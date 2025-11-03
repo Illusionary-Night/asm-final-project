@@ -38,7 +38,7 @@ EraseText PROTO,
 
 SetRectangle PROTO,
 	object: PTR RECTANGLE,
-	element: BYTE,   ;the address of string
+	element: BYTE,   
 	color: WORD,
 	_width: WORD,
 	_Hight: WORD,

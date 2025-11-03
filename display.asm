@@ -49,7 +49,7 @@ clear_screen proc uses eax ecx esi
 
 clear_screen endp
 
-GetColor proc uses ax esi color: PTR WORD
+GetColor proc uses ax esi ecx color: PTR WORD
 
 	mov esi, color
 	mov ax, WriteAttribute
@@ -82,7 +82,7 @@ GetScreenSize proc uses eax esi position: PTR COORD
 	
 GetScreenSize endp
 
-SetCursor proc uses eax position: COORD
+SetCursor proc uses eax ecx position: COORD
 	
 	mov eax, position
 	mov DisplayCursor, eax
@@ -91,7 +91,7 @@ SetCursor proc uses eax position: COORD
 
 SetCursor endp
 
-SetColor proc uses ax color: WORD
+SetColor proc uses ax ecx color: WORD
 
 	mov ax, color
 	mov WriteAttribute, ax 

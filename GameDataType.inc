@@ -18,11 +18,9 @@ ShowToolSlot PROTO,
 	Position: COORD
 
 EraseToolSlotPic PROTO,
-	object: PTR TOOLSLOT,
-	Position: COORD
+	Object: PTR TOOLSLOT
 
 EraseToolSlotFrame PROTO,
-	object: PTR TOOLSLOT,
-	Position: COORD
+	Object: PTR TOOLSLOT
 
 

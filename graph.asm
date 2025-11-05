@@ -3,9 +3,9 @@ INCLUDE display.inc
 INCLUDE graph.inc
 
 .data
-	GraphCursor COORD <0,0>
-	GraphStrBuf BYTE "                                                                                                                                                        ", 0Dh, 0Ah
-	;color WORD 07h
+	GraphCursor     COORD <0,0>
+	GraphStrBuf     BYTE "                                                                                                                                             ",0Dh,0Ah
+	BackGroundColor WORD 07h
 .code
 
 SetText proc uses eax esi ecx object: PTR TEXT, source: PTR BYTE, color: WORD, position: COORD, _length: WORD
@@ -39,7 +39,7 @@ ShowText proc uses eax bx esi ecx object: PTR TEXT
 	mov eax, [esi]
 	mov bx, [esi+10]
 	INVOKE PrintStr, eax, bx 
-	INVOKE SetColor, 07h	
+	INVOKE SetColor, BackGroundColor	
 
 	ret 4
 
@@ -56,11 +56,109 @@ EraseText proc uses eax bx esi ecx object: PTR TEXT
 	INVOKE SetColor, 0h
 	INVOKE SetCursor, GraphCursor
 	INVOKE PrintStr, eax, bx
-	INVOKE SetColor, 07h
+	INVOKE SetColor, BackGroundColor
 
 	ret 4
 
 EraseText endp
+
+SetLine proc uses eax esi ecx Object: PTR LINE, Element: BYTE, Color: WORD, IsVertical: BYTE, _Length: WORD, Position: COORD
+
+	mov esi, Object
+	mov al, Element
+	mov [esi], al
+	
+	mov ax, Color
+	mov [esi+1], ax
+
+	mov al, IsVertical
+	mov [esi+3], al
+
+	mov ax, _Length
+	mov [esi+4], ax
+
+	mov eax, Position
+	mov [esi+6], eax
+ 
+	ret 24
+
+SetLine endp
+	
+ShowLine proc uses esi eax ecx edi Object: PTR LINE
+
+	xor ecx, ecx
+	mov esi, Object
+	mov edi, OFFSET GraphCursor
+	mov ax, [esi+1]
+	mov cx, [esi+4]
+	INVOKE SetColor, ax
+
+	mov eax, [esi+6]
+	mov GraphCursor, eax
+	INVOKE SetCursor, GraphCursor
+
+	L1:
+		mov eax, esi
+		INVOKE PrintStr, eax, 1
+		mov al, [esi+3]
+		cmp al, 1
+		je L2
+
+		mov ax, [edi]
+		inc ax
+		mov [edi], ax
+		jmp L3
+
+		L2:
+			mov ax, [edi+2]
+			inc ax
+			mov [edi+2], ax
+		L3:
+			INVOKE SetCursor, GraphCursor
+			
+	LOOP L1
+	INVOKE SetColor, BackGroundColor
+	ret 4
+
+ShowLine endp
+
+EraseLine proc uses eax esi ecx edi Object: PTR LINE
+
+	xor ecx, ecx
+	mov esi, Object
+	mov edi, OFFSET GraphCursor
+	mov ax, [esi+1]
+	mov cx, [esi+4]
+	INVOKE SetColor, ax
+
+	mov eax, [esi+6]
+	mov GraphCursor, eax
+	INVOKE SetCursor, GraphCursor
+
+	L1:
+		mov eax, OFFSET GraphStrBuf
+		INVOKE PrintStr, eax, 1
+		mov al, [esi+3]
+		cmp al, 1
+		je L2
+
+		mov ax, [edi]
+		inc ax
+		mov [edi], ax
+		jmp L3
+
+		L2:
+			mov ax, [edi+2]
+			inc ax
+			mov [edi+2], ax
+		L3:
+			INVOKE SetCursor, GraphCursor
+			
+	LOOP L1
+	INVOKE SetColor, BackGroundColor
+	ret 4
+
+EraseLine endp
 
 SetRectangle proc uses eax esi ecx object: PTR RECTANGLE, element: BYTE, color: WORD, _width: WORD, _Hight: WORD, position: COORD
 
@@ -133,18 +231,19 @@ ShowRectangle proc uses eax ecx ebx esi edi object: PTR RECTANGLE
 
 	loop L1
 
-	INVOKE SetColor, 07h
+	INVOKE SetColor, BackGroundColor
 	ret 4
 
 ShowRectangle endp
 
-EraseRectangle proc object: PTR RECTANGLE
+EraseRectangle proc uses eax ecx esi edi ebx edx object: PTR RECTANGLE
 
 	xor ecx, ecx
 	xor ebx, ebx
 	mov esi, object
 	mov edi, [esi]
 	mov cx, [esi+5]
+	dec cx
 	mov bx, [esi+3]
 	INVOKE SetColor, 00h
 	mov eax, [esi+7]
@@ -152,19 +251,32 @@ EraseRectangle proc object: PTR RECTANGLE
 	INVOKE SetCursor, GraphCursor
 	mov eax, OFFSET GraphStrBuf	
 	mov esi, OFFSET GraphCursor
+	INVOKE PrintStr, eax, bx
 
 	L1:
-		INVOKE PrintStr, eax, bx
-		push ebx
-		mov bx, [esi+2]
-		inc bx
-		mov [esi+2], bx
+		INVOKE PrintStr, eax, 1
+		mov dx, [esi]
+		add dx, bx
+		dec dx
+		mov [esi], dx
 		INVOKE SetCursor, GraphCursor
-		pop ebx
+		INVOKE PrintStr, eax, 1
+
+		mov dx, [esi]
+		sub dx, bx
+		inc dx
+		mov [esi], dx
+		INVOKE SetCursor, GraphCursor
+
+		mov dx, [esi+2]
+		inc dx
+		mov [esi+2], dx
+		INVOKE SetCursor, GraphCursor
 		
 	loop L1
+	INVOKE PrintStr, eax, bx
 
-	INVOKE SetColor, 07h
+	INVOKE SetColor, BackGroundColor
 	ret 4
 
 EraseRectangle endp
@@ -217,7 +329,7 @@ ShowPicture proc uses eax esi edi ecx object: PTR PICTURE
 		
 	loop L1
 
-	INVOKE SetColor, 07h
+	INVOKE SetColor, BackGroundColor
 	ret 4
 
 ShowPicture endp
@@ -248,7 +360,7 @@ ErasePicture proc uses eax esi ecx edi object: PTR PICTURE
 		
 	loop L1
 
-	INVOKE SetColor, 07h
+	INVOKE SetColor, BackGroundColor
 	ret 4
 
 ErasePicture endp

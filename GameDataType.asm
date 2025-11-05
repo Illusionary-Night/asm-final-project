@@ -59,14 +59,19 @@ ShowToolSlot proc uses eax esi ecx edi Object: PTR TOOLSLOT, Position: COORD
 
 ShowToolSlot endp
 
-EraseToolSlotPic proc object: PTR TOOLSLOT
-
+EraseToolSlotPic proc uses esi ecx Object: PTR TOOLSLOT
+	
+	mov esi, Object
+	add esi, 11
+	INVOKE ErasePicture, esi
 	ret 4
 
 EraseToolSlotPic endp
 
-EraseToolSlotFrame proc object: PTR TOOLSLOT
+EraseToolSlotFrame proc uses esi ecx Object: PTR TOOLSLOT
 
+	mov esi, Object
+	INVOKE EraseRectangle, esi
 	ret 4
 
 EraseToolSlotFrame endp

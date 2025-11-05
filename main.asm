@@ -17,6 +17,7 @@ ExitProcess proto,dwExitCode:dword
 	teststr2 BYTE "game start", 0Dh, 0Ah
 	rec1 RECTANGLE <>
 	P1 PICTURE <>
+	Li1 LINE <>
 	_title TEXT <>
 	color WORD 0Ah
 	Tool1 TOOLSLOT <>
@@ -27,17 +28,23 @@ main proc
 
 	INVOKE Display_Init
 	INVOKE SetText, OFFSET _title, OFFSET teststr2, 0Ah, Cursor, LENGTHOF teststr2
+	INVOKE SetLine, OFFSET Li1, '*', 0Ah, 1, 10, Cursor
 	INVOKE SetRectangle, OFFSET rec1, '*', 07h, 5, 3, Cursor
 	INVOKE SetPicture, OFFSET P1, OFFSET teststr1, 07h, 6, 6, Cursor
 	INVOKE SetToolSlot, OFFSET Tool1, OFFSET teststr1, 0Ah
 	
-	INVOKE ShowToolSlot, OFFSET Tool1, Cursor
+	;INVOKE ShowToolSlot, OFFSET Tool1, Cursor
+	;INVOKE EraseToolSlotPic, OFFSET Tool1
+	;INVOKE EraseToolSlotFrame, OFFSET Tool1
 
 	;INVOKE ShowPicture, OFFSET P1
 	;INVOKE ErasePicture, OFFSET P1
 
 	;INVOKE ShowRectangle, OFFSET rec1
 	;INVOKE EraseRectangle, OFFSET rec1
+
+	;INVOKE ShowLine, OFFSET Li1
+	;INVOKE EraseLine, OFFSET Li1
 
 	;INVOKE ShowText, OFFSET _title
 	;INVOKE EraseText, OFFSET _title

@@ -7,6 +7,15 @@ TEXT STRUCT
 	_Length  WORD ?
 TEXT ENDS
 
+LINE STRUCT
+	Element    BYTE ?    ;the basic ASCII that form a LINE
+	Color      WORD ?
+	IsVertical BYTE ?
+	_Length    WORD ?
+	Position   COORD <>
+LINE ENDS
+
+
 RECTANGLE STRUCT
 	Element  BYTE ?    ;the basic ASCII that form a RECTANGLE
 	Color    WORD ?
@@ -35,6 +44,21 @@ ShowText PROTO,
 
 EraseText PROTO,
 	object: PTR TEXT
+
+SetLine PROTO,
+	Object:     PTR LINE,
+	Element:    BYTE,   ;the address of string
+	Color:      WORD,
+	IsVertical: BYTE,
+	_Length:    WORD,
+	Position:   COORD
+	
+ShowLine PROTO,
+	Object: PTR LINE
+
+EraseLine PROTO,
+	Object: PTR LINE
+
 
 SetRectangle PROTO,
 	object: PTR RECTANGLE,

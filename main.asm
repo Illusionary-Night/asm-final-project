@@ -33,9 +33,9 @@ main proc
 	INVOKE SetPicture, OFFSET P1, OFFSET teststr1, 07h, 6, 6, Cursor
 	INVOKE SetToolSlot, OFFSET Tool1, OFFSET teststr1, 0Ah
 	
-	;INVOKE ShowToolSlot, OFFSET Tool1, Cursor
+	INVOKE ShowToolSlot, OFFSET Tool1, Cursor
 	;INVOKE EraseToolSlotPic, OFFSET Tool1
-	;INVOKE EraseToolSlotFrame, OFFSET Tool1
+	INVOKE EraseToolSlotFrame, OFFSET Tool1
 
 	;INVOKE ShowPicture, OFFSET P1
 	;INVOKE ErasePicture, OFFSET P1

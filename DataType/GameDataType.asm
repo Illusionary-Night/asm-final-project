@@ -1,5 +1,8 @@
-INCLUDE Irvine32.inc
-INCLUDE graph.inc
+INCLUDE ./asm-final-project/SysInc/Irvine32.inc
+INCLUDE ./asm-final-project/IO/graph.inc
+INCLUDE ./asm-final-project/DataType/GameDataType.inc
+
+
 
 .data
 	FrameWidth   WORD 8

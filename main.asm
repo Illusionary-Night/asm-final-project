@@ -1,7 +1,7 @@
-INCLUDE Irvine32.inc
-INCLUDE display.inc
-INCLUDE graph.inc
-INCLUDE GameDataType.inc
+INCLUDE ./asm-final-project/SysInc/Irvine32.inc
+INCLUDE ./asm-final-project/IO/display.inc
+INCLUDE ./asm-final-project/IO/graph.inc
+INCLUDE ./asm-final-project/DataType/GameDataType.inc
 
 main EQU start@0
 

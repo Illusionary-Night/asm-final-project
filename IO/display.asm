@@ -1,5 +1,5 @@
-INCLUDE Irvine32.inc
-INCLUDE display.inc
+INCLUDE ./asm-final-project/SysInc/Irvine32.inc
+INCLUDE ./asm-final-project/IO/display.inc
 
 .data
 	writehandle DWORD ?

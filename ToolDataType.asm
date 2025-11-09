@@ -2,16 +2,11 @@ INCLUDE Irvine32.inc
 INCLUDE graph.inc
 INCLUDE GameDataType.inc
 INCLUDE ToolDataType.inc
+INCLUDE Character.inc
+INCLUDE MemOperation.inc
 .data
 	
 .code
-MemClone PROC USES esi edi ecx, Object:PTR BYTE, Source:PTR BYTE, _Length:DWORD
-    mov esi, Source
-    mov edi, Object
-    mov ecx, _Length
-    rep movsb
-    ret
-MemClone ENDP
 
 SetProtoTool PROC USES esi edi eax,     ;用於設置道具種類，而非新增
 	Object: PTR TOOL,
@@ -20,6 +15,8 @@ SetProtoTool PROC USES esi edi eax,     ;用於設置道具種類，而非新增
 	Rarity: BYTE,
 	CooldownMax: DWORD,
 	TypeID: DWORD,
+    AllyDelta: ATTRIBUTE,
+    EnemyDelta: ATTRIBUTE
 
     mov esi, Object
     
@@ -38,6 +35,12 @@ SetProtoTool PROC USES esi edi eax,     ;用於設置道具種類，而非新增
     mov eax, TypeID
     mov (TOOL PTR [esi]).TYPEID, eax
     
+    lea edi, (TOOL PTR [esi]).ALLYDELTA
+    INVOKE MemClone, edi, ADDR AllyDelta, SIZEOF ATTRIBUTE
+
+    lea edi, (TOOL PTR [esi]).ENEMYDELTA
+    INVOKE MemClone, edi, ADDR EnemyDelta, SIZEOF ATTRIBUTE
+
     ret
 SetProtoTool ENDP
 

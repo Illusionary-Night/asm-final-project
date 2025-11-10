@@ -2,6 +2,7 @@ INCLUDE Irvine32.inc
 INCLUDE display.inc
 INCLUDE graph.inc
 INCLUDE GameDataType.inc
+INCLUDE BackPack.inc
 
 main EQU start@0
 
@@ -22,6 +23,8 @@ ExitProcess proto,dwExitCode:dword
 	color WORD 0Ah
 	Tool1 TOOLSLOT <>
 	Cursor COORD <5,10>
+	MyBackPack BACKPACK<>
+	BasePos COORD <10,10>
 .code
 
 main proc
@@ -33,9 +36,13 @@ main proc
 	INVOKE SetPicture, OFFSET P1, OFFSET teststr1, 07h, 6, 6, Cursor
 	INVOKE SetToolSlot, OFFSET Tool1, OFFSET teststr1, 0Ah
 	
-	INVOKE ShowToolSlot, OFFSET Tool1, Cursor
+	INVOKE InitBackPack , ADDR MyBackPack , BasePos
+	INVOKE ShowBackPack , ADDR MyBackPack
+	;INVOKE EraseBackPack, ADDR MyBackPack
+
+	;INVOKE ShowToolSlot, OFFSET Tool1, Cursor
 	;INVOKE EraseToolSlotPic, OFFSET Tool1
-	INVOKE EraseToolSlotFrame, OFFSET Tool1
+	;INVOKE EraseToolSlotFrame, OFFSET Tool1
 
 	;INVOKE ShowPicture, OFFSET P1
 	;INVOKE ErasePicture, OFFSET P1

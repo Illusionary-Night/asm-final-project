@@ -1,4 +1,6 @@
 .NOLIST
+IFNDEF __SmallWin
+__SmallWin EQU 1
 ; Include file for Calling Windows API Functions      (SmallWin.inc)
 
 ; Recent updates:
@@ -521,3 +523,4 @@ wsprintf PROTO NEAR C,
 	vars :VARARG		; optional arguments
 
 .LIST
+ENDIF

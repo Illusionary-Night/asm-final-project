@@ -1,8 +1,11 @@
 .NOLIST
+IFNDEF __ToolDataType
+__ToolDataType EQU 1
 INCLUDE ./asm-final-project/DataType/Character.inc
+
 TOOL STRUCT
 	SLOT TOOLSLOT 16 DUP(<>)	; 描述道具的圖案，在形狀之外的範圍則以特殊字元'?'來表達不覆蓋
-	SHAPE BYTE 16 DUP(<>)		; 每格以bool(0 or 1)表達該位置是否有形狀
+	SHAPE BYTE 16 DUP(?)		; 每格以bool(0 or 1)表達該位置是否有形狀
 	BPPOSITION COORD <>			; 描述該道具在背包中的位置
 	RARITY   BYTE ?				; 表示稀有度(normal、rare、epic)，用在商店刷新機率
 	COOLDOWN DWORD ?			; 冷卻時間，道具全都是週期性道具
@@ -21,3 +24,4 @@ CooldownUpdate_Tool PROTO :PTR TOOL
 ExecuteTool PROTO :PTR TOOL
 
 
+ENDIF

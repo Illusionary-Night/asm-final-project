@@ -5,7 +5,8 @@
 ; WinUser.h, WinBase.h, and Winnt.h
 
 ; Last update: 6/10/2005
-
+IFNDEF __GraphWin
+__GraphWin EQU 1
 ;------------------ Structures ----------------
 
 POINT STRUCT
@@ -182,3 +183,4 @@ MAIN_WINDOW_STYLE = WS_VISIBLE+WS_DLGFRAME+WS_CAPTION+WS_BORDER+WS_SYSMENU \
 	+WS_MAXIMIZEBOX+WS_MINIMIZEBOX+WS_THICKFRAME
 
 .LIST
+ENDIF

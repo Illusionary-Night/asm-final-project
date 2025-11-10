@@ -1,5 +1,7 @@
 ; VirtualKeys.inc
 .NOLIST
+IFNDEF __VirtualKeys
+__VirtualKeys EQU 1
 ; updated 4/5/03
 
 ;  Standard MS-Windows Virtual Key definitions
@@ -89,3 +91,4 @@ VK_SCROLL       = 91H
 VK_11 = 0BDh 	; - key (on horizontal numbers row)
 VK_12 = 0BBh 	; + key (on horizontal numbers row)
 .LIST
+ENDIF

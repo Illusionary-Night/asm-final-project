@@ -1,4 +1,6 @@
 .NOLIST
+IFNDEF __Macros
+__Macros EQU 1
 COMMENT !
 ; (Macros.inc) - Include file containing Macros
 ; for Assembly Language for Intel-Based Computers
@@ -350,3 +352,4 @@ IFDEF @MODEL	; @MODEL defined?
 ENDIF	; IFNDEF @MODEL
 
 .LIST
+ENDIF

@@ -1,4 +1,6 @@
 .NOLIST
+IFNDEF __graph
+__graph EQU 1
 
 TEXT STRUCT
 	Source   DWORD ?  ;the address of string
@@ -87,3 +89,5 @@ ShowPicture PROTO,
 
 ErasePicture PROTO,
 	object: PTR PICTURE
+
+ENDIF

@@ -3,6 +3,7 @@ INCLUDE ./asm-final-project/IO/display.inc
 INCLUDE ./asm-final-project/IO/graph.inc
 INCLUDE ./asm-final-project/DataType/GameDataType.inc
 INCLUDE ./asm-final-project/IO/StartScene.inc
+INCLUDE ./asm-final-project/ToolInfo.inc
 
 main EQU start@0
 
@@ -26,9 +27,12 @@ ExitProcess proto,dwExitCode:dword
 .code
 
 main proc
+	
+	
+
 
 	INVOKE Display_Init
-	INVOKE ShowTitle
+	;INVOKE ShowTitle
 	;INVOKE SetText, OFFSET _title, OFFSET teststr2, 0Ah, Cursor, LENGTHOF teststr2
 	;INVOKE SetLine, OFFSET Li1, '*', 0Ah, 1, 10, Cursor
 	;INVOKE SetRectangle, OFFSET rec1, '*', 07h, 5, 3, Cursor
@@ -36,6 +40,9 @@ main proc
 	;INVOKE SetToolSlot, OFFSET Tool1, OFFSET teststr1, 0Ah
 	
 	;INVOKE ShowToolSlot, OFFSET Tool1, Cursor
+	
+	INVOKE SetTestTool
+
 	;INVOKE EraseToolSlotPic, OFFSET Tool1
 	;INVOKE EraseToolSlotFrame, OFFSET Tool1
 

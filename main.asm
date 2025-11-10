@@ -28,7 +28,7 @@ ExitProcess proto,dwExitCode:dword
 main proc
 
 	INVOKE Display_Init
-	INVOKE ShowTitle
+	INVOKE ShowTitle, Cursor, OFFSET pic1
 	;INVOKE SetText, OFFSET _title, OFFSET teststr2, 0Ah, Cursor, LENGTHOF teststr2
 	;INVOKE SetLine, OFFSET Li1, '*', 0Ah, 1, 10, Cursor
 	;INVOKE SetRectangle, OFFSET rec1, '*', 07h, 5, 3, Cursor

@@ -45,37 +45,30 @@ NullSlotRepeatLabel:
 	mov esi, OFFSET test_tool.SLOT
 	mov ecx, 0
 	
-	mov ax, test_position.Y
-	mov temp_position.Y, ax
+	mov dx, test_position.Y
+	mov temp_position.Y, dx
 
 OuterLoop:
-	mov ebx, 0
+	mov eax, 0
 	
-	mov ax, test_position.X
-	mov temp_position.X, ax
+	mov dx, test_position.X
+	mov temp_position.X, dx
 
 InnerLoop:
-	movzx eax, temp_position.X
-	call WriteDec
-	mov ax, ','
-	call WriteChar
-	movzx eax, temp_position.Y
-	call WriteDec
-	call Crlf
 
-	;INVOKE ShowToolSlot, esi, temp_position
+	INVOKE ShowToolSlot, esi, temp_position
 	
 	add esi, SIZEOF TOOLSLOT
 	
-	inc ebx
-	add WORD PTR temp_position.X, 6
+	inc eax
+	add WORD PTR temp_position.X, 7
 
 
-	cmp ebx, 4
+	cmp eax, 4
 	jb InnerLoop
 	
 	inc ecx
-	add WORD PTR temp_position.Y, 6
+	add WORD PTR temp_position.Y, 7
 	
 	cmp ecx, 4
 	jb OuterLoop

@@ -2,6 +2,7 @@ INCLUDE ./asm-final-project/SysInc/Irvine32.inc
 INCLUDE ./asm-final-project/IO/graph.inc
 INCLUDE ./asm-final-project/DataType/GameDataType.inc
 INCLUDE ./asm-final-project/DataType/ToolDataType.inc
+INCLUDE ./asm-final-project/MemOperation.inc
 .data
 	
 .code
@@ -13,8 +14,8 @@ SetProtoTool PROC USES esi edi eax,     ;�Ω�]�m�D������A�
 	Rarity: BYTE,
 	CooldownMax: DWORD,
 	TypeID: DWORD,
-    AllyDelta: ATTRIBUTE,
-    EnemyDelta: ATTRIBUTE
+    AllyDelta: CHARACTERATTRIBUTE,
+    EnemyDelta: CHARACTERATTRIBUTE
 
     mov esi, Object
     
@@ -34,10 +35,10 @@ SetProtoTool PROC USES esi edi eax,     ;�Ω�]�m�D������A�
     mov (TOOL PTR [esi]).TYPEID, eax
     
     lea edi, (TOOL PTR [esi]).ALLYDELTA
-    INVOKE MemClone, edi, ADDR AllyDelta, SIZEOF ATTRIBUTE
+    INVOKE MemClone, edi, ADDR AllyDelta, SIZEOF CHARACTERATTRIBUTE
 
     lea edi, (TOOL PTR [esi]).ENEMYDELTA
-    INVOKE MemClone, edi, ADDR EnemyDelta, SIZEOF ATTRIBUTE
+    INVOKE MemClone, edi, ADDR EnemyDelta, SIZEOF CHARACTERATTRIBUTE
 
     ret
 SetProtoTool ENDP

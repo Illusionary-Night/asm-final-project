@@ -1,3 +1,2 @@
 .NOLIST
-
 MemClone PROTO :PTR BYTE, :PTR BYTE, :DWORD 

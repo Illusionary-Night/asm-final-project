@@ -1,4 +1,4 @@
-INCLUDE Irvine32.inc
+INCLUDE ./asm-final-project/SysInc/Irvine32.inc
 
 .data
 	

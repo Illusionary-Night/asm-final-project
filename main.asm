@@ -24,20 +24,22 @@ ExitProcess proto,dwExitCode:dword
 	color WORD 0Ah
 	Tool1 TOOLSLOT <>
 	Cursor COORD <1,0>
+	myBackPack BACKPACK <>
 .code
 
 main proc
 
 	INVOKE Display_Init
+	INVOKE InitBackPack , OFFSET myBackPack
 	INVOKE DrawBackpack , Cursor
 	;INVOKE ShowTitle
 	;INVOKE SetText, OFFSET _title, OFFSET teststr2, 0Ah, Cursor, LENGTHOF teststr2
 	;INVOKE SetLine, OFFSET Li1, '*', 0Ah, 1, 10, Cursor
 	;INVOKE SetRectangle, OFFSET rec1, '*', 07h, 5, 3, Cursor
 	;INVOKE SetPicture, OFFSET pic1, OFFSET teststr1, 07h, 6, 6, Cursor
-	;INVOKE SetToolSlot, OFFSET Tool1, OFFSET teststr1, 0Ah
+	INVOKE SetToolSlot, OFFSET Tool1, OFFSET teststr1, 0Ah
 	
-	;INVOKE ShowToolSlot, OFFSET Tool1, Cursor
+	INVOKE ShowToolSlot, OFFSET Tool1, Cursor
 	;INVOKE EraseToolSlotPic, OFFSET Tool1
 	;INVOKE EraseToolSlotFrame, OFFSET Tool1
 

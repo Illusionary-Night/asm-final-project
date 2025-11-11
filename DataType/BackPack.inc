@@ -9,6 +9,10 @@ BACKPACK STRUCT
 
 BACKPACK ENDS
 
-DrawBackpack PROTO, BackPackBasPos : COORD
+InitBackPack PROTO , Object : PTR BACKPACK
+
+DrawBackpack PROTO , BackPackBasPos : COORD
+
+RecordIn PROTO , ToolPos : COORD
 
 ENDIF

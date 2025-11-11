@@ -1,6 +1,7 @@
 INCLUDE ./asm-final-project/SysInc/Irvine32.inc
 INCLUDE ./asm-final-project/IO/display.inc
 INCLUDE ./asm-final-project/IO/graph.inc
+INCLUDE ./asm-final-project/DataType/BackPack.inc
 
 .data
 
@@ -11,9 +12,24 @@ INCLUDE ./asm-final-project/IO/graph.inc
 
     linObj     LINE <>
     linChar    BYTE "*"
-    linColor   WORD 07h           
+    linColor   WORD 07h
 
 .code
+
+InitBackPack PROC USES esi edi ecx eax,
+    Object : PTR BACKPACK
+
+    mov esi , Object
+    mov ax , 10
+    mov (BACKPACK PTR [esi]).BackPackWidth , ax
+    mov (BACKPACK PTR [esi]).BackPackHeight , ax
+
+    lea edi , (BACKPACK PTR [esi]).SlotMap
+    mov ecx , 100
+    mov al , 0
+    rep stosb
+    ret
+InitBackPack ENDP
 
 DrawBackpack PROC USES ecx eax ebx BackPackBasPos : COORD
 
@@ -22,7 +38,7 @@ DrawBackpack PROC USES ecx eax ebx BackPackBasPos : COORD
     mov ax , BackPackBasPos.Y
     mov StartPos.Y , ax
 
-    mov ecx , 8
+    mov ecx , 7
     mov bx , StartPos.Y
     Hloop:
         mov ax , StartPos.X
@@ -42,7 +58,7 @@ DrawBackpack PROC USES ecx eax ebx BackPackBasPos : COORD
         mov linObj.Position.X , bx
         mov linObj.Position.Y , ax
 
-        INVOKE SetLine, OFFSET linObj, linChar, linColor, 1, 49, linObj.Position
+        INVOKE SetLine, OFFSET linObj, linChar, linColor, 1, 42, linObj.Position
         INVOKE ShowLine, OFFSET linObj
 
         add bx , 7
@@ -50,5 +66,6 @@ DrawBackpack PROC USES ecx eax ebx BackPackBasPos : COORD
 
     ret
 DrawBackpack ENDP
+    
 
 END

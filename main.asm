@@ -5,6 +5,7 @@ INCLUDE ./asm-final-project/DataType/GameDataType.inc
 INCLUDE ./asm-final-project/IO/StartScene.inc
 INCLUDE ./asm-final-project/GameLogic/GameStat.inc
 INCLUDE ./asm-final-project/GameLogic/GameClock.inc
+INCLUDE ./asm-final-project/DataType/Seller.inc
 
 main EQU start@0
 
@@ -25,13 +26,22 @@ ExitProcess proto,dwExitCode:dword
 	color WORD 0Ah
 	Tool1 TOOLSLOT <>
 	Cursor COORD <5,10>
+	Seller GOODS <>
 .code
 
 main proc
 
 	INVOKE Display_Init
-	INVOKE ShowTitle, Cursor, OFFSET pic1
-	;INVOKE SetText, OFFSET _title, OFFSET teststr2, 0Ah, Cursor, LENGTHOF teststr2
+	
+	INVOKE InsertTool, OFFSET Seller, 1
+	INVOKE InsertTool, OFFSET Seller, 2
+	INVOKE InsertTool, OFFSET Seller, 3
+	INVOKE DeletTool, OFFSET Seller, 1
+	INVOKE ShowGoods, OFFSET Seller
+	;INVOKE EraseGoods, OFFSET Seller
+
+	;INVOKE ShowTitle, Cursor, OFFSET pic1
+	INVOKE SetText, OFFSET _title, OFFSET teststr2, 0Ah, Cursor, LENGTHOF teststr2
 	;INVOKE SetLine, OFFSET Li1, '*', 0Ah, 1, 10, Cursor
 	;INVOKE SetRectangle, OFFSET rec1, '*', 07h, 5, 3, Cursor
 	;INVOKE SetPicture, OFFSET pic1, OFFSET teststr1, 07h, 6, 6, Cursor
@@ -53,8 +63,8 @@ main proc
 	;INVOKE ShowText, OFFSET _title
 	;INVOKE EraseText, OFFSET _title
 	
-	DelayXms 10000
-	INVOKE clear_screen
+	;DelayXms 10000
+	;INVOKE clear_screen
 
 	L1:
 		mov ecx, 0

@@ -39,21 +39,21 @@ GAMESTAT STRUCT
 GAMESTAT ENDS
 
 IntoPrepareStat PROTO,
-	CurStat: GAMESTAT
+	CurStat: PTR GAMESTAT
 
 IntoFightStat PROTO,
-	CurStat: GAMESTAT
+	CurStat: PTR GAMESTAT
 
 CheStartSubStat PROTO,
-	CurStat: GAMESTAT,
+	CurStat: PTR GAMESTAT,
 	SubStat: BYTE
 
 ChePrepareSubStat PROTO,
-	CurStat: GAMESTAT,
+	CurStat: PTR GAMESTAT,
 	SubStat: BYTE
 
 CheFightSubStat PROTO,
-	CurStat: GAMESTAT,
+	CurStat: PTR GAMESTAT,
 	SubStat: BYTE
 
 ENDIF

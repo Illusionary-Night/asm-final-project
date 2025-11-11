@@ -7,7 +7,7 @@ INCLUDE ./asm-final-project/IO/display.inc
 
 .code
 
-IntoPrepareStat proc uses esi eax CurStat: GAMESTAT
+IntoPrepareStat proc uses esi eax CurStat: PTR GAMESTAT
 
 	mov esi, CurStat
 	mov al, PrepareStat
@@ -19,7 +19,7 @@ IntoPrepareStat proc uses esi eax CurStat: GAMESTAT
 
 IntoPrepareStat endp
 
-IntoFightStat proc CurStat: GAMESTAT
+IntoFightStat proc CurStat: PTR GAMESTAT
 
 	mov esi, CurStat
 	mov al, FightStat
@@ -31,7 +31,7 @@ IntoFightStat proc CurStat: GAMESTAT
 
 IntoFightStat endp
 
-CheStartSubStat proc CurStat: GAMESTAT SubStat: BYTE
+CheStartSubStat proc CurStat: PTR GAMESTAT, SubStat: BYTE
 
 	mov esi, CurStat
 
@@ -43,7 +43,7 @@ CheStartSubStat proc CurStat: GAMESTAT SubStat: BYTE
 
 CheStartSubStat endp
 
-ChePrepareSubStat proc CurStat: GAMESTAT, SubStat: BYTE
+ChePrepareSubStat proc CurStat: PTR GAMESTAT, SubStat: BYTE
 	
 	mov esi, CurStat
 	mov al, SubStat
@@ -53,7 +53,7 @@ ChePrepareSubStat proc CurStat: GAMESTAT, SubStat: BYTE
 
 ChePrepareSubStat endp
 
-CheFightSubStat proc CurStat: GAMESTAT, SubStat: BYTE
+CheFightSubStat proc CurStat: PTR GAMESTAT, SubStat: BYTE
 	
 	mov esi, CurStat
 	mov al, SubStat

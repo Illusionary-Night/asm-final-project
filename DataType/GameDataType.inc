@@ -1,7 +1,11 @@
 .NOLIST
+IFNDEF __GameDataType
+__GameDataType EQU 1
+
+INCLUDE ./asm-final-project/IO/graph.inc
 
 TOOLSLOT STRUCT
-	Frame    RECTANGLE <>
+	Frame RECTANGLE <>
 	Pic  PICTURE <>
 TOOLSLOT ENDS
 
@@ -23,4 +27,4 @@ EraseToolSlotPic PROTO,
 EraseToolSlotFrame PROTO,
 	Object: PTR TOOLSLOT
 
-
+ENDIF

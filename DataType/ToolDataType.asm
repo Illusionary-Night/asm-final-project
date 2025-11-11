@@ -1,25 +1,21 @@
-INCLUDE Irvine32.inc
-INCLUDE graph.inc
-INCLUDE GameDataType.inc
-INCLUDE ToolDataType.inc
+INCLUDE ./asm-final-project/SysInc/Irvine32.inc
+INCLUDE ./asm-final-project/IO/graph.inc
+INCLUDE ./asm-final-project/DataType/GameDataType.inc
+INCLUDE ./asm-final-project/DataType/ToolDataType.inc
+INCLUDE ./asm-final-project/MemOperation.inc
 .data
 	
 .code
-MemClone PROC USES esi edi ecx, Object:PTR BYTE, Source:PTR BYTE, _Length:DWORD
-    mov esi, Source
-    mov edi, Object
-    mov ecx, _Length
-    rep movsb
-    ret
-MemClone ENDP
 
-SetProtoTool PROC USES esi edi eax,     ;用於設置道具種類，而非新增
+SetProtoTool PROC USES esi edi eax,     ;嚙諄抬蕭]嚙練嚙瘩嚙踝蕭嚙踝蕭嚙踝蕭A嚙諉非嚙編嚙磕
 	Object: PTR TOOL,
-	Slot: PTR TOOLSLOT,	; 陣列起始座標，長度16 TOOLSLOT
-	Shape: PTR BYTE,	; 陣列起始座標，長度16 BYTE
+	Slot: PTR TOOLSLOT,	; 嚙罷嚙瘠嚙稻嚙締嚙緙嚙請，嚙踝蕭嚙踝蕭16 TOOLSLOT
+	Shape: PTR BYTE,	; 嚙罷嚙瘠嚙稻嚙締嚙緙嚙請，嚙踝蕭嚙踝蕭16 BYTE
 	Rarity: BYTE,
 	CooldownMax: DWORD,
 	TypeID: DWORD,
+    AllyDelta: CHARACTERATTRIBUTE,
+    EnemyDelta: CHARACTERATTRIBUTE
 
     mov esi, Object
     
@@ -38,6 +34,12 @@ SetProtoTool PROC USES esi edi eax,     ;用於設置道具種類，而非新增
     mov eax, TypeID
     mov (TOOL PTR [esi]).TYPEID, eax
     
+    lea edi, (TOOL PTR [esi]).ALLYDELTA
+    INVOKE MemClone, edi, ADDR AllyDelta, SIZEOF CHARACTERATTRIBUTE
+
+    lea edi, (TOOL PTR [esi]).ENEMYDELTA
+    INVOKE MemClone, edi, ADDR EnemyDelta, SIZEOF CHARACTERATTRIBUTE
+
     ret
 SetProtoTool ENDP
 
@@ -45,7 +47,7 @@ ExecuteTool PROC USES esi,
 	Object: PTR TOOL
 
     mov esi, Object
-    ; 將角色delta屬性加到角色身上
+    ; 嚙瞇嚙踝蕭嚙踝蕭delta嚙豎性加嚙趣角嚙賤身嚙磕
     ret
 ExecuteTool ENDP
 

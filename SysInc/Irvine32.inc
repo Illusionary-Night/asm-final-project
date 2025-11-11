@@ -1,5 +1,6 @@
 ; Include file for Irvine32.lib             (Irvine32.inc)
-
+IFNDEF __Irvine32
+__Irvine32 EQU 1
 ;OPTION CASEMAP:NONE		; optional: make identifiers case-sensitive
 
 INCLUDE SmallWin.inc		; MS-Windows prototypes, structures, and constants
@@ -140,3 +141,4 @@ FPU_ENVIRON STRUCT
 FPU_ENVIRON ENDS
 
 .LIST
+ENDIF

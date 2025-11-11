@@ -1,5 +1,6 @@
 .NOLIST
-
+IFNDEF __Display
+__Display EQU 1
 Display_Init PROTO
 
 clear_screen PROTO
@@ -22,3 +23,5 @@ SetColor PROTO,
 PrintStr PROTO,
 	Source:PTR BYTE,      ;the address of string
 	StrSize:DWORD
+
+ENDIF

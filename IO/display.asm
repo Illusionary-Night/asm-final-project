@@ -1,5 +1,5 @@
-INCLUDE Irvine32.inc
-INCLUDE display.inc
+INCLUDE ./asm-final-project/SysInc/Irvine32.inc
+INCLUDE ./asm-final-project/IO/display.inc
 
 .data
 	writehandle DWORD ?
@@ -21,8 +21,8 @@ Display_Init proc uses eax esi
 	INVOKE GetConsoleScreenBufferInfo, writehandle, OFFSET Screen_info
 
 	call clear_screen
-	INVOKE SetCursor, DisplayCursor
 	
+	INVOKE SetCursor, DisplayCursor
 	mov esi, [OFFSET Screen_info]
 	mov ax, [esi+8]
 	INVOKE SetColor, ax
@@ -107,4 +107,5 @@ PrintStr proc uses eax ecx esi Source: PTR BYTE, StrSize: DWORD     ;I don't kno
 	ret 8
 
 PrintStr endp
+
 end

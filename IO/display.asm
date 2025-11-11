@@ -104,6 +104,14 @@ PrintStr proc uses eax ecx esi Source: PTR BYTE, StrSize: DWORD     ;I don't kno
 
 	
 	INVOKE WriteConsole, writehandle, Source, StrSize, OFFSET OutputCount, 0
+
+	;mov ecx, StrSize
+	;mov esi, Source
+	;L1:
+		;mov al, [esi]
+		;inc esi
+		;call WriteChar 
+	;LOOP L1
 	ret 8
 
 PrintStr endp

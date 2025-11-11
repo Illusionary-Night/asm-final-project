@@ -8,7 +8,7 @@ INCLUDE ./asm-final-project/IO/graph.inc
 	BackGroundColor WORD 07h
 .code
 
-SetText proc uses eax esi ecx object: PTR TEXT, source: PTR BYTE, color: WORD, position: COORD, _length: WORD
+SetText proc uses eax esi object: PTR TEXT, source: PTR BYTE, color: WORD, position: COORD, _length: WORD
 
 	mov esi, object
 	mov eax, source	
@@ -26,7 +26,9 @@ SetText proc uses eax esi ecx object: PTR TEXT, source: PTR BYTE, color: WORD, p
 
 SetText endp
 
-ShowText proc uses eax bx esi ecx object: PTR TEXT
+ShowText proc uses eax ebx esi object: PTR TEXT
+
+	xor ebx, ebx
 
 	mov esi, object
 	mov ax, [esi+4]
@@ -38,24 +40,27 @@ ShowText proc uses eax bx esi ecx object: PTR TEXT
 	
 	mov eax, [esi]
 	mov bx, [esi+10]
-	INVOKE PrintStr, eax, bx 
+	INVOKE PrintStr, eax, ebx 
 	INVOKE SetColor, BackGroundColor	
 
 	ret 4
 
 ShowText endp
 
-EraseText proc uses eax bx esi ecx object: PTR TEXT
+EraseText proc uses eax ebx esi ecx object: PTR TEXT
+
+	xor ebx, ebx
 
 	mov esi, object
+	INVOKE SetColor, 0h
+	
 	mov eax, [esi+6]
 	mov GraphCursor, eax
+	INVOKE SetCursor, GraphCursor
+	
 	mov eax, [esi]
 	mov bx, [esi+10]
-	
-	INVOKE SetColor, 0h
-	INVOKE SetCursor, GraphCursor
-	INVOKE PrintStr, eax, bx
+	INVOKE PrintStr, eax, ebx 
 	INVOKE SetColor, BackGroundColor
 
 	ret 4
@@ -318,7 +323,7 @@ ShowPicture proc uses eax esi edi ecx object: PTR PICTURE
 	mov esi, OFFSET GraphCursor
 
 	L1:
-		INVOKE PrintStr, edi, bx
+		INVOKE PrintStr, edi, ebx
 		add edi, ebx
 		push ebx
 		mov bx, [esi+2]
@@ -350,7 +355,7 @@ ErasePicture proc uses eax esi ecx edi object: PTR PICTURE
 	mov esi, OFFSET GraphCursor
 
 	L1:
-		INVOKE PrintStr, eax, bx
+		INVOKE PrintStr, eax, ebx
 		push ebx
 		mov bx, [esi+2]
 		inc bx

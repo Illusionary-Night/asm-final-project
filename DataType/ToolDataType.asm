@@ -4,44 +4,8 @@ INCLUDE ./asm-final-project/DataType/GameDataType.inc
 INCLUDE ./asm-final-project/DataType/ToolDataType.inc
 INCLUDE ./asm-final-project/MemOperation.inc
 .data
-	
+	showed_slot_position COORD <>
 .code
-
-SetProtoTool PROC USES esi edi eax,     ;�Ω�]�m�D������A�ӫD�s�W
-	Object: PTR TOOL,
-	Slot: PTR TOOLSLOT,	; �}�C�_�l�y�СA����16 TOOLSLOT
-	Shape: PTR BYTE,	; �}�C�_�l�y�СA����16 BYTE
-	Rarity: BYTE,
-	CooldownMax: DWORD,
-	TypeID: DWORD,
-    AllyDelta: CHARACTERATTRIBUTE,
-    EnemyDelta: CHARACTERATTRIBUTE
-
-    mov esi, Object
-    
-    lea edi, (TOOL PTR [esi]).SLOT
-    INVOKE MemClone, edi, Slot, SIZEOF TOOLSLOT * 16
-    
-    lea edi, (TOOL PTR [esi]).SHAPE
-    INVOKE MemClone, edi, Shape, SIZEOF BYTE * 16
-    
-    mov al, Rarity
-    mov (TOOL PTR [esi]).RARITY, al
-    
-    mov eax, CooldownMax
-    mov (TOOL PTR [esi]).COOLDOWNMAX, eax
-    
-    mov eax, TypeID
-    mov (TOOL PTR [esi]).TYPEID, eax
-    
-    lea edi, (TOOL PTR [esi]).ALLYDELTA
-    INVOKE MemClone, edi, ADDR AllyDelta, SIZEOF CHARACTERATTRIBUTE
-
-    lea edi, (TOOL PTR [esi]).ENEMYDELTA
-    INVOKE MemClone, edi, ADDR EnemyDelta, SIZEOF CHARACTERATTRIBUTE
-
-    ret
-SetProtoTool ENDP
 
 ExecuteTool PROC USES esi,
 	Object: PTR TOOL
@@ -67,6 +31,49 @@ Label_end:
     ret
 CooldownUpdate_Tool ENDP
 
+
+ShowTool PROC USES esi edi eax ecx, 
+    Source : PTR TOOL
+    
+	mov esi, Source
+	mov ecx, 0
+	
+	mov dx, (TOOL PTR [esi]).BPPOSITION.Y
+	mov showed_slot_position.Y, dx
+
+OuterLoop:
+	mov eax, 0
+	
+	mov dx, (TOOL PTR [esi]).BPPOSITION.X
+	mov showed_slot_position.X, dx
+
+InnerLoop:
+
+    mov edi, ecx
+    shl edi, 2      ; edi = ecx * 4
+    add edi, eax
+	cmp (TOOL PTR [esi]).SHAPE[edi], '1'
+	jne DontShowSlot
+	INVOKE ShowToolSlot, esi, showed_slot_position
+
+DontShowSlot:	
+	add esi, SIZEOF TOOLSLOT
+	
+	inc eax
+	add WORD PTR showed_slot_position.X, 7
+
+
+	cmp eax, 4
+	jb InnerLoop
+	
+	inc ecx
+	add WORD PTR showed_slot_position.Y, 7
+	
+	cmp ecx, 4
+	jb OuterLoop
+	
+    ret
+ShowTool ENDP
 
 
 END

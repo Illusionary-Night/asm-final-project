@@ -3,6 +3,8 @@ INCLUDE ./asm-final-project/IO/display.inc
 INCLUDE ./asm-final-project/IO/graph.inc
 INCLUDE ./asm-final-project/DataType/GameDataType.inc
 INCLUDE ./asm-final-project/IO/StartScene.inc
+INCLUDE ./asm-final-project/GameLogic/GameStat.inc
+INCLUDE ./asm-final-project/GameLogic/GameClock.inc
 
 main EQU start@0
 
@@ -33,7 +35,7 @@ main proc
 	;INVOKE SetLine, OFFSET Li1, '*', 0Ah, 1, 10, Cursor
 	;INVOKE SetRectangle, OFFSET rec1, '*', 07h, 5, 3, Cursor
 	;INVOKE SetPicture, OFFSET pic1, OFFSET teststr1, 07h, 6, 6, Cursor
-	;INVOKE SetToolSlot, OFFSET Tool1, OFFSET teststr1, 0Ah
+	INVOKE SetToolSlot, OFFSET Tool1, OFFSET teststr1, 0Ah
 	
 	;INVOKE ShowToolSlot, OFFSET Tool1, Cursor
 	;INVOKE EraseToolSlotPic, OFFSET Tool1
@@ -50,6 +52,9 @@ main proc
 
 	;INVOKE ShowText, OFFSET _title
 	;INVOKE EraseText, OFFSET _title
+	
+	DelayXms 10000
+	INVOKE clear_screen
 
 	L1:
 		mov ecx, 0

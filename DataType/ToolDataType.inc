@@ -2,6 +2,7 @@
 IFNDEF __ToolDataType
 __ToolDataType EQU 1
 INCLUDE ./asm-final-project/DataType/Character.inc
+INCLUDE ./asm-final-project/DataType/GameDataType.inc
 
 TOOL STRUCT
 	SLOT BYTE 16*SIZEOF TOOLSLOT DUP(?)	; 描述道具的圖案，在形狀之外的範圍則以特殊字元'?'來表達不覆蓋
@@ -17,11 +18,13 @@ TOOL STRUCT
 TOOL ENDS
 
 
-SetProtoTool PROTO :PTR TOOL, :PTR TOOLSLOT, :PTR BYTE, :BYTE, :DWORD, :DWORD, :CHARACTERATTRIBUTE, :CHARACTERATTRIBUTE
+
 
 CooldownUpdate_Tool PROTO :PTR TOOL
 
 ExecuteTool PROTO :PTR TOOL
+
+ShowTool PROTO :PTR TOOL
 
 
 ENDIF

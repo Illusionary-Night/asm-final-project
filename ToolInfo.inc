@@ -1,5 +1,12 @@
 .NOLIST
-
+INCLUDE ./asm-final-project/DataType/ToolDataType.inc
 ; 設定道具原型
-SetVariousTool PROTO
+SetProtoTool PROTO :PTR TOOL, :PTR TOOLSLOT, :PTR BYTE, :BYTE, :DWORD, :DWORD, :CHARACTERATTRIBUTE, :CHARACTERATTRIBUTE
+
 SetTestTool PROTO
+
+GetToolByUUID PROTO :PTR TOOL, :DWORD
+
+CreateTool PROTO :PTR TOOL, ;DWORD
+
+ToolTest PROTO

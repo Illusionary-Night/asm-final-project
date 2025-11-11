@@ -8,6 +8,7 @@ INCLUDE ./asm-final-project/GameLogic/GameClock.inc
 INCLUDE ./asm-final-project/IO/input.inc
 INCLUDE ./asm-final-project/SysInc/VirtualKeys.inc	;this library defines keyboard keys, ex: VK...
 
+INCLUDE ./asm-final-project/ToolInfo.inc
 
 main EQU start@0
 
@@ -33,6 +34,9 @@ ExitProcess proto,dwExitCode:dword
 .code
 
 main proc
+	
+	
+
 
 	INVOKE Display_Init
 	INVOKE ShowTitle, Cursor, OFFSET pic1
@@ -46,6 +50,9 @@ main proc
 	INVOKE SetToolSlot, OFFSET Tool1, OFFSET teststr1, 0Ah
 	
 	;INVOKE ShowToolSlot, OFFSET Tool1, Cursor
+	
+	INVOKE ToolTest
+
 	;INVOKE EraseToolSlotPic, OFFSET Tool1
 	;INVOKE EraseToolSlotFrame, OFFSET Tool1
 

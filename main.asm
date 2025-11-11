@@ -3,6 +3,7 @@ INCLUDE ./asm-final-project/IO/display.inc
 INCLUDE ./asm-final-project/IO/graph.inc
 INCLUDE ./asm-final-project/DataType/GameDataType.inc
 INCLUDE ./asm-final-project/IO/StartScene.inc
+INCLUDE ./asm-final-project/DataType/BackPack.inc
 
 main EQU start@0
 
@@ -22,13 +23,14 @@ ExitProcess proto,dwExitCode:dword
 	_title TEXT <>
 	color WORD 0Ah
 	Tool1 TOOLSLOT <>
-	Cursor COORD <5,10>
+	Cursor COORD <1,0>
 .code
 
 main proc
 
 	INVOKE Display_Init
-	INVOKE ShowTitle
+	INVOKE DrawBackpack , Cursor
+	;INVOKE ShowTitle
 	;INVOKE SetText, OFFSET _title, OFFSET teststr2, 0Ah, Cursor, LENGTHOF teststr2
 	;INVOKE SetLine, OFFSET Li1, '*', 0Ah, 1, 10, Cursor
 	;INVOKE SetRectangle, OFFSET rec1, '*', 07h, 5, 3, Cursor
@@ -51,9 +53,9 @@ main proc
 	;INVOKE ShowText, OFFSET _title
 	;INVOKE EraseText, OFFSET _title
 
-	L1:
-		mov ecx, 0
-	loop L1
+	;L1:
+		;mov ecx, 0
+	;loop L1
 		
 	call WaitMsg	
 	

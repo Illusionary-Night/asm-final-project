@@ -67,5 +67,34 @@ DrawBackpack PROC USES ecx eax ebx BackPackBasPos : COORD
     ret
 DrawBackpack ENDP
     
+RecordIn PROC USES eax ebx esi edi Object : PTR BACKPACK , ToolPos : COORD      ;record 1 if tool is in
+
+    mov esi , Object
+
+    mov ax , ToolPos.Y
+    mov bx , 10
+    mul bx
+    add ax , ToolPos.X 
+
+    movzx ebx , ax
+    mov (BACKPACK PTR [esi]).SlotMap[ebx] , 1
+
+    ret
+RecordIn ENDP
+
+DelRecord PROC USES eax ebx esi edi Object : PTR BACKPACK , ToolPos : COORD     ;change back to zero if take out the tool
+
+    mov esi , Object
+
+    mov ax , ToolPos.Y
+    mov bx , 10
+    mul bx
+    add ax , ToolPos.X
+
+    movzx ebx , ax
+    mov (BACKPACK PTR [esi]).SlotMap[ebx] , 0
+
+    ret
+DelRecord ENDP
 
 END

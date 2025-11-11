@@ -13,6 +13,8 @@ InitBackPack PROTO , Object : PTR BACKPACK
 
 DrawBackpack PROTO , BackPackBasPos : COORD
 
-RecordIn PROTO , ToolPos : COORD
+RecordIn PROTO , Object : PTR BACKPACK , ToolPos : COORD
+
+DelRecord PROTO , Object : PTR BACKPACK , ToolPos : COORD
 
 ENDIF

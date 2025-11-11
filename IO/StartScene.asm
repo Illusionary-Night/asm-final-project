@@ -129,7 +129,7 @@ INVOKE Showpicture, start_pic
 setCoord 0, 7
 INVOKE Setpicture, start_pic, OFFSET name14, 7, 104, 1, position
 INVOKE Showpicture, start_pic
-ret
+ret 8
 ShowTitle endp
 
 end

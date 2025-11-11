@@ -1,4 +1,4 @@
-﻿INCLUDE ./asm-final-project/SysInc/Irvine32.inc
+INCLUDE ./asm-final-project/SysInc/Irvine32.inc
 INCLUDE ./asm-final-project/DataType/GameDataType.inc
 INCLUDE ./asm-final-project/DataType/Character.inc
 INCLUDE ./asm-final-project/DataType/ToolDataType.inc
@@ -29,6 +29,8 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	test_position COORD <4,1>
 	test_UUID DWORD 0
 	temp_position COORD <>
+
+	test_tool2 Tool  <>
 
 	tool_proto_database TOOL 100 DUP(<>)
 	TPD_number DWORD 0
@@ -68,6 +70,14 @@ SetProtoTool PROC USES esi edi eax,
     lea edi, (TOOL PTR [esi]).ENEMYDELTA
     INVOKE MemClone, edi, ADDR EnemyDelta, SIZEOF CHARACTERATTRIBUTE
 
+	mov edi, OFFSET tool_proto_database
+	mov eax, SIZEOF TOOL
+	mul TPD_number
+	add edi, eax
+
+	INVOKE MemClone, edi, esi, SIZEOF TOOL
+	inc TPD_number
+
     ret
 SetProtoTool ENDP
 SetTestTool PROC USES esi ecx eax edx
@@ -83,8 +93,6 @@ NullSlotRepeatLabel:
 	INVOKE SetProtoTool, OFFSET test_tool, OFFSET test_tool_slot, OFFSET test_tool_shape, 1, 4, 5, test_ally_delta, test_enemy_delta
 	ret
 SetTestTool  ENDP
-
-
 
 GetToolByUUID PROC, 
 	Object :PTR TOOL,
@@ -136,7 +144,12 @@ CreateTool ENDP
 ToolTest PROC
 	INVOKE SetTestTool	
 	INVOKE CreateTool, OFFSET test_UUID, 0
-	INVOKE ShowTool, OFFSET test_tool
+	INVOKE GetToolByUUID, OFFSET test_tool2, test_UUID
+	lea edi, OFFSET test_tool2
+	lea edi, (TOOL PTR [edi]).BPPOSITION
+	mov esi, OFFSET test_position
+    INVOKE MemClone, edi, esi, SIZEOF COORD
+	INVOKE ShowTool, OFFSET test_tool2
 	ret
 ToolTest ENDP
 

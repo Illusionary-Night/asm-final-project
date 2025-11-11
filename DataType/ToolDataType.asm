@@ -11,7 +11,7 @@ ExecuteTool PROC USES esi,
 	Object: PTR TOOL
 
     mov esi, Object
-    ; �N����delta�ݩʥ[�쨤�⨭�W
+
     ret
 ExecuteTool ENDP
 

@@ -41,7 +41,7 @@ main proc
 	
 	;INVOKE ShowToolSlot, OFFSET Tool1, Cursor
 	
-	INVOKE SetTestTool
+	INVOKE ToolTest
 
 	;INVOKE EraseToolSlotPic, OFFSET Tool1
 	;INVOKE EraseToolSlotFrame, OFFSET Tool1

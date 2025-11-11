@@ -3,6 +3,9 @@ INCLUDE ./asm-final-project/IO/display.inc
 INCLUDE ./asm-final-project/IO/graph.inc
 INCLUDE ./asm-final-project/DataType/GameDataType.inc
 INCLUDE ./asm-final-project/IO/StartScene.inc
+INCLUDE ./asm-final-project/IO/input.inc
+INCLUDE ./asm-final-project/SysInc/Irvine32.inc
+INCLUDE ./asm-final-project/SysInc/VirtualKeys.inc	;this library defines keyboard keys, ex: VK...
 
 main EQU start@0
 
@@ -23,12 +26,17 @@ ExitProcess proto,dwExitCode:dword
 	color WORD 0Ah
 	Tool1 TOOLSLOT <>
 	Cursor COORD <5,10>
+	inputmessage BYTE 20 DUP(?)	;store message input by user
+	inputsize DWORD ?
 .code
 
 main proc
 
 	INVOKE Display_Init
 	INVOKE ShowTitle, Cursor, OFFSET pic1
+	INVOKE WaitKeyPress, VK_SPACE	;see VirtualKeys.inc to pass what key you want to wait for user to press down
+	INVOKE clear_screen
+
 	;INVOKE SetText, OFFSET _title, OFFSET teststr2, 0Ah, Cursor, LENGTHOF teststr2
 	;INVOKE SetLine, OFFSET Li1, '*', 0Ah, 1, 10, Cursor
 	;INVOKE SetRectangle, OFFSET rec1, '*', 07h, 5, 3, Cursor

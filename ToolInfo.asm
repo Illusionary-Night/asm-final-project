@@ -17,11 +17,10 @@ INCLUDE ./asm-final-project/MemOperation.inc
 							"XXXXXX",
 							"XXXXXX",
 							"XXXXXX"
-	test_tool_shape BYTE	"1000",
-							"0010",
-							"0100",
-							"1010",
-							"0000"
+	test_tool_shape BYTE	"1101",
+							"1111",
+							"1001",
+							"1111"
 	test_tool_slot TOOLSLOT 16 DUP(<>)
 	test_tool Tool  <>
 	test_ally_delta CHARACTERATTRIBUTE  <>
@@ -33,9 +32,9 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	test_tool2 Tool  <>
 
 	tool_proto_database TOOL 100 DUP(<>)
-	TPD_number DWORD 0
+	TPD_number DWORD 1
 	tool_database TOOL 100 DUP(<>)
-	TD_number DWORD 0
+	TD_number DWORD 1
 .code
 SetProtoTool PROC USES esi edi eax,
 	Object: PTR TOOL,
@@ -80,17 +79,24 @@ SetProtoTool PROC USES esi edi eax,
 
     ret
 SetProtoTool ENDP
+
 SetTestTool PROC USES esi ecx eax edx
 	mov esi, OFFSET test_tool_slot
-	INVOKE SetToolSlot, esi, OFFSET test_slot_info1, 0Ah
-	mov ecx, 15
-NullSlotRepeatLabel:
-	add esi, SIZEOF TOOLSLOT
+	
+	mov ecx, 16
+SlotRepeatLabel:
 	INVOKE SetToolSlot, esi, OFFSET test_slot_info2, 0Ah
-	LOOP NullSlotRepeatLabel
+	add esi, SIZEOF TOOLSLOT
+	LOOP SlotRepeatLabel
+
 	INVOKE SetCharacterAttribute, OFFSET test_ally_delta ,0 ,0 ,0 ,0 ,0 ,0 ,0
-	INVOKE SetCharacterAttribute, OFFSET test_ally_delta ,0 ,0 ,0 ,0 ,0 ,0 ,0
+	INVOKE SetCharacterAttribute, OFFSET test_enemy_delta ,0 ,0 ,0 ,0 ,0 ,0 ,0
 	INVOKE SetProtoTool, OFFSET test_tool, OFFSET test_tool_slot, OFFSET test_tool_shape, 1, 4, 5, test_ally_delta, test_enemy_delta
+	
+	lea edi, test_tool.BPPOSITION
+	mov esi, OFFSET test_position
+    INVOKE MemClone, edi, esi, SIZEOF COORD
+	
 	ret
 SetTestTool  ENDP
 
@@ -143,10 +149,9 @@ CreateTool ENDP
 
 ToolTest PROC
 	INVOKE SetTestTool	
-	INVOKE CreateTool, OFFSET test_UUID, 0
+	INVOKE CreateTool, OFFSET test_UUID, 30
 	INVOKE GetToolByUUID, OFFSET test_tool2, test_UUID
-	lea edi, OFFSET test_tool2
-	lea edi, (TOOL PTR [edi]).BPPOSITION
+	lea edi, test_tool2.BPPOSITION
 	mov esi, OFFSET test_position
     INVOKE MemClone, edi, esi, SIZEOF COORD
 	INVOKE ShowTool, OFFSET test_tool2

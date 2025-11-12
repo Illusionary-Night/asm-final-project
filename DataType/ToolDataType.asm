@@ -5,6 +5,8 @@ INCLUDE ./asm-final-project/DataType/ToolDataType.inc
 INCLUDE ./asm-final-project/MemOperation.inc
 .data
 	showed_slot_position COORD <>
+	showed_shape_counter DWORD ?
+	showed_slot_counter DWORD ?
 .code
 
 ExecuteTool PROC USES esi,
@@ -32,33 +34,41 @@ Label_end:
 CooldownUpdate_Tool ENDP
 
 
-ShowTool PROC USES esi edi eax ecx, 
-    Source : PTR TOOL
+ShowTool PROC USES esi edi eax ecx edx ebx, ;ebx edx不要拿來記憶 有坑 有人沒有USES
+	Source : PTR TOOL
     
 	mov esi, Source
 	mov ecx, 0
+	mov showed_slot_counter, 0
+	mov showed_shape_counter, 0
 	
-	mov dx, (TOOL PTR [esi]).BPPOSITION.Y
-	mov showed_slot_position.Y, dx
+	mov bx, (TOOL PTR [esi]).BPPOSITION.Y
+	mov showed_slot_position.Y, bx
 
 OuterLoop:
 	mov eax, 0
 	
-	mov dx, (TOOL PTR [esi]).BPPOSITION.X
-	mov showed_slot_position.X, dx
+	mov bx, (TOOL PTR [esi]).BPPOSITION.X
+	mov showed_slot_position.X, bx
+
 
 InnerLoop:
+	
+	lea edi, (TOOL PTR [esi]).SHAPE
+	add edi, showed_shape_counter
 
-    mov edi, ecx
-    shl edi, 2      ; edi = ecx * 4
-    add edi, eax
-	cmp (TOOL PTR [esi]).SHAPE[edi], '1'
+
+	cmp BYTE PTR [edi], '1'
 	jne DontShowSlot
-	INVOKE ShowToolSlot, esi, showed_slot_position
+	lea edi, (TOOL PTR [esi]).SLOT
+	add edi, showed_slot_counter
+	INVOKE ShowToolSlot, edi, showed_slot_position
 
 DontShowSlot:	
-	add esi, SIZEOF TOOLSLOT
 	
+	add showed_slot_counter, SIZEOF TOOLSLOT
+	add showed_shape_counter, SIZEOF BYTE
+
 	inc eax
 	add WORD PTR showed_slot_position.X, 7
 
@@ -68,10 +78,10 @@ DontShowSlot:
 	
 	inc ecx
 	add WORD PTR showed_slot_position.Y, 7
-	
+
 	cmp ecx, 4
 	jb OuterLoop
-	
+
     ret
 ShowTool ENDP
 

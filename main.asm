@@ -39,9 +39,9 @@ main proc
 
 
 	INVOKE Display_Init
-	INVOKE ShowTitle, Cursor, OFFSET pic1
-	INVOKE WaitKeyPress, VK_SPACE	;see VirtualKeys.inc to pass what key you want to wait for user to press down
-	INVOKE clear_screen
+	;INVOKE ShowTitle, Cursor, OFFSET pic1
+	;INVOKE WaitKeyPress, VK_SPACE	;see VirtualKeys.inc to pass what key you want to wait for user to press down
+	;INVOKE clear_screen
 
 	;INVOKE SetText, OFFSET _title, OFFSET teststr2, 0Ah, Cursor, LENGTHOF teststr2
 	;INVOKE SetLine, OFFSET Li1, '*', 0Ah, 1, 10, Cursor
@@ -68,8 +68,8 @@ main proc
 	;INVOKE ShowText, OFFSET _title
 	;INVOKE EraseText, OFFSET _title
 	
-	DelayXms 10000
-	INVOKE clear_screen
+	;DelayXms 10000
+	;INVOKE clear_screen
 
 	L1:
 		mov ecx, 0

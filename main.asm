@@ -38,7 +38,7 @@ main proc
 	INVOKE Display_Init
 
 	INVOKE InitBackPack, OFFSET testBp
-	INVOKE DrawBackPack, Cursor
+	INVOKE ShowBackPack, Cursor
 
 	;INVOKE ShowTitle, Cursor, OFFSET pic1
 	;INVOKE WaitKeyPress, VK_SPACE	;see VirtualKeys.inc to pass what key you want to wait for user to press down
@@ -50,9 +50,14 @@ main proc
 	;INVOKE SetPicture, OFFSET pic1, OFFSET teststr1, 07h, 6, 6, Cursor
 	INVOKE SetToolSlot, OFFSET Tool1, OFFSET teststr1, 0Ah
 	
-	;INVOKE ShowToolSlot, OFFSET Tool1, Cursor
+	INVOKE ShowToolSlot, OFFSET Tool1, Cursor
 	;INVOKE EraseToolSlotPic, OFFSET Tool1
 	;INVOKE EraseToolSlotFrame, OFFSET Tool1
+
+	;INVOKE RecordInBackPack, OFFSET testBp, Cursor
+	;INVOKE DelRecordBackPack, OFFSET testBp, Cursor
+	;INVOKE CheckBackPackRecord, OFFSET testBp, Cursor
+	;call WriteDec
 
 	;INVOKE ShowPicture, OFFSET pic1
 	;INVOKE ErasePicture, OFFSET pic

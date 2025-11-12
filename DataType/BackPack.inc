@@ -11,10 +11,12 @@ BACKPACK ENDS
 
 InitBackPack PROTO , Object : PTR BACKPACK
 
-DrawBackpack PROTO , BackPackBasPos : COORD
+ShowBackpack PROTO , BackPackBasPos : COORD
 
-RecordIn PROTO , Object : PTR BACKPACK , ToolPos : COORD
+RecordInBackPack PROTO , Object : PTR BACKPACK , ToolPos : COORD
 
-DelRecord PROTO , Object : PTR BACKPACK , ToolPos : COORD
+DelRecordBackPack PROTO , Object : PTR BACKPACK , ToolPos : COORD
+
+CheckBackPackRecord PROTO , Object : PTR BACKPACK , ToolPos : COORD
 
 ENDIF

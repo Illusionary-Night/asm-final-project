@@ -31,70 +31,121 @@ InitBackPack PROC USES esi edi ecx eax,
     ret
 InitBackPack ENDP
 
-DrawBackpack PROC USES ecx eax ebx BackPackBasPos : COORD
+ShowBackpack PROC USES ecx eax ebx BackPackBasPos : COORD
 
     mov ax , BackPackBasPos.X
     mov StartPos.X , ax
     mov ax , BackPackBasPos.Y
     mov StartPos.Y , ax
 
-    mov ecx , 7
+    mov ecx , 9
     mov bx , StartPos.Y
     Hloop:
         mov ax , StartPos.X
         mov linObj.Position.X , ax
         mov linObj.Position.Y , bx
 
-        INVOKE SetLine, OFFSET linObj, linChar, linColor, 0, 70, linObj.Position
+        INVOKE SetLine, OFFSET linObj, linChar, linColor, 0, 56, linObj.Position
         INVOKE ShowLine, OFFSET linObj
 
         add bx , 7
     Loop Hloop
 
-    mov ecx , 11
+    mov ecx , 9
     mov bx , StartPos.X
     Wloop:
         mov ax , StartPos.Y
         mov linObj.Position.X , bx
         mov linObj.Position.Y , ax
 
-        INVOKE SetLine, OFFSET linObj, linChar, linColor, 1, 42, linObj.Position
+        INVOKE SetLine, OFFSET linObj, linChar, linColor, 1, 56, linObj.Position
         INVOKE ShowLine, OFFSET linObj
 
         add bx , 7
     Loop Wloop
 
     ret
-DrawBackpack ENDP
+ShowBackpack ENDP
     
-RecordIn PROC USES eax ebx esi edi Object : PTR BACKPACK , ToolPos : COORD      ;record 1 if tool is in
+RecordInBackPack PROC USES eax ebx esi edi ecx edx Object : PTR BACKPACK , ToolPos : COORD      ;record 1 if tool is in
 
     mov esi , Object
 
     mov ax , ToolPos.Y
+    mov cx , 7
+    xor dx , dx
+    div cx
     mov bx , 10
     mul bx
-    add ax , ToolPos.X 
+    mov cx , ax
 
-    movzx ebx , ax
+    mov ax , ToolPos.X 
+    mov bx , 7
+    xor dx , dx
+    div bx
+    add cx , ax
+
+    movzx ebx , cx
     mov (BACKPACK PTR [esi]).SlotMap[ebx] , 1
 
     ret
-RecordIn ENDP
+RecordInBackPack ENDP
 
-DelRecord PROC USES eax ebx esi edi Object : PTR BACKPACK , ToolPos : COORD     ;change back to zero if take out the tool
+DelRecordBackPack PROC USES eax ebx edx esi edi ecx Object : PTR BACKPACK , ToolPos : COORD     ;change back to zero if take out the tool
 
     mov esi , Object
 
     mov ax , ToolPos.Y
+    mov cx , 7
+    xor dx , dx
+    div cx
     mov bx , 10
     mul bx
-    add ax , ToolPos.X
+    mov cx , ax
 
-    movzx ebx , ax
+    mov ax , ToolPos.X
+    mov bx , 7
+    xor dx , dx
+    div bx
+    add cx , ax
+
+    movzx ebx , cx
     mov (BACKPACK PTR [esi]).SlotMap[ebx] , 0
 
     ret
-DelRecord ENDP
+DelRecordBackPack ENDP
+
+CheckBackPackRecord PROC USES esi ebx ecx edx Object : PTR BACKPACK , ToolPos : COORD        ;this function will return 1 or 0 in eax
+
+    mov esi , Object
+
+    mov ax , ToolPos.Y
+    mov cx , 7
+    xor dx , dx
+    div cx
+    mov bx , 10
+    mul bx
+    mov cx , ax
+
+    mov ax , ToolPos.X
+    mov bx , 7
+    xor dx , dx
+    div bx
+    add cx , ax
+
+    movzx ebx , cx
+
+    cmp (BACKPACK PTR [esi]).SlotMap[ebx] , 0
+    je isNull
+    mov eax , 1
+    jmp done
+
+    isNull:
+    mov eax , 0
+
+    done:
+    ret
+
+CheckBackPackRecord ENDP
 
 END

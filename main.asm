@@ -7,6 +7,7 @@ INCLUDE ./asm-final-project/GameLogic/GameStat.inc
 INCLUDE ./asm-final-project/GameLogic/GameClock.inc
 INCLUDE ./asm-final-project/IO/input.inc
 INCLUDE ./asm-final-project/SysInc/VirtualKeys.inc	;this library defines keyboard keys, ex: VK...
+INCLUDE ./asm-final-project/DataType/Seller.inc
 
 INCLUDE ./asm-final-project/ToolInfo.inc
 
@@ -31,6 +32,7 @@ ExitProcess proto,dwExitCode:dword
 	Cursor COORD <5,10>
 	inputmessage BYTE 20 DUP(?)	;store message input by user
 	inputsize DWORD ?
+	Seller GOODS <>
 .code
 
 main proc
@@ -39,9 +41,9 @@ main proc
 
 
 	INVOKE Display_Init
-	INVOKE ShowTitle, Cursor, OFFSET pic1
-	INVOKE WaitKeyPress, VK_SPACE	;see VirtualKeys.inc to pass what key you want to wait for user to press down
-	INVOKE clear_screen
+	;INVOKE ShowTitle, Cursor, OFFSET pic1
+	;INVOKE WaitKeyPress, VK_SPACE	;see VirtualKeys.inc to pass what key you want to wait for user to press down
+	;INVOKE clear_screen
 
 	;INVOKE SetText, OFFSET _title, OFFSET teststr2, 0Ah, Cursor, LENGTHOF teststr2
 	;INVOKE SetLine, OFFSET Li1, '*', 0Ah, 1, 10, Cursor
@@ -51,7 +53,15 @@ main proc
 	
 	;INVOKE ShowToolSlot, OFFSET Tool1, Cursor
 	
-	INVOKE ToolTest
+	;INVOKE ToolTest
+	INVOKE InsertTool, OFFSET Seller, 2
+	INVOKE InsertTool, OFFSET Seller, 2
+	INVOKE InsertTool, OFFSET Seller, 3
+	INVOKE DeletTool, OFFSET Seller, 1
+	INVOKE ShowGoods, OFFSET Seller
+
+	INVOKE ShowToolInfo, OFFSET Seller, 0
+	;INVOKE EraseToolInfo, OFFSET Seller
 
 	;INVOKE EraseToolSlotPic, OFFSET Tool1
 	;INVOKE EraseToolSlotFrame, OFFSET Tool1

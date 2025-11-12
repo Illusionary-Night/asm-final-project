@@ -161,7 +161,7 @@ EraseLine proc uses eax esi ecx edi Object: PTR LINE
 			
 	LOOP L1
 	INVOKE SetColor, BackGroundColor
-	ret 4
+	ret
 
 EraseLine endp
 
@@ -256,7 +256,7 @@ EraseRectangle proc uses eax ecx esi edi ebx edx object: PTR RECTANGLE
 	INVOKE SetCursor, GraphCursor
 	mov eax, OFFSET GraphStrBuf	
 	mov esi, OFFSET GraphCursor
-	INVOKE PrintStr, eax, bx
+	INVOKE PrintStr, eax, ebx
 
 	L1:
 		INVOKE PrintStr, eax, 1
@@ -279,7 +279,7 @@ EraseRectangle proc uses eax ecx esi edi ebx edx object: PTR RECTANGLE
 		INVOKE SetCursor, GraphCursor
 		
 	loop L1
-	INVOKE PrintStr, eax, bx
+	INVOKE PrintStr, eax, ebx
 
 	INVOKE SetColor, BackGroundColor
 	ret 4

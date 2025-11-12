@@ -9,6 +9,7 @@ INCLUDE ./asm-final-project/IO/input.inc
 INCLUDE ./asm-final-project/SysInc/VirtualKeys.inc	;this library defines keyboard keys, ex: VK...
 
 INCLUDE ./asm-final-project/ToolInfo.inc
+INCLUDE ./asm-final-project/DataType/BackPack.inc
 
 main EQU start@0
 
@@ -28,9 +29,10 @@ ExitProcess proto,dwExitCode:dword
 	_title TEXT <>
 	color WORD 0Ah
 	Tool1 TOOLSLOT <>
-	Cursor COORD <5,10>
+	Cursor COORD <0,0>
 	inputmessage BYTE 20 DUP(?)	;store message input by user
 	inputsize DWORD ?
+	testBp BACKPACK <>
 .code
 
 main proc
@@ -39,9 +41,13 @@ main proc
 
 
 	INVOKE Display_Init
-	INVOKE ShowTitle, Cursor, OFFSET pic1
-	INVOKE WaitKeyPress, VK_SPACE	;see VirtualKeys.inc to pass what key you want to wait for user to press down
-	INVOKE clear_screen
+
+	INVOKE InitBackPack, OFFSET testBp
+	INVOKE ShowBackPack, Cursor
+
+	;INVOKE ShowTitle, Cursor, OFFSET pic1
+	;INVOKE WaitKeyPress, VK_SPACE	;see VirtualKeys.inc to pass what key you want to wait for user to press down
+	;INVOKE clear_screen
 
 	;INVOKE SetText, OFFSET _title, OFFSET teststr2, 0Ah, Cursor, LENGTHOF teststr2
 	;INVOKE SetLine, OFFSET Li1, '*', 0Ah, 1, 10, Cursor
@@ -56,6 +62,11 @@ main proc
 	;INVOKE EraseToolSlotPic, OFFSET Tool1
 	;INVOKE EraseToolSlotFrame, OFFSET Tool1
 
+	;INVOKE RecordInBackPack, OFFSET testBp, Cursor
+	;INVOKE DelRecordBackPack, OFFSET testBp, Cursor
+	;INVOKE CheckBackPackRecord, OFFSET testBp, Cursor
+	;call WriteDec
+
 	;INVOKE ShowPicture, OFFSET pic1
 	;INVOKE ErasePicture, OFFSET pic
 
@@ -68,8 +79,8 @@ main proc
 	;INVOKE ShowText, OFFSET _title
 	;INVOKE EraseText, OFFSET _title
 	
-	DelayXms 10000
-	INVOKE clear_screen
+	;DelayXms 10000
+	;INVOKE clear_screen
 
 	L1:
 		mov ecx, 0

@@ -18,10 +18,9 @@ INCLUDE ./asm-final-project/MemOperation.inc
 							"XXXXXX",
 							"XXXXXX"
 	test_tool_shape BYTE	"1000",
-							"0010",
-							"0100",
-							"1010",
-							"0000"
+				"0010",
+				"0100",
+				"1010"
 	test_tool_slot TOOLSLOT 16 DUP(<>)
 	test_tool Tool  <>
 	test_ally_delta CHARACTERATTRIBUTE  <>

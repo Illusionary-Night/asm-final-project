@@ -9,8 +9,7 @@
 ;	0, Start
 ;	1, GameRule
 ;Prepare have 3 SubStat
-;	0, Instruction
-;	1, Buy
+;	0, Buy
 ;	2, Pack!
 ;Fight have 2 SubStat
 ;	0, Self
@@ -26,9 +25,8 @@ FightStat       EQU 2
 StartSceneStat  EQU 0
 GameRuleStat    EQU 1
 
-InstructionStat EQU 0
-BuyStat 	EQU 1
-PackStat        EQU 2
+BuyStat 	EQU 0
+PackStat        EQU 1
 
 SelfStat        EQU 0
 EnemeStat       EQU 1

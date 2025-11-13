@@ -57,6 +57,7 @@ InnerLoop:
 	INVOKE ShowToolSlot, esi, showed_slot_position
 
 DontShowSlot:	
+	call WriteInt
 	add esi, SIZEOF TOOLSLOT
 	
 	inc eax

@@ -42,33 +42,25 @@ ShowGoods proc uses esi eax ecx Shelf: PTR GOODS
 		
 		L2:
 			add esi, 4
-			IncSellerCursorY
+			AddSellerCursorY 1
 	LOOP L1
 
 	ret 4
 
 ShowGoods endp
 
-EraseGoods proc uses esi Shelf: PTR GOODS
+EraseGoods proc uses esi ecx eax Shelf: PTR GOODS
 
 	mov esi, Shelf
 	INVOKE EraseRectangle, esi
 	add esi, SIZEOF RECTANGLE
 	mov ecx, MAXGOODS
-
-	SetSellerCursor GOODSPOSITIONX, GOODSPOSITIONY
+	
+	mov eax, 0
 	
 	L1:
-		mov eax, [esi]
-		cmp eax, 0
-		je L2
-		;INVOKE ......, OFFSET SellerToolBuf, [esi]		
-		INVOKE SetText, OFFSET TestText, OFFSET TS1, 0Ah, SellerCursor, LENGTHOF TS1
-		INVOKE EraseText, OFFSET TestText
-		
-		L2:
-			add esi, 4
-			IncSellerCursorY
+		INVOKE DeletTool, Shelf, al
+		inc al
 	LOOP L1
 
 	ret 4
@@ -95,7 +87,13 @@ InsertTool proc uses esi eax ebx Shelf: PTR GOODS, UUID: BYTE
 
 InsertTool endp
 
-DeletTool proc Shelf: PTR GOODS, Index: BYTE
+DeletTool proc uses esi eax ebx ecx Shelf: PTR GOODS, Index: BYTE
+
+	SetSellerCursor GOODSPOSITIONX, GOODSPOSITIONY
+	movzx ebx, Index
+	AddSellerCursorY bx
+	INVOKE SetText, OFFSET TestText, OFFSET TS1, 0Ah, SellerCursor, GOODSFRAMEWIDTH
+	INVOKE EraseText, OFFSET TestText
 
 	mov esi, Shelf
 	add esi, SIZEOF RECTANGLE
@@ -145,7 +143,6 @@ ShowToolInfo proc uses eax esi edi ebx ecx Shelf: PTR GOODS, Index: BYTE
 		mov esi, OFFSET SellerStrBuf	
 		L2:
 			mov bl, SellerToolBuf.SHAPE[eax]
-			add bl, '0'
 			mov [esi], bl
 
 			inc eax
@@ -154,7 +151,7 @@ ShowToolInfo proc uses eax esi edi ebx ecx Shelf: PTR GOODS, Index: BYTE
 		pop ecx
 		INVOKE SetText, OFFSET TestText, OFFSET SellerStrBuf, 0Ah, SellerCursor, SHAPESIZE
 		INVOKE ShowText, OFFSET TestText
-		IncSellerCursorY
+		AddSellerCursorY 1
 	LOOP L1
 
 	mov esi, OFFSET SellerToolBuf
@@ -165,43 +162,43 @@ ShowToolInfo proc uses eax esi edi ebx ecx Shelf: PTR GOODS, Index: BYTE
 	INVOKE ShowText, OFFSET TestText
 	mov al, (TOOL PTR [esi]).RARITY
 	call WriteInt
-	IncSellerCursorY
+	AddSellerCursorY 1
 
 	INVOKE SetText, OFFSET TestText, OFFSET CoolDownTimeStr, 0Ah, SellerCursor, LENGTHOF CoolDownTimeStr
 	INVOKE ShowText, OFFSET TestText
 	mov eax, (TOOL PTR [esi]).COOLDOWNMAX
 	call WriteInt
-	IncSellerCursorY
+	AddSellerCursorY 1
 
 	INVOKE SetText, OFFSET TestText, OFFSET TypeStr, 0Ah, SellerCursor, LENGTHOF TypeStr
 	INVOKE ShowText, OFFSET TestText
 	mov eax, (TOOL PTR [esi]).TYPEID
 	call WriteInt
-	IncSellerCursorY
+	AddSellerCursorY 1
 
 	INVOKE SetText, OFFSET TestText, OFFSET HpStr, 0Ah, SellerCursor, LENGTHOF HpStr
 	INVOKE ShowText, OFFSET TestText
 	mov eax, (TOOL PTR [esi]).ALLYDELTA.HP
 	call WriteInt
-	IncSellerCursorY
+	AddSellerCursorY 1
 
 	INVOKE SetText, OFFSET TestText, OFFSET EpStr, 0Ah, SellerCursor, LENGTHOF EpStr
 	INVOKE ShowText, OFFSET TestText
 	mov eax, (TOOL PTR [esi]).ALLYDELTA.EP
 	call WriteInt
-	IncSellerCursorY
+	AddSellerCursorY 1
 
 	INVOKE SetText, OFFSET TestText, OFFSET MpStr, 0Ah, SellerCursor, LENGTHOF MpStr
 	INVOKE ShowText, OFFSET TestText
 	mov eax, (TOOL PTR [esi]).ALLYDELTA.MP
 	call WriteInt
-	IncSellerCursorY
+	AddSellerCursorY 1
 
 	INVOKE SetText, OFFSET TestText, OFFSET ShieldStr, 0Ah, SellerCursor, LENGTHOF ShieldStr
 	INVOKE ShowText, OFFSET TestText
 	mov eax, (TOOL PTR [esi]).ALLYDELTA.SHIELD
 	call WriteInt
-	IncSellerCursorY	
+	AddSellerCursorY 1	
 	
 	ret
 
@@ -227,39 +224,19 @@ EraseToolInfo proc uses eax esi edi ebx ecx Shelf: PTR GOODS
 	L1:
 		INVOKE SetText, OFFSET TestText, OFFSET SellerStrBuf, 0Ah, SellerCursor, SHAPESIZE
 		INVOKE EraseText, OFFSET TestText
-		IncSellerCursorY
+		AddSellerCursorY 1
 	LOOP L1
 
 	xor eax, eax
 
 	SetSellerCursor ATTRIBUTEPOSITIONX, GOODSPOSITIONY
-	INVOKE SetText, OFFSET TestText, OFFSET RarityStr, 0Ah, SellerCursor, ATTRIBUTEWIDTH
-	INVOKE EraseText, OFFSET TestText
-	IncSellerCursorY
-
-	INVOKE SetText, OFFSET TestText, OFFSET RarityStr, 0Ah, SellerCursor, ATTRIBUTEWIDTH
-	INVOKE EraseText, OFFSET TestText
-	IncSellerCursorY
-
-	INVOKE SetText, OFFSET TestText, OFFSET RarityStr, 0Ah, SellerCursor, ATTRIBUTEWIDTH
-	INVOKE EraseText, OFFSET TestText
-	IncSellerCursorY
-
-	INVOKE SetText, OFFSET TestText, OFFSET RarityStr, 0Ah, SellerCursor, ATTRIBUTEWIDTH
-	INVOKE EraseText, OFFSET TestText
-	IncSellerCursorY
+	mov ecx, ATTRIBUTEHIGHT
 	
-	INVOKE SetText, OFFSET TestText, OFFSET RarityStr, 0Ah, SellerCursor, ATTRIBUTEWIDTH
-	INVOKE EraseText, OFFSET TestText
-	IncSellerCursorY
-
-	INVOKE SetText, OFFSET TestText, OFFSET RarityStr, 0Ah, SellerCursor, ATTRIBUTEWIDTH
-	INVOKE EraseText, OFFSET TestText
-	IncSellerCursorY
-
-	INVOKE SetText, OFFSET TestText, OFFSET RarityStr, 0Ah, SellerCursor, ATTRIBUTEWIDTH
-	INVOKE EraseText, OFFSET TestText
-	IncSellerCursorY
+	L2:
+		INVOKE SetText, OFFSET TestText, OFFSET RarityStr, 0Ah, SellerCursor, ATTRIBUTEWIDTH
+		INVOKE EraseText, OFFSET TestText
+		AddSellerCursorY 1
+	LOOP L2
 
 	mov esi, Shelf
 	INVOKE ShowGoods, esi
@@ -267,7 +244,10 @@ EraseToolInfo proc uses eax esi edi ebx ecx Shelf: PTR GOODS
 	ret
 EraseToolInfo endp
 
-BuyTool proc Shelf: PTR GOODS, Index: BYTE
+BuyTool proc uses ecx Shelf: PTR GOODS, Index: BYTE
+	
+	INVOKE DeletTool, Shelf, Index
+	ret
 
 BuyTool endp
 

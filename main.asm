@@ -42,8 +42,8 @@ main proc
 
 	INVOKE Display_Init
 
-	INVOKE InitBackPack, OFFSET testBp
-	INVOKE ShowBackPack, Cursor
+	;INVOKE InitBackPack, OFFSET testBp
+	;INVOKE ShowBackPack, Cursor
 
 	;INVOKE ShowTitle, Cursor, OFFSET pic1
 	;INVOKE WaitKeyPress, VK_SPACE	;see VirtualKeys.inc to pass what key you want to wait for user to press down
@@ -82,13 +82,13 @@ main proc
 	;DelayXms 10000
 	;INVOKE clear_screen
 
-	L1:
-		mov ecx, 0
-	loop L1
+	;L1:
+		;mov ecx, 0
+	;loop L1
 		
-	call WaitMsg	
+	;call WaitMsg	
 	
-	invoke ExitProcess,0
+	;invoke ExitProcess,0
 
 main endp
 

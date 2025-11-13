@@ -149,7 +149,7 @@ CreateTool ENDP
 
 ToolTest PROC
 	INVOKE SetTestTool	
-	INVOKE CreateTool, OFFSET test_UUID, 30
+	INVOKE CreateTool, OFFSET test_UUID, 1
 	INVOKE GetToolByUUID, OFFSET test_tool2, test_UUID
 	lea edi, test_tool2.BPPOSITION
 	mov esi, OFFSET test_position

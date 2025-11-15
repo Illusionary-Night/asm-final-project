@@ -5,13 +5,12 @@ INCLUDE ./asm-final-project/DataType/GameDataType.inc
 INCLUDE ./asm-final-project/IO/StartScene.inc
 INCLUDE ./asm-final-project/GameLogic/GameStat.inc
 INCLUDE ./asm-final-project/GameLogic/GameClock.inc
-INCLUDE ./asm-final-project/IO/input.inc
-INCLUDE ./asm-final-project/SysInc/VirtualKeys.inc	;this library defines keyboard keys, ex: VK...
+INCLUDE ./asm-final-project/IO/input.inc	;this .inc file already include VirtualKeys.inc
 INCLUDE ./asm-final-project/DataType/Seller.inc
 INCLUDE ./asm-final-project/DataType/BackPack.inc
-
 INCLUDE ./asm-final-project/ToolInfo.inc
 INCLUDE ./asm-final-project/GameLogic/GameControler.inc
+INCLUDE ./asm-final-project/IO/input.inc
 
 main EQU start@0
 
@@ -32,22 +31,27 @@ ExitProcess proto,dwExitCode:dword
 	color WORD 0Ah
 	Tool1 TOOLSLOT <>
 	Cursor COORD <0,0>
-	inputmessage BYTE 20 DUP(?)	;store message input by user
-	inputsize DWORD ?
 	TestBp BACKPACK <>
+	KeyArray DWORD VK_SPACE, VK_SHIFT, 0h
+	targetKey DWORD 0h
 .code
-
 main proc
 	
-	
-
-
 	INVOKE Display_Init
 	;INVOKE InitBackPack, OFFSET TestBp
 	;INVOKE ShowBackpack, Cursor
-	;INVOKE ShowTitle, Cursor, OFFSET pic1
+
+	INVOKE ShowTitle, Cursor, OFFSET pic1
 	;INVOKE WaitKeyPress, VK_SPACE	;see VirtualKeys.inc to pass what key you want to wait for user to press down
+	;Note: "WaitKeyPress" will block any instruction the program, wait until the user press the key
 	;INVOKE clear_screen
+
+L2:
+	TestKeyPress VK_SPACE
+	jnz L3
+	loop L2
+L3:
+	INVOKE clear_screen
 
 	;INVOKE SetText, OFFSET _title, OFFSET teststr2, 0Ah, Cursor, LENGTHOF teststr2
 	;INVOKE SetLine, OFFSET Li1, '*', 0Ah, 1, 10, Cursor
@@ -78,11 +82,11 @@ main proc
 	;INVOKE clear_screen
 	INVOKE GameMainLoop
 	L1:
-		;INVOKE GameMainLoop
-		mov ecx, 0
+		INVOKE GameMainLoop
+		;mov ecx, 0
 	loop L1
 		
-	call WaitMsg	
+	call WaitMsg
 	
 	invoke ExitProcess,0
 

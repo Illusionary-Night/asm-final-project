@@ -31,10 +31,14 @@ PackStat        EQU 1
 SelfStat        EQU 0
 EnemeStat       EQU 1
 
+
 GAMESTAT STRUCT
 	MainStat BYTE ?
 	SubStat  BYTE ?
 GAMESTAT ENDS
+
+IntoStartStat PROTO,
+	CurStat: PTR GAMESTAT
 
 IntoPrepareStat PROTO,
 	CurStat: PTR GAMESTAT

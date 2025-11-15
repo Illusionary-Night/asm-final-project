@@ -16,6 +16,10 @@ INCLUDE ./asm-final-project/GameLogic/GameControler.inc
 
 GameMainLoop proc uses eax ecx ebx esi
 
+	INVOKE IntoStartStat, OFFSET CurGameStat
+	DelayXms 1000
+	INVOKE CheStartSubStat, OFFSET CurGameStat, GameRuleStat
+	
 	;L1:
 		INVOKE IntoPrepareStat, OFFSET CurGameStat
 

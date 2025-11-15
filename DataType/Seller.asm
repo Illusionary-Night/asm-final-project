@@ -19,7 +19,6 @@ INCLUDE ./asm-final-project/DataType/Seller.inc
 	ShieldStr	Byte "Shield: "
 	TestText Text <>
 	TS1 BYTE "There is TOOL"
-	ToolIndex BYTE 0
 .code
 
 ShowGoods proc uses esi eax ecx Shelf: PTR GOODS
@@ -27,10 +26,12 @@ ShowGoods proc uses esi eax ecx Shelf: PTR GOODS
 	mov esi, Shelf
 	INVOKE ShowRectangle, esi
 
-	add esi, SIZEOF RECTANGLE
 	mov ecx, MAXGOODS
 	
-	SetSellerCursor GOODSPOSITIONX, GOODSPOSITIONY
+	mov esi, Shelf
+	SetSellerCursor (GOODS PTR [esi]).Position.X, (GOODS PTR [esi]).Position.Y
+
+	add esi, SIZEOF RECTANGLE
 	
 	L1:
 		mov eax, [esi]
@@ -67,29 +68,31 @@ EraseGoods proc uses esi ecx eax Shelf: PTR GOODS
 
 EraseGoods endp
 
-InsertTool proc uses esi eax ebx Shelf: PTR GOODS, UUID: BYTE
+InsertTool proc uses esi eax ebx Shelf: PTR GOODS, UUID: DWORD
 
 	mov esi, Shelf
+	movzx eax, (GOODS PTR [esi]).ToolIndex
 	add esi, SIZEOF RECTANGLE
-	movzx eax, ToolIndex
 	mov bl, TYPE DWORD	
 	mul bl
 	add esi, eax
-	mov al, UUID
+	mov eax, UUID
 	
-	mov [esi], al	
+	mov [esi], eax	
 
-	mov al, ToolIndex
+	mov esi, Shelf
+	mov al, (GOODS PTR [esi]).ToolIndex
 	inc al
-	mov ToolIndex, al
+	mov (GOODS PTR [esi]).ToolIndex, al
 
 	ret 8
 
 InsertTool endp
 
-DeletTool proc uses esi eax ebx ecx Shelf: PTR GOODS, Index: BYTE
+DeletTool proc uses esi eax ebx ecx Shelf: PTR GOODS, Index: BYTE	
 
-	SetSellerCursor GOODSPOSITIONX, GOODSPOSITIONY
+	mov esi, Shelf
+	SetSellerCursor (GOODS PTR [esi]).Position.X, (GOODS PTR [esi]).Position.Y
 	movzx ebx, Index
 	AddSellerCursorY bx
 	INVOKE SetText, OFFSET TestText, OFFSET TS1, 0Ah, SellerCursor, GOODSFRAMEWIDTH
@@ -101,11 +104,11 @@ DeletTool proc uses esi eax ebx ecx Shelf: PTR GOODS, Index: BYTE
 	mov bl, TYPE DWORD	
 	mul bl
 	add esi, eax
-	mov al, 0
+	mov eax, 0
 	
-	mov [esi], al	
+	mov [esi], eax	
 
-	ret 8
+	ret
 
 DeletTool endp
 
@@ -133,7 +136,11 @@ ShowToolInfo proc uses eax esi edi ebx ecx Shelf: PTR GOODS, Index: BYTE
 	xor ebx, ebx
 	mov ecx, SHAPESIZE
 
-	SetSellerCursor SHAPEPOSITIONX, GOODSPOSITIONY
+	mov esi, Shelf
+	mov ax, (GOODS PTR [esi]).Position.X
+	sub ax, SHAPESIZE
+	dec ax
+	SetSellerCursor ax, (GOODS PTR [esi]).Position.Y
 
 	mov eax, 0
 
@@ -154,10 +161,15 @@ ShowToolInfo proc uses eax esi edi ebx ecx Shelf: PTR GOODS, Index: BYTE
 		AddSellerCursorY 1
 	LOOP L1
 
+	mov esi, Shelf
+	mov ax, (GOODS PTR [esi]).Position.X
+	add ax, GOODSFRAMEWIDTH
+	inc ax
+	SetSellerCursor ax, (GOODS PTR [esi]).Position.Y
+
 	mov esi, OFFSET SellerToolBuf
 	xor eax, eax
 
-	SetSellerCursor ATTRIBUTEPOSITIONX, GOODSPOSITIONY
 	INVOKE SetText, OFFSET TestText, OFFSET RarityStr, 0Ah, SellerCursor, LENGTHOF RarityStr
 	INVOKE ShowText, OFFSET TestText
 	mov al, (TOOL PTR [esi]).RARITY
@@ -219,7 +231,11 @@ EraseToolInfo proc uses eax esi edi ebx ecx Shelf: PTR GOODS
 	xor ebx, ebx
 	mov ecx, SHAPESIZE
 
-	SetSellerCursor SHAPEPOSITIONX, GOODSPOSITIONY
+	mov esi, Shelf
+	mov ax, (GOODS PTR [esi]).Position.X
+	sub ax, SHAPESIZE
+	dec ax
+	SetSellerCursor ax, (GOODS PTR [esi]).Position.Y
 
 	L1:
 		INVOKE SetText, OFFSET TestText, OFFSET SellerStrBuf, 0Ah, SellerCursor, SHAPESIZE
@@ -229,7 +245,11 @@ EraseToolInfo proc uses eax esi edi ebx ecx Shelf: PTR GOODS
 
 	xor eax, eax
 
-	SetSellerCursor ATTRIBUTEPOSITIONX, GOODSPOSITIONY
+	mov ax, (GOODS PTR [esi]).Position.X
+	add ax, GOODSFRAMEWIDTH
+	inc ax
+	SetSellerCursor ax, (GOODS PTR [esi]).Position.Y
+
 	mov ecx, ATTRIBUTEHIGHT
 	
 	L2:
@@ -244,9 +264,19 @@ EraseToolInfo proc uses eax esi edi ebx ecx Shelf: PTR GOODS
 	ret
 EraseToolInfo endp
 
-BuyTool proc uses ecx Shelf: PTR GOODS, Index: BYTE
+BuyTool proc uses esi ecx ebx Shelf: PTR GOODS, Index: BYTE
 	
+	mov esi, Shelf
+	add esi, SIZEOF RECTANGLE
+	movzx eax, Index
+	mov bl, TYPE DWORD	
+	mul bl
+	add esi, eax
+	mov eax, [esi]
+	
+	push eax
 	INVOKE DeletTool, Shelf, Index
+	pop eax
 	ret
 
 BuyTool endp

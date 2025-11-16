@@ -5,13 +5,15 @@ __BackPack EQU 1
 BACKPACK STRUCT
     BackPackWidth       WORD    ?
     BackPackHeight      WORD    ?
-    SlotMap             BYTE    100 DUP(?)          ;0為空 1為滿
+    SlotMap             BYTE    64 DUP(?)          ;0為空 1為滿
 
 BACKPACK ENDS
 
 InitBackPack PROTO , Object : PTR BACKPACK
 
 ShowBackpack PROTO , BackPackBasPos : COORD
+
+
 
 RecordInBackPack PROTO , Object : PTR BACKPACK , ToolPos : COORD
 

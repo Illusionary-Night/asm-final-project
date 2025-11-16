@@ -20,12 +20,12 @@ InitBackPack PROC USES esi edi ecx eax,
     Object : PTR BACKPACK
 
     mov esi , Object
-    mov ax , 10
+    mov ax , 8
     mov (BACKPACK PTR [esi]).BackPackWidth , ax
     mov (BACKPACK PTR [esi]).BackPackHeight , ax
 
     lea edi , (BACKPACK PTR [esi]).SlotMap
-    mov ecx , 100
+    mov ecx , 64
     mov al , 0
     rep stosb
     ret

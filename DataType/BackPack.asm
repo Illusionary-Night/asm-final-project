@@ -5,8 +5,8 @@ INCLUDE ./asm-final-project/DataType/BackPack.inc
 
 .data
 
-    CELL_WIDTH  WORD 8
-    CELL_HEIGHT WORD 8
+    CELL_WIDTH  WORD 7
+    CELL_HEIGHT WORD 7
 
     StartPos    COORD <0, 0>      
 
@@ -20,18 +20,25 @@ InitBackPack PROC USES esi edi ecx eax,
     Object : PTR BACKPACK
 
     mov esi , Object
-    mov ax , 8
+    mov ax , BACKPACKWIDTH
     mov (BACKPACK PTR [esi]).BackPackWidth , ax
+    mov ax , BACKPACKHEIGHT
     mov (BACKPACK PTR [esi]).BackPackHeight , ax
 
     lea edi , (BACKPACK PTR [esi]).SlotMap
-    mov ecx , 64
+    mov ecx , MAXSLOTS
     mov al , 0
     rep stosb
+
+    lea esi , (BACKPACK PTR [esi]).ItemUUIDMap
+    mov ecx , MAXSLOTS
+    mov al , 0
+    rep stosb
+
     ret
 InitBackPack ENDP
 
-ShowBackpack PROC USES ecx eax ebx BackPackBasPos : COORD
+ShowBackpack PROC USES ecx eax ebx edx BackPackBasPos : COORD
 
     mov ax , BackPackBasPos.X
     mov StartPos.X , ax
@@ -45,7 +52,11 @@ ShowBackpack PROC USES ecx eax ebx BackPackBasPos : COORD
         mov linObj.Position.X , ax
         mov linObj.Position.Y , bx
 
-        INVOKE SetLine, OFFSET linObj, linChar, linColor, 0, 56, linObj.Position
+        mov ax , CELL_HEIGHT
+        mov dx , BACKPACKHEIGHT
+        mul dx
+
+        INVOKE SetLine, OFFSET linObj, linChar, linColor, 0, ax, linObj.Position
         INVOKE ShowLine, OFFSET linObj
 
         add bx , 7
@@ -58,7 +69,11 @@ ShowBackpack PROC USES ecx eax ebx BackPackBasPos : COORD
         mov linObj.Position.X , bx
         mov linObj.Position.Y , ax
 
-        INVOKE SetLine, OFFSET linObj, linChar, linColor, 1, 56, linObj.Position
+        mov ax , CELL_WIDTH
+        mov dx , BACKPACKWIDTH
+        mul dx
+
+        INVOKE SetLine, OFFSET linObj, linChar, linColor, 1, ax, linObj.Position
         INVOKE ShowLine, OFFSET linObj
 
         add bx , 7

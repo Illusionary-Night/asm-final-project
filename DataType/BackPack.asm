@@ -81,26 +81,35 @@ ShowBackpack PROC USES ecx eax ebx edx BackPackBasPos : COORD
 
     ret
 ShowBackpack ENDP
-    
-RecordInBackPack PROC USES eax ebx esi edi ecx edx Object : PTR BACKPACK , ToolPos : COORD      ;record 1 if tool is in
 
-    mov esi , Object
+ScreenPosToSlotIndex PROC USES ebx ecx edx , ScreenPos : COORD
 
-    mov ax , ToolPos.Y
+    mov ax , ScreenPos.Y
     mov cx , 7
     xor dx , dx
     div cx
-    mov bx , 10
+    mov bx , 8
     mul bx
     mov cx , ax
 
-    mov ax , ToolPos.X 
+    mov ax , ScreenPos.X
     mov bx , 7
     xor dx , dx
     div bx
     add cx , ax
 
-    movzx ebx , cx
+    movzx eax , cx
+
+    ret
+ScreenPosToSlotIndex ENDP
+    
+RecordInBackPack PROC USES eax ebx esi edi ecx edx Object : PTR BACKPACK , ToolPos : COORD      ;record 1 if tool is in
+
+    mov esi , Object
+
+    INVOKE ScreenPosToSlotIndex , ToolPos
+
+    mov ebx , eax
     mov (BACKPACK PTR [esi]).SlotMap[ebx] , 1
 
     ret
@@ -110,21 +119,9 @@ DelRecordBackPack PROC USES eax ebx edx esi edi ecx Object : PTR BACKPACK , Tool
 
     mov esi , Object
 
-    mov ax , ToolPos.Y
-    mov cx , 7
-    xor dx , dx
-    div cx
-    mov bx , 10
-    mul bx
-    mov cx , ax
+    INVOKE ScreenPosToSlotIndex , ToolPos
 
-    mov ax , ToolPos.X
-    mov bx , 7
-    xor dx , dx
-    div bx
-    add cx , ax
-
-    movzx ebx , cx
+    mov ebx , eax
     mov (BACKPACK PTR [esi]).SlotMap[ebx] , 0
 
     ret
@@ -134,21 +131,9 @@ CheckBackPackRecord PROC USES esi ebx ecx edx Object : PTR BACKPACK , ToolPos : 
 
     mov esi , Object
 
-    mov ax , ToolPos.Y
-    mov cx , 7
-    xor dx , dx
-    div cx
-    mov bx , 10
-    mul bx
-    mov cx , ax
+    INVOKE ScreenPosToSlotIndex , ToolPos
 
-    mov ax , ToolPos.X
-    mov bx , 7
-    xor dx , dx
-    div bx
-    add cx , ax
-
-    movzx ebx , cx
+    mov ebx , eax
 
     cmp (BACKPACK PTR [esi]).SlotMap[ebx] , 0
     je isNull

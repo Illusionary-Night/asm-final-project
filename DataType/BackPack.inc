@@ -17,6 +17,7 @@ BACKPACK ENDS
 InitBackPack PROTO , Object : PTR BACKPACK
 ShowBackpack PROTO , BackPackBasPos : COORD
 
+ScreenPosToSlotIndex PROTO , ScreenPos : COORD
 
 RecordInBackPack PROTO , Object : PTR BACKPACK , ToolPos : COORD
 DelRecordBackPack PROTO , Object : PTR BACKPACK , ToolPos : COORD

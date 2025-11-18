@@ -23,6 +23,6 @@ RecordInBackPack PROTO , Object : PTR BACKPACK , ToolPos : COORD
 DelRecordBackPack PROTO , Object : PTR BACKPACK , ToolPos : COORD
 CheckBackPackRecord PROTO , Object : PTR BACKPACK , ToolPos : COORD
 
-
+CheckToolInBackPack PROTO , Object : PTR Tool , CursorPosX : WORD , CursorPosY : WORD
 
 ENDIF

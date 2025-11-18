@@ -2,6 +2,7 @@ INCLUDE ./asm-final-project/SysInc/Irvine32.inc
 INCLUDE ./asm-final-project/IO/display.inc
 INCLUDE ./asm-final-project/IO/graph.inc
 INCLUDE ./asm-final-project/DataType/BackPack.inc
+INCLUDE ./asm-final-project/DataType/ToolDataType.inc
 
 .data
 
@@ -14,6 +15,8 @@ INCLUDE ./asm-final-project/DataType/BackPack.inc
     linChar    BYTE "*"
     linColor   WORD 07h
 
+    check_shape_counter DWORD ?
+    check_slotPos   COORD <?,?>
 .code
 
 InitBackPack PROC USES esi edi ecx eax,
@@ -147,5 +150,55 @@ CheckBackPackRecord PROC USES esi ebx ecx edx Object : PTR BACKPACK , ToolPos : 
     ret
 
 CheckBackPackRecord ENDP
+
+
+CheckToolInBackPack PROC USES esi edi ecx ebx Object : PTR Tool , CursorPosX : WORD , CursorPosY : WORD
+
+    mov esi , Object
+    mov ecx , 4
+    mov check_shape_counter , 0
+
+    mov ax , CursorPosX
+    mov check_slotPos.X , ax
+    mov ax , CursorPosY
+    mov check_slotPos.Y , ax
+
+    INVOKE ScreenPosToSlotIndex , check_slotPos
+    mov ebx , eax
+
+    OuterLoop:
+        push ecx
+        mov ecx , 4
+
+        InnerLoop:
+            lea edi , (TOOL PTR [esi]).SHAPE
+            add edi , check_shape_counter
+
+            cmp (BACKPACK PTR [esi]).SlotMap[ebx] , 1
+            je SlotFull
+            jmp Next
+
+            SlotFull:
+                cmp BYTE PTR [edi] , '1'
+                je ToolCannotPitIn
+                jmp Next
+                
+        Next:
+        Loop InnerLoop
+
+        pop ecx
+        add check_shape_counter , SIZEOF BYTE
+    Loop OuterLoop
+
+    ToolCannotPitIn:
+        mov eax , 0
+        jmp Done 
+
+    mov eax , 1
+
+    Done:
+    ret
+
+CheckToolInBackPack ENDP
 
 END

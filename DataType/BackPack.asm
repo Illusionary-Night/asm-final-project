@@ -152,29 +152,43 @@ CheckBackPackRecord PROC USES esi ebx ecx edx Object : PTR BACKPACK , ToolPos : 
 CheckBackPackRecord ENDP
 
 
-CheckToolInBackPack PROC USES esi edi ecx ebx Object : PTR Tool , CursorPosX : WORD , CursorPosY : WORD
+CheckToolInBackPack PROC USES esi edi ecx ebx edx Object : PTR Tool , CompareObject : PTR BACKPACK , CursorPosX : WORD , CursorPosY : WORD
+
+    LOCAL startX : WORD
 
     mov esi , Object
+    mov edx , CompareObject
     mov ecx , 4
     mov check_shape_counter , 0
 
     mov ax , CursorPosX
     mov check_slotPos.X , ax
+    mov startX , ax
     mov ax , CursorPosY
     mov check_slotPos.Y , ax
 
-    INVOKE ScreenPosToSlotIndex , check_slotPos
-    mov ebx , eax
 
     OuterLoop:
         push ecx
         mov ecx , 4
 
+        mov ax , startX
+        mov check_slotPos.X , ax
+
         InnerLoop:
+            cmp check_slotPos.X , 7
+            ja Next
+
+            cmp check_slotPos.Y , 7
+            ja Next
+
+            INVOKE ScreenPosToSlotIndex , check_slotPos
+            mov ebx , eax
+
             lea edi , (TOOL PTR [esi]).SHAPE
             add edi , check_shape_counter
 
-            cmp (BACKPACK PTR [esi]).SlotMap[ebx] , 1
+            cmp (BACKPACK PTR [edx]).SlotMap[ebx] , 1
             je SlotFull
             jmp Next
 
@@ -184,17 +198,19 @@ CheckToolInBackPack PROC USES esi edi ecx ebx Object : PTR Tool , CursorPosX : W
                 jmp Next
                 
         Next:
+        add check_slotPos.X , 1
+        add check_shape_counter , SIZEOF BYTE
         Loop InnerLoop
 
         pop ecx
-        add check_shape_counter , SIZEOF BYTE
+        add check_slotPos.Y , 1
     Loop OuterLoop
+
+    mov eax , 1
+    jmp Done
 
     ToolCannotPitIn:
         mov eax , 0
-        jmp Done 
-
-    mov eax , 1
 
     Done:
     ret

@@ -57,11 +57,11 @@ L3:
 	;INVOKE SetLine, OFFSET Li1, '*', 0Ah, 1, 10, Cursor
 	;INVOKE SetRectangle, OFFSET rec1, '*', 07h, 5, 3, Cursor
 	;INVOKE SetPicture, OFFSET pic1, OFFSET teststr1, 07h, 6, 6, Cursor
-	INVOKE SetToolSlot, OFFSET Tool1, OFFSET teststr1, 0Ah
+	;INVOKE SetToolSlot, OFFSET Tool1, OFFSET teststr1, 0Ah
 	
 	;INVOKE ShowToolSlot, OFFSET Tool1, Cursor
 	
-	INVOKE ToolTest
+	;INVOKE ToolTest
 
 	;INVOKE EraseToolSlotPic, OFFSET Tool1
 	;INVOKE EraseToolSlotFrame, OFFSET Tool1

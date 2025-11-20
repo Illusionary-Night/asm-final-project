@@ -14,7 +14,7 @@ INCLUDE ./asm-final-project/DataType/Seller.inc
 	CoolDownTimeStr BYTE "CoolDownTime: "
 	TypeStr		BYTE "Type: "
 	HpStr		BYTE "Hp: "
-	EpStr		BYTE "Ep: "
+	EpStr		BYTE "Sp: "
 	MpStr		BYTE "Mp: "
 	ShieldStr	Byte "Shield: "
 	TestText Text <>
@@ -205,12 +205,7 @@ ShowToolInfo proc uses eax esi edi ebx ecx Shelf: PTR GOODS, Index: BYTE
 	mov eax, (TOOL PTR [esi]).ALLYDELTA.MP
 	call WriteInt
 	AddSellerCursorY 1
-
-	INVOKE SetText, OFFSET TestText, OFFSET ShieldStr, 0Ah, SellerCursor, LENGTHOF ShieldStr
-	INVOKE ShowText, OFFSET TestText
-	mov eax, (TOOL PTR [esi]).ALLYDELTA.SHIELD
-	call WriteInt
-	AddSellerCursorY 1	
+	
 	
 	ret
 

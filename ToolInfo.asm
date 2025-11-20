@@ -28,7 +28,7 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	test_position COORD <4,1>
 	test_UUID DWORD 0
 	temp_position COORD <>
-
+	test_name BYTE "Test Tool",0
 	test_tool2 Tool  <>
 
 	tool_proto_database TOOL 100 DUP(<>)
@@ -44,7 +44,8 @@ SetProtoTool PROC USES esi edi eax,
 	CooldownMax: DWORD,
 	TypeID: DWORD,
     AllyDelta: INGAMEATTRIBUTE,
-    EnemyDelta: INGAMEATTRIBUTE
+    EnemyDelta: INGAMEATTRIBUTE,
+	ToolName: PTR BYTE
 
     mov esi, Object
     
@@ -69,6 +70,9 @@ SetProtoTool PROC USES esi edi eax,
     lea edi, (TOOL PTR [esi]).ENEMYDELTA
     INVOKE MemClone, edi, ADDR EnemyDelta, SIZEOF INGAMEATTRIBUTE
 
+	lea edi, (TOOL PTR [esi]).TOOLNAME
+    INVOKE MemClone, edi, ADDR ToolName, SIZEOF BYTE * 20
+
 	mov edi, OFFSET tool_proto_database
 	mov eax, SIZEOF TOOL
 	mul TPD_number
@@ -91,7 +95,7 @@ SlotRepeatLabel:
 
 	INVOKE SetInGameAttribute, OFFSET test_ally_delta ,0 ,0 ,0
 	INVOKE SetInGameAttribute, OFFSET test_enemy_delta ,0 ,0 ,0
-	INVOKE SetProtoTool, OFFSET test_tool, OFFSET test_tool_slot, OFFSET test_tool_shape, 1, 4, 5, test_ally_delta, test_enemy_delta
+	INVOKE SetProtoTool, OFFSET test_tool, OFFSET test_tool_slot, OFFSET test_tool_shape, 1, 4, 5, test_ally_delta, test_enemy_delta, OFFSET test_name
 	
 	lea edi, test_tool.BPPOSITION
 	mov esi, OFFSET test_position

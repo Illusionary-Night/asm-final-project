@@ -9,8 +9,8 @@ TOOLSLOT STRUCT
 	Pic  PICTURE <>
 TOOLSLOT ENDS
 
-BpPositiontoRPosition PROTO,    ;this function will return a RealPosition in eax
-	BpPosition: COORD
+BpPositiontoRPosition PROTO,    
+	BpPosition: PTR COORD
 
 SetToolSlot PROTO,
 	Object:   PTR TOOLSLOT,

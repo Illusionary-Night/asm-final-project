@@ -70,14 +70,14 @@ DontShowSlot:
 	add showed_shape_counter, SIZEOF BYTE
 
 	inc eax
-	add WORD PTR showed_slot_position.X, 7
+	add WORD PTR showed_slot_position.X, 1
 
 
 	cmp eax, 4
 	jb InnerLoop
 	
 	inc ecx
-	add WORD PTR showed_slot_position.Y, 7
+	add WORD PTR showed_slot_position.Y, 1
 
 	cmp ecx, 4
 	jb OuterLoop

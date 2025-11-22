@@ -13,20 +13,24 @@ INCLUDE ./asm-final-project/DataType/GameDataType.inc
 	BackPackPosition COORD<0,0>  ;背包最左上角的位置
 .code
 
-BpPositiontoRPosition proc uses esi ebx ecx BpPosition: COORD
+BpPositiontoRPosition proc uses esi ebx ecx eax BpPosition: PTR COORD
 
-	lea esi, BpPosition
-	mov bx, [esi]
-	movzx eax,  FrameWidth
-	mul bx
-	shr eax, 16
-	push eax
 	xor eax, eax
-	mov bx, [esi+2]
+	xor ebx, ebx
+
+	mov esi, BpPosition
+	mov bx, (COORD PTR [esi]).X
+	movzx eax,  FrameWidth
+	dec eax
+	mul bl
+	mov (COORD PTR [esi]).X, ax
+	xor eax, eax
+	mov bx, (COORD PTR [esi]).Y
 	movzx eax,  FrameHight
-	mul bx
-	pop ebx
-	add eax, ebx
+	dec eax
+	mul bl
+	;dec ax
+	mov (COORD PTR [esi]).Y, ax
 	ret 4
 
 BpPositiontoRPosition endp
@@ -46,6 +50,7 @@ ShowToolSlot proc uses eax esi ecx edi Object: PTR TOOLSLOT, Position: COORD
 
 	mov esi, Object
 	lea edi, Position
+	INVOKE BpPositiontoRPosition, edi
 	mov eax, [edi]
 	mov [esi+7], eax
 	add WORD PTR [edi], 1

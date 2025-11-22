@@ -26,10 +26,10 @@ RunPackProcess PROC uses esi eax ebx OurBp: PTR BACKPACK, Shelf: PTR GOODS, Targ
 	mov esi, Target
 	
 	INVOKE ReadInt09
+	mov bl, al
 	INVOKE TakeTool, shelf, Target, al
 
 	INVOKE ReadInt09
-	call WriteInt
 	mov (TOOL PTR [esi]).BPPOSITION.X, ax
 	INVOKE ReadInt09
 	mov (TOOL PTR [esi]).BPPOSITION.Y, ax

@@ -2,11 +2,12 @@ INCLUDE ./asm-final-project/SysInc/Irvine32.inc
 INCLUDE ./asm-final-project/IO/display.inc
 INCLUDE ./asm-final-project/IO/graph.inc
 INCLUDE ./asm-final-project/DataType/BackPack.inc
+INCLUDE ./asm-final-project/DataType/ToolDataType.inc
 
 .data
 
-    CELL_WIDTH  WORD 8
-    CELL_HEIGHT WORD 8
+    CELL_WIDTH  WORD 7
+    CELL_HEIGHT WORD 7
 
     StartPos    COORD <0, 0>      
 
@@ -14,24 +15,33 @@ INCLUDE ./asm-final-project/DataType/BackPack.inc
     linChar    BYTE "*"
     linColor   WORD 07h
 
+    check_shape_counter DWORD ?
+    check_slotPos   COORD <?,?>
 .code
 
 InitBackPack PROC USES esi edi ecx eax,
     Object : PTR BACKPACK
 
     mov esi , Object
-    mov ax , 8
+    mov ax , BACKPACKWIDTH
     mov (BACKPACK PTR [esi]).BackPackWidth , ax
+    mov ax , BACKPACKHEIGHT
     mov (BACKPACK PTR [esi]).BackPackHeight , ax
 
     lea edi , (BACKPACK PTR [esi]).SlotMap
-    mov ecx , 64
+    mov ecx , MAXSLOTS
     mov al , 0
     rep stosb
+
+    lea esi , (BACKPACK PTR [esi]).ItemUUIDMap
+    mov ecx , MAXSLOTS
+    mov al , 0
+    rep stosb
+
     ret
 InitBackPack ENDP
 
-ShowBackpack PROC USES ecx eax ebx BackPackBasPos : COORD
+ShowBackpack PROC USES ecx eax ebx edx BackPackBasPos : COORD
 
     mov ax , BackPackBasPos.X
     mov StartPos.X , ax
@@ -45,7 +55,11 @@ ShowBackpack PROC USES ecx eax ebx BackPackBasPos : COORD
         mov linObj.Position.X , ax
         mov linObj.Position.Y , bx
 
-        INVOKE SetLine, OFFSET linObj, linChar, linColor, 0, 56, linObj.Position
+        mov ax , CELL_HEIGHT
+        mov dx , BACKPACKHEIGHT
+        mul dx
+
+        INVOKE SetLine, OFFSET linObj, linChar, linColor, 0, ax, linObj.Position
         INVOKE ShowLine, OFFSET linObj
 
         add bx , 7
@@ -58,7 +72,11 @@ ShowBackpack PROC USES ecx eax ebx BackPackBasPos : COORD
         mov linObj.Position.X , bx
         mov linObj.Position.Y , ax
 
-        INVOKE SetLine, OFFSET linObj, linChar, linColor, 1, 56, linObj.Position
+        mov ax , CELL_WIDTH
+        mov dx , BACKPACKWIDTH
+        mul dx
+
+        INVOKE SetLine, OFFSET linObj, linChar, linColor, 1, ax, linObj.Position
         INVOKE ShowLine, OFFSET linObj
 
         add bx , 7
@@ -66,26 +84,35 @@ ShowBackpack PROC USES ecx eax ebx BackPackBasPos : COORD
 
     ret
 ShowBackpack ENDP
-    
-RecordInBackPack PROC USES eax ebx esi edi ecx edx Object : PTR BACKPACK , ToolPos : COORD      ;record 1 if tool is in
 
-    mov esi , Object
+ScreenPosToSlotIndex PROC USES ebx ecx edx , ScreenPos : COORD
 
-    mov ax , ToolPos.Y
+    mov ax , ScreenPos.Y
     mov cx , 7
     xor dx , dx
     div cx
-    mov bx , 10
+    mov bx , 8
     mul bx
     mov cx , ax
 
-    mov ax , ToolPos.X 
+    mov ax , ScreenPos.X
     mov bx , 7
     xor dx , dx
     div bx
     add cx , ax
 
-    movzx ebx , cx
+    movzx eax , cx
+
+    ret
+ScreenPosToSlotIndex ENDP
+    
+RecordInBackPack PROC USES eax ebx esi edi ecx edx Object : PTR BACKPACK , ToolPos : COORD      ;record 1 if tool is in
+
+    mov esi , Object
+
+    INVOKE ScreenPosToSlotIndex , ToolPos
+
+    mov ebx , eax
     mov (BACKPACK PTR [esi]).SlotMap[ebx] , 1
 
     ret
@@ -95,21 +122,9 @@ DelRecordBackPack PROC USES eax ebx edx esi edi ecx Object : PTR BACKPACK , Tool
 
     mov esi , Object
 
-    mov ax , ToolPos.Y
-    mov cx , 7
-    xor dx , dx
-    div cx
-    mov bx , 10
-    mul bx
-    mov cx , ax
+    INVOKE ScreenPosToSlotIndex , ToolPos
 
-    mov ax , ToolPos.X
-    mov bx , 7
-    xor dx , dx
-    div bx
-    add cx , ax
-
-    movzx ebx , cx
+    mov ebx , eax
     mov (BACKPACK PTR [esi]).SlotMap[ebx] , 0
 
     ret
@@ -119,21 +134,9 @@ CheckBackPackRecord PROC USES esi ebx ecx edx Object : PTR BACKPACK , ToolPos : 
 
     mov esi , Object
 
-    mov ax , ToolPos.Y
-    mov cx , 7
-    xor dx , dx
-    div cx
-    mov bx , 10
-    mul bx
-    mov cx , ax
+    INVOKE ScreenPosToSlotIndex , ToolPos
 
-    mov ax , ToolPos.X
-    mov bx , 7
-    xor dx , dx
-    div bx
-    add cx , ax
-
-    movzx ebx , cx
+    mov ebx , eax
 
     cmp (BACKPACK PTR [esi]).SlotMap[ebx] , 0
     je isNull
@@ -147,5 +150,71 @@ CheckBackPackRecord PROC USES esi ebx ecx edx Object : PTR BACKPACK , ToolPos : 
     ret
 
 CheckBackPackRecord ENDP
+
+
+CheckToolInBackPack PROC USES esi edi ecx ebx edx Object : PTR Tool , CompareObject : PTR BACKPACK , CursorPosX : WORD , CursorPosY : WORD
+
+    LOCAL startX : WORD
+
+    mov esi , Object
+    mov edx , CompareObject
+    mov ecx , 4
+    mov check_shape_counter , 0
+
+    mov ax , CursorPosX
+    mov check_slotPos.X , ax
+    mov startX , ax
+    mov ax , CursorPosY
+    mov check_slotPos.Y , ax
+
+
+    OuterLoop:
+        push ecx
+        mov ecx , 4
+
+        mov ax , startX
+        mov check_slotPos.X , ax
+
+        InnerLoop:
+            cmp check_slotPos.X , 7
+            ja Next
+
+            cmp check_slotPos.Y , 7
+            ja Next
+
+            INVOKE ScreenPosToSlotIndex , check_slotPos
+            mov ebx , eax
+
+            lea edi , (TOOL PTR [esi]).SHAPE
+            add edi , check_shape_counter
+
+            cmp (BACKPACK PTR [edx]).SlotMap[ebx] , 1
+            je SlotFull
+            jmp Next
+
+            SlotFull:
+                cmp BYTE PTR [edi] , '1'
+                je ToolCannotPitIn
+                jmp Next
+                
+        Next:
+        add check_slotPos.X , 1
+        add check_shape_counter , SIZEOF BYTE
+        Loop InnerLoop
+
+        pop ecx
+        add check_slotPos.Y , 1
+    Loop OuterLoop
+
+    mov eax , 1
+    jmp Done
+
+    ToolCannotPitIn:
+        mov eax , 0
+
+    Done:
+    ret
+
+CheckToolInBackPack ENDP
 
 END

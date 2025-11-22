@@ -23,12 +23,12 @@ INCLUDE ./asm-final-project/MemOperation.inc
 							"1111"
 	test_tool_slot TOOLSLOT 16 DUP(<>)
 	test_tool Tool  <>
-	test_ally_delta CHARACTERATTRIBUTE  <>
-	test_enemy_delta CHARACTERATTRIBUTE  <>
+	test_ally_delta INGAMEATTRIBUTE  <>
+	test_enemy_delta INGAMEATTRIBUTE  <>
 	test_position COORD <4,1>
 	test_UUID DWORD 0
 	temp_position COORD <>
-
+	test_name BYTE "Test Tool",0
 	test_tool2 Tool  <>
 
 	tool_proto_database TOOL 100 DUP(<>)
@@ -43,8 +43,9 @@ SetProtoTool PROC USES esi edi eax,
 	Rarity: BYTE,
 	CooldownMax: DWORD,
 	TypeID: DWORD,
-    AllyDelta: CHARACTERATTRIBUTE,
-    EnemyDelta: CHARACTERATTRIBUTE
+    AllyDelta: INGAMEATTRIBUTE,
+    EnemyDelta: INGAMEATTRIBUTE,
+	ToolName: PTR BYTE
 
     mov esi, Object
     
@@ -64,10 +65,13 @@ SetProtoTool PROC USES esi edi eax,
     mov (TOOL PTR [esi]).TYPEID, eax
     
     lea edi, (TOOL PTR [esi]).ALLYDELTA
-    INVOKE MemClone, edi, ADDR AllyDelta, SIZEOF CHARACTERATTRIBUTE
+    INVOKE MemClone, edi, ADDR AllyDelta, SIZEOF INGAMEATTRIBUTE
 
     lea edi, (TOOL PTR [esi]).ENEMYDELTA
-    INVOKE MemClone, edi, ADDR EnemyDelta, SIZEOF CHARACTERATTRIBUTE
+    INVOKE MemClone, edi, ADDR EnemyDelta, SIZEOF INGAMEATTRIBUTE
+
+	lea edi, (TOOL PTR [esi]).TOOLNAME
+    INVOKE MemClone, edi, ADDR ToolName, SIZEOF BYTE * 20
 
 	mov edi, OFFSET tool_proto_database
 	mov eax, SIZEOF TOOL
@@ -89,9 +93,9 @@ SlotRepeatLabel:
 	add esi, SIZEOF TOOLSLOT
 	LOOP SlotRepeatLabel
 
-	INVOKE SetCharacterAttribute, OFFSET test_ally_delta ,0 ,0 ,0 ,0 ,0 ,0 ,0
-	INVOKE SetCharacterAttribute, OFFSET test_enemy_delta ,0 ,0 ,0 ,0 ,0 ,0 ,0
-	INVOKE SetProtoTool, OFFSET test_tool, OFFSET test_tool_slot, OFFSET test_tool_shape, 1, 4, 5, test_ally_delta, test_enemy_delta
+	INVOKE SetInGameAttribute, OFFSET test_ally_delta ,0 ,0 ,0
+	INVOKE SetInGameAttribute, OFFSET test_enemy_delta ,0 ,0 ,0
+	INVOKE SetProtoTool, OFFSET test_tool, OFFSET test_tool_slot, OFFSET test_tool_shape, 1, 4, 5, test_ally_delta, test_enemy_delta, OFFSET test_name
 	
 	lea edi, test_tool.BPPOSITION
 	mov esi, OFFSET test_position

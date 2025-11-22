@@ -13,8 +13,9 @@ TOOL STRUCT
 	COOLDOWNMAX DWORD ?			; 冷卻時間上限
 	TYPEID DWORD ?				; 道具種類編號
 	UUID DWORD ?				; 道具唯一編號，定義時不用填，初始化時才需要
-	ALLYDELTA CHARACTERATTRIBUTE <>		; 使用道具後對我方的屬性變化
-	ENEMYDELTA CHARACTERATTRIBUTE <>		; 使用道具後對敵方的屬性變化
+	ALLYDELTA INGAMEATTRIBUTE <>		; 使用道具後對我方的屬性變化
+	ENEMYDELTA INGAMEATTRIBUTE <>		; 使用道具後對敵方的屬性變化
+	TOOLNAME BYTE 20 DUP(?)			; 道具名稱
 TOOL ENDS
 
 

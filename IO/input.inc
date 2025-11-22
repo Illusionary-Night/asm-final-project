@@ -10,4 +10,10 @@ TestKeyPress MACRO virtualkey
     INVOKE GetKeyState, virtualkey
     test ax, 8000h
 ENDM
+
+ReadToolPosition PROTO,
+	Object: PTR TOOL
+
+ReadInt09 PROTO 
+
 ENDIF

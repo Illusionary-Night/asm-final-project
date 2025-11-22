@@ -10,8 +10,11 @@ INCLUDE ./asm-final-project/GameLogic/GameStat.inc
 INCLUDE ./asm-final-project/GameLogic/GameClock.inc
 INCLUDE ./asm-final-project/GameLogic/GameControler.inc
 
+INCLUDE ./asm-final-project/ToolInfo.inc
+
 .data
 	CurGameStat GAMESTAT <>
+	Game_UUID DWORD ?
 .code
 
 GameMainLoop proc uses eax ecx ebx esi
@@ -19,7 +22,11 @@ GameMainLoop proc uses eax ecx ebx esi
 	INVOKE IntoStartStat, OFFSET CurGameStat
 	DelayXms 1000
 	INVOKE CheStartSubStat, OFFSET CurGameStat, GameRuleStat
-	
+
+	INVOKE SetTestTool	             ;we will initialize tool database here
+	INVOKE CreateTool, OFFSET Game_UUID, 1
+	;INVOKE ToolTest	
+
 	;L1:
 		INVOKE IntoPrepareStat, OFFSET CurGameStat
 

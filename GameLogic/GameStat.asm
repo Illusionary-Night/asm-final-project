@@ -15,17 +15,19 @@ INCLUDE ./asm-final-project/GameLogic/GameStat.inc
 INCLUDE ./asm-final-project/GameLogic/GameClock.inc
 INCLUDE ./asm-final-project/GameLogic/GameControler.inc
 INCLUDE ./asm-final-project/GameLogic/GameKey.inc
+INCLUDE ./asm-final-project/GameLogic/GameProcess.inc
 
 
 .data
-	GameBp BACKPACK <>	
-	Seller GOODS <>
-	OurGoods GOODS <<,,,,<OURGOODSPOSITIONX,GOODSPOSITIONY>>,,<,,,,<OURATTRIBUTEPOSITIONX,GOODSPOSITIONY>>,<,,,,<OURSHAPEPOSITIONX,GOODSPOSITIONY>>,<OURGOODSPOSITIONX,>,>
-	CurGameStat GAMESTAT <0,0>
-	GameStatCursor COORD <0,0>
-	GameStatPicBuf PICTURE <>
-	UserGoods DWORD MAXGOODS DUP(0)
-	GameInputBuf BYTE 10 DUP(0)
+	GameBp 		BACKPACK <>	
+	Seller		GOODS <>
+	OurGoods 	GOODS <<,,,,<OURGOODSPOSITIONX,GOODSPOSITIONY>>,,<,,,,<OURATTRIBUTEPOSITIONX,GOODSPOSITIONY>>,<,,,,<OURSHAPEPOSITIONX,GOODSPOSITIONY>>,<OURGOODSPOSITIONX,>,>
+	CurGameStat 	GAMESTAT <0,0>
+	GameStatCursor 	COORD <0,0>
+	GameStatPicBuf 	PICTURE <>
+	UserGoods 	DWORD MAXGOODS DUP(0)
+	GameInputBuf 	BYTE 10 DUP(0)
+	GameStatToolBuf TOOL <>
 .code
 
 IntoStartStat proc uses esi eax	CurStat: PTR GAMESTAT
@@ -93,7 +95,7 @@ CheStartSubStat proc uses esi eax CurStat: PTR GAMESTAT, SubStat: BYTE
 
 CheStartSubStat endp
 
-ChePrepareSubStat proc uses esi eax ecx CurStat: PTR GAMESTAT, SubStat: BYTE
+ChePrepareSubStat proc uses esi eax ecx ebx CurStat: PTR GAMESTAT, SubStat: BYTE
 	
 	mov esi, CurStat
 	mov al, SubStat
@@ -104,7 +106,6 @@ ChePrepareSubStat proc uses esi eax ecx CurStat: PTR GAMESTAT, SubStat: BYTE
 	mov eax, 0
 	mov esi, OFFSET GameInputBuf
 	cmp al, BuyStat
-	call ReadChar
 	je L1
 	
 	cmp al, PackStat
@@ -115,32 +116,51 @@ ChePrepareSubStat proc uses esi eax ecx CurStat: PTR GAMESTAT, SubStat: BYTE
 		mov eax, 0
 		call ReadChar
 		cmp al, ShowInst
-		je ShowProcess
+		je ShowProcess1
 		cmp al, BuyInst
 		je BuyProcess
 		cmp al, EndInst
-		je EndProcess	
+		je EndProcess1
+		jmp Dummy1	
 
-		EndProcess: 
+		EndProcess1: 
 			mov ecx, 1
-			jmp Dummy		
-		ShowProcess:
-			call ReadChar
-			sub al, '0'
+			jmp Dummy1		
+		ShowProcess1:
+			INVOKE ReadInt09
 			INVOKE ShowToolInfo, OFFSET Seller, al
-			jmp Dummy
+			jmp Dummy1
 		BuyProcess:
-			call ReadChar
-			sub al, '0'
+			INVOKE ReadInt09
 			INVOKE BuyTool, OFFSET Seller, al
 			INVOKE InsertTool, OFFSET OurGoods, eax
 			INVOKE ShowGoods, OFFSET OurGoods
 			INVOKE EraseToolInfo, OFFSET Seller
-		Dummy:
+		Dummy1:
 	LOOP L1
 
 	L2:                          ;Pack Process, break untile user done
+		mov ecx, 0
+		mov eax, 0
+		call ReadChar
+		cmp al, ShowInst
+		je ShowProcess2
+		cmp al, PackInst
+		je PackProcess
+		cmp al, EndInst
+		je EndProcess2
+		jmp Dummy2	
 
+		EndProcess2: 
+			mov ecx, 1
+			jmp Dummy2		
+		ShowProcess2:
+			INVOKE ReadInt09
+			INVOKE ShowToolInfo, OFFSET OurGoods, al
+			jmp Dummy2
+		PackProcess:
+			INVOKE RunPackProcess, OFFSET GameBp, OFFSET OurGoods, OFFSET GameStatToolBuf 
+		Dummy2:
 	LOOP L2
 
 	ret

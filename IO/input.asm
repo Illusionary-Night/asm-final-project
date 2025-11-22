@@ -1,6 +1,7 @@
 INCLUDE ./asm-final-project/SysInc/Irvine32.inc
 INCLUDE ./asm-final-project/SysInc/VirtualKeys.inc
 INCLUDE ./asm-final-project/IO/input.inc
+INCLUDE ./asm-final-project/DataType/ToolDataType.inc
 
 .data
     inputhandle DWORD ?
@@ -23,5 +24,26 @@ L1:
 outloop1:
     ret 2
 WaitKeyPress endp
+
+ReadToolPosition proc uses esi ebx eax Object: PTR TOOL 
+
+	xor eax, eax
+	mov esi, Object
+	INVOKE ReadInt09
+	mov (TOOL PTR [esi]).BPPOSITION.X, ax
+	INVOKE ReadInt09
+	mov (TOOL PTR [esi]).BPPOSITION.Y, ax
+	ret 
+
+ReadToolPosition endp
+
+ReadInt09 PROC 
+
+	call ReadChar
+	sub eax, '0'
+	movzx eax, al
+	ret
+
+ReadInt09 endp
 
 end

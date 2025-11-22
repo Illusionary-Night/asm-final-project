@@ -82,6 +82,11 @@ EraseToolInfo PROTO,
 
 BuyTool PROTO,            ;this function will return UUID in eax
 	Shelf: PTR GOODS,
+	Index: BYTE
+
+TakeTool PROTO,
+	Shelf: PTR GOODS,
+	TargetTool: PTR TOOL,
 	Index: BYTE	
 
 ENDIF

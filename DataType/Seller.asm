@@ -123,15 +123,7 @@ ShowToolInfo proc uses eax esi edi ebx ecx Shelf: PTR GOODS, Index: BYTE
 	add esi, SIZEOF RECTANGLE
 	INVOKE ShowRectangle, esi
 
-	mov esi, Shelf
-	add esi, SIZEOF RECTANGLE
-	movzx eax, Index
-	mov bl, TYPE DWORD
-	mul bl
-	add esi, eax
-	mov eax, [esi]
-
-	INVOKE GetToolByUUID, OFFSET SellerToolBuf, eax 	
+	INVOKE TakeTool, Shelf, OFFSET SellerToolBuf, Index	
 	xor eax, eax
 	xor ebx, ebx
 	mov ecx, SHAPESIZE
@@ -276,6 +268,22 @@ BuyTool proc uses esi ecx ebx Shelf: PTR GOODS, Index: BYTE
 
 BuyTool endp
 
+TakeTool proc uses ecx eax esi ebx Shelf: PTR GOODS, TargetTool: PTR TOOL, Index: BYTE	
 
+	xor eax, eax
+	xor ebx, ebx
+	mov esi, Shelf
+	add esi, SIZEOF RECTANGLE
+
+	movzx eax, Index
+	mov bl, TYPE DWORD
+	mul bl
+	add esi, eax
+	mov eax, [esi]
+
+	INVOKE GetToolByUUID, TargetTool, eax
+	ret
+
+TakeTool endp
 
 end

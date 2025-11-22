@@ -82,7 +82,6 @@ L3:
 	;INVOKE clear_screen
 	INVOKE GameMainLoop
 	L1:
-		INVOKE GameMainLoop
 		;mov ecx, 0
 	loop L1
 		

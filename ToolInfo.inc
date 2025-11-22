@@ -1,4 +1,8 @@
 .NOLIST
+IFNDEF __ToolInfo
+__ToolInfo EQU 1
+
+
 INCLUDE ./asm-final-project/DataType/ToolDataType.inc
 ; 設定道具原型
 SetProtoTool PROTO :PTR TOOL, :PTR TOOLSLOT, :PTR BYTE, :BYTE, :DWORD, :DWORD, :INGAMEATTRIBUTE, :INGAMEATTRIBUTE, :PTR BYTE
@@ -7,6 +11,8 @@ SetTestTool PROTO
 
 GetToolByUUID PROTO :PTR TOOL, :DWORD
 
-CreateTool PROTO :PTR TOOL, ;DWORD
+CreateTool PROTO :PTR DWORD, :DWORD
 
 ToolTest PROTO
+
+ENDIF

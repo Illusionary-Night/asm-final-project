@@ -28,6 +28,9 @@ INCLUDE ./asm-final-project/GameLogic/GameProcess.inc
 	UserGoods 	DWORD MAXGOODS DUP(0)
 	GameInputBuf 	BYTE 10 DUP(0)
 	GameStatToolBuf TOOL <>
+
+	User         CHARACTERATTRIBUTE <>
+	Enemy	     CHARACTERATTRIBUTE <>
 .code
 
 IntoStartStat proc uses esi eax	CurStat: PTR GAMESTAT
@@ -40,6 +43,8 @@ IntoStartStat proc uses esi eax	CurStat: PTR GAMESTAT
 	mov (GAMESTAT PTR [esi]).SubStat, al
 
 	INVOKE ShowTitle, GameStatCursor, OFFSET GameStatPicBuf
+	INVOKE InitializeResourceAttribute, OFFSET User.Resource
+	INVOKE InitializeInGameAttribute, OFFSET User.InGame
 
 	ret
 
@@ -47,25 +52,30 @@ IntoStartStat endp
 
 IntoPrepareStat proc uses esi eax ecx CurStat: PTR GAMESTAT
 
+	;INVOKE clear_screen
 	mov esi, CurStat
 	mov al, PrepareStat
 	mov (GAMESTAT PTR [esi]).MainStat, al
 
 	mov al, BuyStat
 	mov (GAMESTAT PTR [esi]).SubStat, al
-
-	INVOKE InitBackPack, OFFSET GameBp
-	INVOKE ShowBackpack, GameStatCursor
 	
 	mov ecx, 5
 	mov eax, 0	
-
+	INVOKE ResetAllToolInGoods, OFFSET Seller
+	
 	L1:                                           ;choose which tool to sell
 		INVOKE InsertTool, OFFSET Seller, 1
 		inc al
 	LOOP L1
 	INVOKE ShowGoods, OFFSET Seller
 	INVOKE ShowGoods, OFFSET OurGoods
+	
+	mov ax, UserInfoPositionX
+	mov GameStatCursor.X, ax
+	mov ax, UserInfoPositionY
+	mov GameStatCursor.Y, ax
+	INVOKE ShowCharInfo, OFFSET User, GameStatCursor
 	
 	ret 4
 
@@ -79,6 +89,41 @@ IntoFightStat proc uses esi eax CurStat: PTR GAMESTAT
 
 	mov al, SelfStat
 	mov (GAMESTAT PTR [esi]).SubStat, al
+
+	INVOKE InitializeResourceAttribute, OFFSET Enemy.Resource
+	INVOKE InitializeInGameAttribute, OFFSET Enemy.InGame
+
+	INVOKE EraseToolInfo, OFFSET Seller
+	INVOKE EraseToolInfo, OFFSET OurGoods
+	INVOKE EraseGoods, OFFSET Seller
+	INVOKE EraseGoods, OFFSET OurGoods
+
+	mov ax, UserInfoPositionX
+	mov GameStatCursor.X, ax
+	add GameStatCursor.X, EnemyInfoPositionX-UserInfoPositionX
+	mov ax, UserInfoPositionY
+	mov GameStatCursor.Y, ax
+	INVOKE ShowCharInfo, OFFSET Enemy, GameStatCursor
+
+	sub GameStatCursor, EnemyInfoPositionX-UserInfoPositionX
+	DelayForARound
+
+	L1:  ; Assume user attack enemy 20, Enemy attack user 15
+		mov ecx, 0
+		INVOKE RunFightProcess, OFFSET User, OFFSET Enemy, GameStatCursor
+		cmp eax, 1
+		je Done
+		jmp Dummy
+
+		Done:
+			mov ecx, 1
+		Dummy:
+			DelayForARound
+	LOOP L1
+
+	add GameStatCursor.X, EnemyInfoPositionX-UserInfoPositionX
+	INVOKE EraseCharInfo, OFFSET Enemy, GameStatCursor
+	
 	ret 4
 
 IntoFightStat endp
@@ -90,8 +135,11 @@ CheStartSubStat proc uses esi eax CurStat: PTR GAMESTAT, SubStat: BYTE
 	mov al, SubStat
 	mov (GAMESTAT PTR [esi]).SubStat, al
 	INVOKE clear_screen
+
+	INVOKE InitBackPack, OFFSET GameBp
+	INVOKE ShowBackpack, GameStatCursor
 		
-	ret 8
+	ret
 
 CheStartSubStat endp
 
@@ -103,8 +151,6 @@ ChePrepareSubStat proc uses esi eax ecx ebx CurStat: PTR GAMESTAT, SubStat: BYTE
 
 	xor ecx, ecx
 	mov ecx, 3
-	mov eax, 0
-	mov esi, OFFSET GameInputBuf
 	cmp al, BuyStat
 	je L1
 	
@@ -131,13 +177,16 @@ ChePrepareSubStat proc uses esi eax ecx ebx CurStat: PTR GAMESTAT, SubStat: BYTE
 			INVOKE ShowToolInfo, OFFSET Seller, al
 			jmp Dummy1
 		BuyProcess:
-			INVOKE ReadInt09
-			INVOKE BuyTool, OFFSET Seller, al
-			INVOKE InsertTool, OFFSET OurGoods, eax
-			INVOKE ShowGoods, OFFSET OurGoods
-			INVOKE EraseToolInfo, OFFSET Seller
+			mov ax, UserInfoPositionX
+			mov GameStatCursor.X, ax
+			mov ax, UserInfoPositionY
+			mov GameStatCursor.Y, ax
+
+			INVOKE RunBuyProcess, OFFSET Seller, OFFSET OurGoods, OFFSET User, GameStatCursor
 		Dummy1:
 	LOOP L1
+
+	jmp Done	
 
 	L2:                          ;Pack Process, break untile user done
 		mov ecx, 0
@@ -162,6 +211,8 @@ ChePrepareSubStat proc uses esi eax ecx ebx CurStat: PTR GAMESTAT, SubStat: BYTE
 			INVOKE RunPackProcess, OFFSET GameBp, OFFSET OurGoods, OFFSET GameStatToolBuf 
 		Dummy2:
 	LOOP L2
+
+	Done:
 
 	ret
 

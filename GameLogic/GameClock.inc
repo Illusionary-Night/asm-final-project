@@ -3,7 +3,7 @@
 IFNDEF __GameClock
 __GameClock EQU 1
 
-TimePerRound     EQU 500   ;ms
+TimePerRound     EQU 1000   ;ms
 TimePerSpeEffect EQU 50    ;ms
 
 DelayXms macro X      ;Delay for Xms

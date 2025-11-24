@@ -41,17 +41,13 @@ main proc
 	;INVOKE InitBackPack, OFFSET TestBp
 	;INVOKE ShowBackpack, Cursor
 
-	INVOKE ShowTitle, Cursor, OFFSET pic1
+	;INVOKE ShowTitle, Cursor, OFFSET pic1
 	;INVOKE WaitKeyPress, VK_SPACE	;see VirtualKeys.inc to pass what key you want to wait for user to press down
 	;Note: "WaitKeyPress" will block any instruction the program, wait until the user press the key
 	;INVOKE clear_screen
 
-L2:
-	TestKeyPress VK_SPACE
-	jnz L3
-	loop L2
 L3:
-	INVOKE clear_screen
+	;INVOKE clear_screen
 
 	;INVOKE SetText, OFFSET _title, OFFSET teststr2, 0Ah, Cursor, LENGTHOF teststr2
 	;INVOKE SetLine, OFFSET Li1, '*', 0Ah, 1, 10, Cursor

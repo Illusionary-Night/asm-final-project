@@ -182,7 +182,7 @@ InitializeResourceAttribute PROC USES esi,
 InitializeResourceAttribute ENDP
 
 
-CheckMoneyEnough PROC USES esi eax,
+CheckMoneyEnough PROC USES esi,
     pChar:PTR CHARACTERATTRIBUTE,
     needMoney:SDWORD
 
@@ -200,7 +200,7 @@ notEnough:
 
 CheckMoneyEnough ENDP
 
-CheckCharacterAlive PROC USES esi eax,
+CheckCharacterAlive PROC USES esi,
     pChar:PTR CHARACTERATTRIBUTE
 
     mov esi, pChar

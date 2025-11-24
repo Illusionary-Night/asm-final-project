@@ -73,6 +73,9 @@ DeletTool PROTO,
 	Shelf: PTR GOODS,
 	Index: BYTE
 
+ResetAllToolInGoods PROTO,
+	Shelf: PTR GOODS
+
 ShowToolInfo PROTO,
 	Shelf: PTR GOODS,
 	Index: BYTE

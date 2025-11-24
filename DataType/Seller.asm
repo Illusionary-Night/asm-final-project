@@ -54,38 +54,40 @@ EraseGoods proc uses esi ecx eax Shelf: PTR GOODS
 
 	mov esi, Shelf
 	INVOKE EraseRectangle, esi
-	add esi, SIZEOF RECTANGLE
 	mov ecx, MAXGOODS
 	
 	mov eax, 0
+	SetSellerCursor (GOODS PTR [esi]).Position.X, (GOODS PTR [esi]).Position.Y
 	
 	L1:
-		INVOKE DeletTool, Shelf, al
-		inc al
+		INVOKE SetText, OFFSET TestText, OFFSET TS1, 0Ah, SellerCursor, GOODSFRAMEWIDTH
+		INVOKE EraseText, OFFSET TestText
+		AddSellerCursorY 1
 	LOOP L1
 
 	ret 4
 
 EraseGoods endp
 
-InsertTool proc uses esi eax ebx Shelf: PTR GOODS, UUID: DWORD
+InsertTool proc uses esi eax ebx ecx Shelf: PTR GOODS, UUID: DWORD
 
 	mov esi, Shelf
-	movzx eax, (GOODS PTR [esi]).ToolIndex
+	mov ecx, MAXGOODS
 	add esi, SIZEOF RECTANGLE
-	mov bl, TYPE DWORD	
-	mul bl
-	add esi, eax
-	mov eax, UUID
-	
-	mov [esi], eax	
 
-	mov esi, Shelf
-	mov al, (GOODS PTR [esi]).ToolIndex
-	inc al
-	mov (GOODS PTR [esi]).ToolIndex, al
-
-	ret 8
+	L1:
+		mov eax, [esi]
+		cmp eax, 0
+		jne Dummy
+		
+		Done:
+			mov eax, UUID
+			mov [esi], eax
+			mov ecx, 1
+		Dummy:
+			add esi, SIZEOF DWORD
+	LOOP L1
+	ret
 
 InsertTool endp
 
@@ -111,6 +113,21 @@ DeletTool proc uses esi eax ebx ecx Shelf: PTR GOODS, Index: BYTE
 	ret
 
 DeletTool endp
+
+ResetAllToolInGoods proc uses eax esi ecx Shelf: PTR GOODS
+	
+	mov ecx, MAXGOODS
+	mov eax, 0
+	L1:
+		INVOKE DeletTool, Shelf, al
+		inc al
+	LOOP L1
+	mov eax, 0
+	mov esi, Shelf
+	mov (GOODS PTR [esi]).ToolIndex, al
+	ret
+
+ResetAllToolInGoods endp
 
 ShowToolInfo proc uses eax esi edi ebx ecx Shelf: PTR GOODS, Index: BYTE
 

@@ -110,7 +110,7 @@ RunFightProcess proc uses esi edi Char1: PTR CHARACTERATTRIBUTE, Char2: PTR CHAR
 		mov eax, 1
 		jmp Done
 	UserLose:
-		sub (CHARACTERATTRIBUTE PTR [esi]).Resource.LIVES, eax
+		dec (CHARACTERATTRIBUTE PTR [esi]).Resource.LIVES
 		mov eax, 1
 	Done:
 		INVOKE EraseCharInfo, Char1, Position

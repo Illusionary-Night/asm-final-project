@@ -37,10 +37,16 @@ ShowGoods proc uses esi eax ecx Shelf: PTR GOODS
 		mov eax, [esi]
 		cmp eax, 0
 		je L2
-		;INVOKE ......, OFFSET SellerToolBuf, [esi]		
-		INVOKE SetText, OFFSET TestText, OFFSET TS1, 0Ah, SellerCursor, LENGTHOF TS1
-		INVOKE ShowText, OFFSET TestText
+		INVOKE GetToolByUUID, OFFSET SellerToolBuf, eax		
+		;INVOKE SetText, OFFSET TestText, OFFSET SellerToolBuf.TOOLNAME, 0Ah, SellerCursor, LENGTHOF SellerToolBuf.TOOLNAME
+		;INVOKE ShowText, OFFSET TestText
 		
+		; 取得 TOOLNAME 位址
+		lea esi, SellerToolBuf.TOOLNAME
+
+		; 設定 TestText
+		INVOKE SetText, OFFSET TestText, esi, 0Ah, SellerCursor, 20  ; 或用 strlen 取得真正長度
+		INVOKE ShowText, OFFSET TestText
 		L2:
 			add esi, 4
 			AddSellerCursorY 1

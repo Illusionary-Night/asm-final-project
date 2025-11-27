@@ -16,6 +16,7 @@ TOOL STRUCT
 	ALLYDELTA INGAMEATTRIBUTE <>		; 使用道具後對我方的屬性變化
 	ENEMYDELTA INGAMEATTRIBUTE <>		; 使用道具後對敵方的屬性變化
 	TOOLNAME BYTE 20 DUP(?)			; 道具名稱
+	PRICE DWORD ?					; 道具價格
 TOOL ENDS
 
 

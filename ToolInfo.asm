@@ -191,7 +191,7 @@ SetProtoTool PROC USES esi edi eax,
     INVOKE MemClone, edi, ADDR EnemyDelta, SIZEOF INGAMEATTRIBUTE
 
 	lea edi, (TOOL PTR [esi]).TOOLNAME
-    INVOKE MemClone, edi, ADDR ToolName, SIZEOF BYTE * 20
+    INVOKE MemClone, edi, ToolName, SIZEOF BYTE * 20
 
 	mov eax, Price
 	mov (TOOL PTR [esi]).PRICE, eax

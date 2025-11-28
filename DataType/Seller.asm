@@ -21,7 +21,7 @@ INCLUDE ./asm-final-project/DataType/Seller.inc
 	TS1 BYTE "There is TOOL"
 .code
 
-ShowGoods proc uses esi eax ecx Shelf: PTR GOODS
+ShowGoods proc uses esi edi eax ecx Shelf: PTR GOODS
 
 	mov esi, Shelf
 	INVOKE ShowRectangle, esi
@@ -41,11 +41,11 @@ ShowGoods proc uses esi eax ecx Shelf: PTR GOODS
 		;INVOKE SetText, OFFSET TestText, OFFSET SellerToolBuf.TOOLNAME, 0Ah, SellerCursor, LENGTHOF SellerToolBuf.TOOLNAME
 		;INVOKE ShowText, OFFSET TestText
 		
-		; 取得 TOOLNAME 位址
-		lea esi, SellerToolBuf.TOOLNAME
+		;    o TOOLNAME   }
+		lea edi, SellerToolBuf.TOOLNAME
 
-		; 設定 TestText
-		INVOKE SetText, OFFSET TestText, esi, 0Ah, SellerCursor, 20  ; 或用 strlen 取得真正長度
+		;  ] w TestText
+		INVOKE SetText, OFFSET TestText, edi, 0Ah, SellerCursor, 20  ;  峊  strlen    o u      
 		INVOKE ShowText, OFFSET TestText
 		L2:
 			add esi, 4

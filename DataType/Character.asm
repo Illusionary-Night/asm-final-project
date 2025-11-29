@@ -58,7 +58,7 @@ notEnough:
 
 CheckInGameStatEnough ENDP
 
-OverlayInGameAttribute PROC USES esi edi eax ebx ecx edx,
+OverlayInGameAttribute PROC USES esi edi ebx ecx edx,   ; flag in eax 1= fail 0= success
     pAttr1:PTR INGAMEATTRIBUTE,
     pAttr2:PTR INGAMEATTRIBUTE,
     TypeFlag:DWORD            ; 0 = Demand, 1 = Effect
@@ -136,6 +136,7 @@ checkDemandMP:
     add (INGAMEATTRIBUTE PTR [esi]).EP, ebx
     mov ebx, (INGAMEATTRIBUTE PTR [edi]).MP
     add (INGAMEATTRIBUTE PTR [esi]).MP, ebx
+    mov eax, 0
     ret
 
 failOverlay:

@@ -93,6 +93,8 @@ IntoFightStat proc uses esi eax CurStat: PTR GAMESTAT
 	INVOKE InitializeResourceAttribute, OFFSET Enemy.Resource
 	INVOKE InitializeInGameAttribute, OFFSET Enemy.InGame
 
+	INVOKE InitializeInGameAttribute, OFFSET User.InGame	;---------------------------- I think we also need to re-initialize user InGame attribute here
+
 	INVOKE EraseToolInfo, OFFSET Seller
 	INVOKE EraseToolInfo, OFFSET OurGoods
 	INVOKE EraseGoods, OFFSET Seller

@@ -43,11 +43,11 @@ RunPackProcess PROC uses esi eax ebx OurBp: PTR BACKPACK, Shelf: PTR GOODS, Targ
 	INVOKE ReadInt09
 	mov (TOOL PTR [esi]).BPPOSITION.Y, ax
 
-	INVOKE CheckBackPackRecord, OurBp, (TOOL PTR [esi]).BPPOSITION
-	cmp al, 1
-	;je Conflict
+	INVOKE CheckToolInBackPack , Target , OurBp , (TOOL PTR [esi]).BPPOSITION.X , (TOOL PTR [esi]).BPPOSITION.Y
+	cmp eax, 0
+	je Conflict
 
-	INVOKE RecordInBackPack, OurBp, (TOOL PTR [esi]).BPPOSITION
+	INVOKE PlaceToolInPackSlotMap , Target , OurBp , (TOOL PTR [esi]).BPPOSITION.X , (TOOL PTR [esi]).BPPOSITION.Y
 	INVOKE ShowTool, Target
 	INVOKE DeletTool, Shelf, bl
 	jmp Dummy	

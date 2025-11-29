@@ -25,4 +25,6 @@ CheckBackPackRecord PROTO , Object : PTR BACKPACK , ToolPos : COORD
 
 CheckToolInBackPack PROTO , Object : PTR Tool , CompareObject : PTR BACKPACK , CursorPosX : WORD , CursorPosY : WORD
 
+PlaceToolInPackSlotMap PROTO , Object : PTR Tool , PackRecord : PTR BACKPACK , CursorPosX : WORD , CursorPosY : WORD
+
 ENDIF

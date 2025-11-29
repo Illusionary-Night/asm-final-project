@@ -217,4 +217,56 @@ CheckToolInBackPack PROC USES esi edi ecx ebx edx Object : PTR Tool , CompareObj
 
 CheckToolInBackPack ENDP
 
+PlaceToolInPackSlotMap PROC USES esi edi ecx eax edx Object : PTR Tool , PackRecord : PTR BACKPACK , CursorPosX : WORD , CursorPosY : WORD
+
+    LOCAL startX : WORD
+
+    mov esi , Object
+    mov edx , PackRecord
+
+    mov ecx , 4
+    mov check_shape_counter , 0
+
+    mov ax , CursorPosX
+    mov check_slotPos.X , ax
+    mov startX , ax
+    mov ax , CursorPosY
+    mov check_slotPos.Y , ax
+
+    OuterLoop:
+        push ecx
+        mov ecx , 4
+
+        mov ax , startX
+        mov check_slotPos.X , ax
+
+        InnerLoop:
+            cmp check_slotPos.X , 7
+            ja Next
+
+            cmp check_slotPos.Y , 7
+            ja Next
+
+            INVOKE ScreenPosToSlotIndex , check_slotPos
+            mov ebx , eax
+
+            lea edi , (TOOL PTR [esi]).SHAPE
+            add edi , check_shape_counter
+
+            cmp BYTE PTR [edi] , '1'
+            jne Next
+            mov (BACKPACK PTR [edx]).SlotMap[ebx] , 1
+                
+        Next:
+        add check_slotPos.X , 1
+        add check_shape_counter , SIZEOF BYTE
+        Loop InnerLoop
+
+        pop ecx
+        add check_slotPos.Y , 1
+    Loop OuterLoop
+
+ret
+PlaceToolInPackSlotMap ENDP
+
 END

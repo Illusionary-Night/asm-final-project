@@ -7,6 +7,7 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	showed_slot_position COORD <>
 	showed_shape_counter DWORD ?
 	showed_slot_counter DWORD ?
+	Msg_Cooldown BYTE "     Cooldown Remain: ", 0
 .code
 
 ExecuteTool PROC USES esi,
@@ -19,6 +20,13 @@ ExecuteTool ENDP
 
 CooldownUpdate_Tool PROC USES esi eax,
 	Object: PTR TOOL
+
+	;mov edx, OFFSET Msg_Cooldown
+	;call WriteString
+	;push eax
+	;mov eax, (TOOL PTR [esi]).COOLDOWN
+	;call WriteDec
+	;pop eax
 
     mov esi, Object
     mov eax, (TOOL PTR [esi]).COOLDOWN

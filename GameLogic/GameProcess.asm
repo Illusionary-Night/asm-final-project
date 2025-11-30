@@ -26,7 +26,9 @@ INCLUDE ./asm-final-project/GameLogic/GameProcess.inc
 	UserLivesStr    BYTE "Lives: "
 	GameProcessCursor COORD <>;<UserAttributeX,UserAttributeY>
 	GameProcessText TEXT <>
-	
+	ToolListPtrInBackPack DWORD ?
+	ToolCountPtrInBackPack DWORD ?
+	Msg_ProcessPeriodicTools BYTE "Processing periodic tools...",0Ah,0Dh,"$"
 .code
 
 RunPackProcess PROC uses esi eax ebx OurBp: PTR BACKPACK, Shelf: PTR GOODS, Target: PTR TOOL
@@ -60,7 +62,7 @@ RunPackProcess PROC uses esi eax ebx OurBp: PTR BACKPACK, Shelf: PTR GOODS, Targ
 
 RunPackProcess endp
 
-RunBuyProcess proc uses eax esi ebx Shelf1: PTR GOODS, Shelf2: PTR GOODS, Char: PTR CHARACTERATTRIBUTE, Position: COORD
+RunBuyProcess proc uses eax esi edi ebx edx Shelf1: PTR GOODS, Shelf2: PTR GOODS, Char: PTR CHARACTERATTRIBUTE, Position: COORD
 
 	INVOKE ReadInt09
 	mov bl, al
@@ -96,7 +98,8 @@ RunFightProcess proc uses esi edi AllyChar: PTR CHARACTERATTRIBUTE, EnemyChar: P
 	sub (CHARACTERATTRIBUTE PTR [esi]).Ingame.HP, 150	; enemy attack user
 	
 	;cyclical tool active--------------------------
-	;INVOKE ProcessPeriodicTools
+	INVOKE GetToolListPtrInBackPack, ADDR ToolListPtrInBackPack, ADDR ToolCountPtrInBackPack
+	INVOKE ProcessPeriodicTools , esi, edi
 	;----------------------------------------------
 	
 	mov eax, (CHARACTERATTRIBUTE PTR [edi]).Ingame.HP
@@ -182,10 +185,32 @@ EraseCharInfo endp
 
 
 ; ProcessPeriodicTools: 遍歷道具陣列，處理週期冷卻
-ProcessPeriodicTools PROC USES esi edi eax ebx ecx edx ToolList:PTR TOOL, ToolNumber:DWORD, AllyChar: PTR CHARACTERATTRIBUTE, EnemyChar: PTR CHARACTERATTRIBUTE
+ProcessPeriodicTools PROC USES esi edi eax ebx ecx edx AllyChar: PTR CHARACTERATTRIBUTE, EnemyChar: PTR CHARACTERATTRIBUTE
+    mov esi, ToolListPtrInBackPack       ; ESI 指向第一個道具
+    mov ecx, ToolCountPtrInBackPack     
+	MOV ecx, [ecx]			; ECX = 陣列長度
 
-    mov esi, ToolList       ; ESI 指向第一個道具
-    mov ecx, ToolNumber     ; ECX = 陣列長度
+
+	push edx
+	mov dh, 50       ; Y 座標（0 從上開始）
+	mov dl, 100       ; X 座標（0 從左開始）
+	call Gotoxy       ; 設定文字游標位置
+	pop edx
+
+	mov edx, OFFSET Msg_ProcessPeriodicTools
+	call WriteString 
+
+	push edx
+	mov dh, 50       ; Y 座標（0 從上開始）
+	mov dl, 120       ; X 座標（0 從左開始）
+	call Gotoxy       ; 設定文字游標位置
+	pop edx
+
+	push eax
+	mov eax, ecx
+	call WriteInt
+	pop eax
+
 
     cmp ecx, 0
     je DoneLoop

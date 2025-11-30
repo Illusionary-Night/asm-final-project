@@ -29,4 +29,6 @@ PlaceToolInPackSlotMap PROTO , Object : PTR Tool , PackRecord : PTR BACKPACK , C
 
 PlaceToolInPackToolList PROTO , Object : PTR Tool
 
+GetToolListPtrInBackPack PROTO, Object:PTR PTR TOOL, ToolNumber:PTR DWORD
+
 ENDIF

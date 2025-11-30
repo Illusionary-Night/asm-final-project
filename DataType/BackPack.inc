@@ -27,4 +27,6 @@ CheckToolInBackPack PROTO , Object : PTR Tool , CompareObject : PTR BACKPACK , C
 
 PlaceToolInPackSlotMap PROTO , Object : PTR Tool , PackRecord : PTR BACKPACK , CursorPosX : WORD , CursorPosY : WORD
 
+PlaceToolInPackToolList PROTO , Object : PTR Tool
+
 ENDIF

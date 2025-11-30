@@ -3,6 +3,7 @@ INCLUDE ./asm-final-project/IO/display.inc
 INCLUDE ./asm-final-project/IO/graph.inc
 INCLUDE ./asm-final-project/DataType/BackPack.inc
 INCLUDE ./asm-final-project/DataType/ToolDataType.inc
+INCLUDE ./asm-final-project/MemOperation.inc
 
 .data
 
@@ -17,6 +18,9 @@ INCLUDE ./asm-final-project/DataType/ToolDataType.inc
 
     check_shape_counter DWORD ?
     check_slotPos   COORD <?,?>
+
+    ToolListInBackPack  TOOL 100 DUP(<>)
+    ToolNumber DWORD 1
 .code
 
 InitBackPack PROC USES esi edi ecx eax,
@@ -204,7 +208,6 @@ CheckToolInBackPack PROC USES esi edi ecx ebx edx Object : PTR Tool , CompareObj
         add check_slotPos.Y , 1
     Loop OuterLoop
 
-
     mov eax , 1
     jmp Done
 
@@ -269,8 +272,22 @@ PlaceToolInPackSlotMap PROC USES esi edi ecx eax edx ebx Object : PTR Tool , Pac
         add check_slotPos.Y , 1
     Loop OuterLoop
 
-ret
+    ret
 PlaceToolInPackSlotMap ENDP
 
+PlaceToolInPackToolList PROC USES esi edi eax Object : PTR Tool
+
+    mov esi , Object
+
+    mov edi , OFFSET ToolListInBackPack
+    mov eax , SIZEOF TOOL
+    mul ToolNumber
+    add edi , eax
+
+    INVOKE MemClone, edi , esi , SIZEOF TOOL
+    inc ToolNumber
+
+ret
+PlaceToolInPackToolList ENDP
 
 END

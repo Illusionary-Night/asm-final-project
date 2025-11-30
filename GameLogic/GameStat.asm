@@ -46,6 +46,8 @@ IntoStartStat proc uses esi eax	CurStat: PTR GAMESTAT
 	INVOKE InitializeResourceAttribute, OFFSET User.Resource
 	INVOKE InitializeInGameAttribute, OFFSET User.InGame
 
+	INVOKE InitBackPack , OFFSET GameBp
+
 	ret
 
 IntoStartStat endp

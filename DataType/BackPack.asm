@@ -85,20 +85,14 @@ ShowBackpack PROC USES ecx eax ebx edx BackPackBasPos : COORD
     ret
 ShowBackpack ENDP
 
-ScreenPosToSlotIndex PROC USES ebx ecx edx , ScreenPos : COORD
+ScreenPosToSlotIndex PROC USES ebx ecx , ScreenPos : COORD
 
     mov ax , ScreenPos.Y
-    mov cx , 7
-    xor dx , dx
-    div cx
     mov bx , 8
     mul bx
     mov cx , ax
 
     mov ax , ScreenPos.X
-    mov bx , 7
-    xor dx , dx
-    div bx
     add cx , ax
 
     movzx eax , cx
@@ -182,8 +176,12 @@ CheckToolInBackPack PROC USES esi edi ecx ebx edx Object : PTR Tool , CompareObj
             cmp check_slotPos.Y , 7
             ja Next
 
-            INVOKE ScreenPosToSlotIndex , check_slotPos
-            mov ebx , eax
+            mov ax , check_slotPos.Y
+            mov bx , 8
+            mul bx
+            movzx ebx , ax
+            movzx eax , check_slotPos.X
+            add ebx , eax
 
             lea edi , (TOOL PTR [esi]).SHAPE
             add edi , check_shape_counter
@@ -206,6 +204,7 @@ CheckToolInBackPack PROC USES esi edi ecx ebx edx Object : PTR Tool , CompareObj
         add check_slotPos.Y , 1
     Loop OuterLoop
 
+
     mov eax , 1
     jmp Done
 
@@ -217,7 +216,7 @@ CheckToolInBackPack PROC USES esi edi ecx ebx edx Object : PTR Tool , CompareObj
 
 CheckToolInBackPack ENDP
 
-PlaceToolInPackSlotMap PROC USES esi edi ecx eax edx Object : PTR Tool , PackRecord : PTR BACKPACK , CursorPosX : WORD , CursorPosY : WORD
+PlaceToolInPackSlotMap PROC USES esi edi ecx eax edx ebx Object : PTR Tool , PackRecord : PTR BACKPACK , CursorPosX : WORD , CursorPosY : WORD
 
     LOCAL startX : WORD
 
@@ -247,8 +246,12 @@ PlaceToolInPackSlotMap PROC USES esi edi ecx eax edx Object : PTR Tool , PackRec
             cmp check_slotPos.Y , 7
             ja Next
 
-            INVOKE ScreenPosToSlotIndex , check_slotPos
-            mov ebx , eax
+            ;mov ax , check_slotPos.Y
+            ;mov bx , 8
+            ;mul bx
+            ;movzx ebx , ax
+            ;movzx eax , check_slotPos.X
+            ;add ebx , eax
 
             lea edi , (TOOL PTR [esi]).SHAPE
             add edi , check_shape_counter
@@ -268,5 +271,6 @@ PlaceToolInPackSlotMap PROC USES esi edi ecx eax edx Object : PTR Tool , PackRec
 
 ret
 PlaceToolInPackSlotMap ENDP
+
 
 END

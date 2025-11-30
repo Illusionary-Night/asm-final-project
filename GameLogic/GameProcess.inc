@@ -43,8 +43,8 @@ RunBuyProcess PROTO,
 
 ;return the fight result to eax, 0 not done, 1 done
 RunFightProcess PROTO,                  ; Assume user attack enemy 20, Enemy attack user 15
-	Char1: PTR CHARACTERATTRIBUTE,  ;User
-	Char2: PTR CHARACTERATTRIBUTE,	;Enemy
+	AllyChar: PTR CHARACTERATTRIBUTE,  ;User
+	EnemyChar: PTR CHARACTERATTRIBUTE,	;Enemy
 	Position: COORD
 
 ShowCharInfo PROTO,

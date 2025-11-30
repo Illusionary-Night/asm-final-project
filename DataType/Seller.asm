@@ -11,17 +11,20 @@ INCLUDE ./asm-final-project/DataType/Seller.inc
 	SellerCursor COORD <GOODSPOSITIONX,GOODSPOSITIONY>
 	SellerStrBuf BYTE 10 DUP(0)
 	RarityStr  	BYTE "Rarity: "
+	PriceStr	BYTE "Price: "
 	CoolDownTimeStr BYTE "CoolDownTime: "
 	TypeStr		BYTE "Type: "
 	HpStr		BYTE "Hp: "
 	EpStr		BYTE "Sp: "
 	MpStr		BYTE "Mp: "
 	ShieldStr	Byte "Shield: "
+	AllyDeltaStr	BYTE "Ally: "
+	EnemyDeltaStr	BYTE "Enemy: "
 	TestText Text <>
 	TS1 BYTE "There is TOOL"
 .code
 
-ShowGoods proc uses esi eax ecx Shelf: PTR GOODS
+ShowGoods proc uses esi edi eax ecx Shelf: PTR GOODS
 
 	mov esi, Shelf
 	INVOKE ShowRectangle, esi
@@ -37,10 +40,16 @@ ShowGoods proc uses esi eax ecx Shelf: PTR GOODS
 		mov eax, [esi]
 		cmp eax, 0
 		je L2
-		;INVOKE ......, OFFSET SellerToolBuf, [esi]		
-		INVOKE SetText, OFFSET TestText, OFFSET TS1, 0Ah, SellerCursor, LENGTHOF TS1
-		INVOKE ShowText, OFFSET TestText
+		INVOKE GetToolByUUID, OFFSET SellerToolBuf, eax		
+		;INVOKE SetText, OFFSET TestText, OFFSET SellerToolBuf.TOOLNAME, 0Ah, SellerCursor, LENGTHOF SellerToolBuf.TOOLNAME
+		;INVOKE ShowText, OFFSET TestText
 		
+		;    o TOOLNAME   }
+		lea edi, SellerToolBuf.TOOLNAME
+
+		;  ] w TestText
+		INVOKE SetText, OFFSET TestText, edi, 0Ah, SellerCursor, 20  ;  Υ  strlen    o u      
+		INVOKE ShowText, OFFSET TestText
 		L2:
 			add esi, 4
 			AddSellerCursorY 1
@@ -185,6 +194,12 @@ ShowToolInfo proc uses eax esi edi ebx ecx Shelf: PTR GOODS, Index: BYTE
 	call WriteInt
 	AddSellerCursorY 1
 
+	INVOKE SetText, OFFSET TestText, OFFSET PriceStr, 0Ah, SellerCursor, LENGTHOF PriceStr
+	INVOKE ShowText, OFFSET TestText
+	mov eax, (TOOL PTR [esi]).PRICE
+	call WriteInt
+	AddSellerCursorY 1
+
 	INVOKE SetText, OFFSET TestText, OFFSET CoolDownTimeStr, 0Ah, SellerCursor, LENGTHOF CoolDownTimeStr
 	INVOKE ShowText, OFFSET TestText
 	mov eax, (TOOL PTR [esi]).COOLDOWNMAX
@@ -195,6 +210,10 @@ ShowToolInfo proc uses eax esi edi ebx ecx Shelf: PTR GOODS, Index: BYTE
 	INVOKE ShowText, OFFSET TestText
 	mov eax, (TOOL PTR [esi]).TYPEID
 	call WriteInt
+	AddSellerCursorY 1
+	;ally delta---------------------------------------------
+	INVOKE SetText, OFFSET TestText, OFFSET AllyDeltaStr, 0Ah, SellerCursor, LENGTHOF AllyDeltaStr
+	INVOKE ShowText, OFFSET TestText
 	AddSellerCursorY 1
 
 	INVOKE SetText, OFFSET TestText, OFFSET HpStr, 0Ah, SellerCursor, LENGTHOF HpStr
@@ -214,8 +233,31 @@ ShowToolInfo proc uses eax esi edi ebx ecx Shelf: PTR GOODS, Index: BYTE
 	mov eax, (TOOL PTR [esi]).ALLYDELTA.MP
 	call WriteInt
 	AddSellerCursorY 1
-	
-	
+	;enemy delta---------------------------------------------
+	INVOKE SetText, OFFSET TestText, OFFSET EnemyDeltaStr, 0Ah, SellerCursor, LENGTHOF EnemyDeltaStr
+	INVOKE ShowText, OFFSET TestText
+	AddSellerCursorY 1
+
+	INVOKE SetText, OFFSET TestText, OFFSET HpStr, 0Ah, SellerCursor, LENGTHOF HpStr
+	INVOKE ShowText, OFFSET TestText
+	mov eax, (TOOL PTR [esi]).ENEMYDELTA.HP
+	call WriteInt
+	AddSellerCursorY 1
+
+	INVOKE SetText, OFFSET TestText, OFFSET EpStr, 0Ah, SellerCursor, LENGTHOF EpStr
+	INVOKE ShowText, OFFSET TestText
+	mov eax, (TOOL PTR [esi]).ENEMYDELTA.EP
+	call WriteInt
+	AddSellerCursorY 1
+
+	INVOKE SetText, OFFSET TestText, OFFSET MpStr, 0Ah, SellerCursor, LENGTHOF MpStr
+	INVOKE ShowText, OFFSET TestText
+	mov eax, (TOOL PTR [esi]).ENEMYDELTA.MP
+	call WriteInt
+	AddSellerCursorY 1
+	;-------------------------------------------------------------
+
+
 	ret
 
 ShowToolInfo endp

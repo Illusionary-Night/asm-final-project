@@ -5,6 +5,7 @@ INCLUDE ./asm-final-project/DataType/ToolDataType.inc
 INCLUDE ./asm-final-project/MemOperation.inc
 
 .data
+	; test tool data---------------------------------------------------
 	test_slot_info1 BYTE	"  **  ",
 							" *  * ",
 							" *  * ",
@@ -29,6 +30,124 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	test_UUID DWORD 0
 	temp_position COORD <>
 	test_name BYTE "Test Tool",0
+	;--------------------------------------------------------------------
+	; test tool data---------------------------------------------------
+	fire_slot_info_00 BYTE	"      ",
+							"      ",
+							"      ",
+							"      ",
+							"      ",
+							"      "
+	fire_slot_info_01 BYTE	"      ",
+							"      ",
+							"    **",
+							"     *",
+							"     *",
+							"     *"
+	fire_slot_info_02 BYTE	"      ",
+							"      ",
+							"      ",
+							"*     ",
+							"**    ",
+							"**    "
+	fire_slot_info_03 BYTE	"      ",
+							"      ",
+							"      ",
+							"      ",
+							"      ",
+							"      "
+	fire_slot_info_10 BYTE	"      ",
+							"    * ",
+							"    * ",
+							"   ** ",
+							"  ****",
+							"  ****"
+	fire_slot_info_11 BYTE	"     *",
+							"     *",
+							"    **",
+							"    **",
+							"    **",
+							"*   **"
+	fire_slot_info_12 BYTE	"***   ",
+							"****  ",
+							"****  ",
+							"******",
+							"******",
+							"******"
+	fire_slot_info_13 BYTE	"   *  ",
+							" ***  ",
+							"****  ",
+							"***** ",
+							"******",
+							"******"
+	fire_slot_info_20 BYTE	"  ****",
+							" *****",
+							" *****",
+							"******",
+							"******",
+							"******"
+	fire_slot_info_21 BYTE	"******",
+							"******",
+							"******",
+							"******",
+							"******",
+							"******"
+	fire_slot_info_22 BYTE	"******",
+							"******",
+							"******",
+							"******",
+							"******",
+							"******"
+	fire_slot_info_23 BYTE	"******",
+							"******",
+							"******",
+							"******",
+							"******",
+							"******"
+	fire_slot_info_30 BYTE	" *****",
+							" *****",
+							"   ***",
+							"     *",
+							"      ",
+							"      "
+	fire_slot_info_31 BYTE	"******",
+							"******",
+							"******",
+							"******",
+							" *****",
+							"    **"
+	fire_slot_info_32 BYTE	"******",
+							"******",
+							"******",
+							"******",
+							"******",
+							"****  "
+	fire_slot_info_33 BYTE	"******",
+							"***** ",
+							"****  ",
+							"***   ",
+							"*     ",
+							"      "
+	fire_tool Tool  <>
+	fire_tool_slot TOOLSLOT 16 DUP(<>)
+	fire_tool_shape BYTE	"1111",
+							"1111",
+							"1111",
+							"1111"
+	fire_rarity BYTE 5
+	fire_cooldown_max DWORD 4
+	fire_typeid DWORD 1
+	fire_ally_delta INGAMEATTRIBUTE  <0,0,0>
+	fire_enemy_delta INGAMEATTRIBUTE  <-20,0,0>
+	fire_name BYTE "Soul Flame",0, 0,0,0,0,0,0,0,0,0,0,0  ; 總共 20 bytes
+	fire_price DWORD 5
+	;--------------------------------------------------------------------
+
+
+
+
+
+
 	test_tool2 Tool  <>
 
 	tool_proto_database TOOL 100 DUP(<>)
@@ -45,7 +164,8 @@ SetProtoTool PROC USES esi edi eax,
 	TypeID: DWORD,
     AllyDelta: INGAMEATTRIBUTE,
     EnemyDelta: INGAMEATTRIBUTE,
-	ToolName: PTR BYTE
+	ToolName: PTR BYTE,
+	Price: DWORD
 
     mov esi, Object
     
@@ -71,7 +191,10 @@ SetProtoTool PROC USES esi edi eax,
     INVOKE MemClone, edi, ADDR EnemyDelta, SIZEOF INGAMEATTRIBUTE
 
 	lea edi, (TOOL PTR [esi]).TOOLNAME
-    INVOKE MemClone, edi, ADDR ToolName, SIZEOF BYTE * 20
+    INVOKE MemClone, edi, ToolName, SIZEOF BYTE * 20
+
+	mov eax, Price
+	mov (TOOL PTR [esi]).PRICE, eax
 
 	mov edi, OFFSET tool_proto_database
 	mov eax, SIZEOF TOOL
@@ -95,20 +218,65 @@ SlotRepeatLabel:
 
 	INVOKE SetInGameAttribute, OFFSET test_ally_delta ,0 ,0 ,0
 	INVOKE SetInGameAttribute, OFFSET test_enemy_delta ,0 ,0 ,0
-	INVOKE SetProtoTool, OFFSET test_tool, OFFSET test_tool_slot, OFFSET test_tool_shape, 1, 4, 5, test_ally_delta, test_enemy_delta, OFFSET test_name
+	INVOKE SetProtoTool, OFFSET test_tool, OFFSET test_tool_slot, OFFSET test_tool_shape, 1, 4, 5, test_ally_delta, test_enemy_delta, OFFSET test_name,10
 	
 	lea edi, test_tool.BPPOSITION
 	mov esi, OFFSET test_position
     INVOKE MemClone, edi, esi, SIZEOF COORD
 	
+
+
+
 	ret
 SetTestTool  ENDP
 
-GetToolByUUID PROC, 
+SetAllTool PROC USES esi ecx eax edx
+	mov esi, OFFSET fire_tool_slot
+	INVOKE SetToolSlot, esi, OFFSET fire_slot_info_00, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET fire_slot_info_01, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET fire_slot_info_02, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET fire_slot_info_03, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET fire_slot_info_10, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET fire_slot_info_11, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET fire_slot_info_12, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET fire_slot_info_13, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET fire_slot_info_20, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET fire_slot_info_21, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET fire_slot_info_22, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET fire_slot_info_23, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET fire_slot_info_30, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET fire_slot_info_31, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET fire_slot_info_32, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET fire_slot_info_33, 0Ch
+
+	INVOKE SetProtoTool, OFFSET fire_tool, OFFSET fire_tool_slot, OFFSET fire_tool_shape, fire_rarity, fire_cooldown_max, fire_typeid, fire_ally_delta, fire_enemy_delta, OFFSET fire_name, 500
+	ret
+SetAllTool  ENDP
+
+
+
+
+
+GetToolByUUID PROC USES esi eax, 
 	Object :PTR TOOL,
 	UUID :DWORD
 
-	mov esi, OFFSET tool_database
+	mov esi, OFFSET tool_proto_database
 	mov eax, SIZEOF TOOL
 	mul UUID
 	add esi, eax
@@ -153,7 +321,7 @@ CreateTool ENDP
 
 ToolTest PROC
 	INVOKE SetTestTool	
-	INVOKE CreateTool, OFFSET test_UUID, 1
+	;INVOKE CreateTool, OFFSET test_UUID, 0
 	INVOKE GetToolByUUID, OFFSET test_tool2, test_UUID
 	lea edi, test_tool2.BPPOSITION
 	mov esi, OFFSET test_position

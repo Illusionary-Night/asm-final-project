@@ -23,7 +23,7 @@ INCLUDE ./asm-final-project/MemOperation.inc
     ToolNumber DWORD 1
 .code
 
-InitBackPack PROC USES esi edi ecx eax,
+InitBackPack PROC USES esi edi ecx eax ebx,
     Object : PTR BACKPACK
 
     mov esi , Object
@@ -36,6 +36,16 @@ InitBackPack PROC USES esi edi ecx eax,
     mov ecx , MAXSLOTS
     mov al , 0
     rep stosb
+
+    mov ecx , 64
+    mov ebx , 0
+    mov eax , 0
+    L:
+        mov al , (BACKPACK PTR [esi]).SlotMap[ebx]
+        call WriteInt
+        inc ebx
+    loop L
+
 
     lea esi , (BACKPACK PTR [esi]).ItemUUIDMap
     mov ecx , MAXSLOTS
@@ -165,7 +175,7 @@ CheckToolInBackPack PROC USES esi edi ecx ebx edx Object : PTR Tool , CompareObj
     mov ax , CursorPosY
     mov check_slotPos.Y , ax
 
-
+    
     OuterLoop:
         push ecx
         mov ecx , 4
@@ -212,7 +222,8 @@ CheckToolInBackPack PROC USES esi edi ecx ebx edx Object : PTR Tool , CompareObj
     jmp Done
 
     ToolCannotPitIn:
-        mov eax , 0
+        mov eax , 8
+        call WriteInt
 
     Done:
     ret
@@ -249,12 +260,12 @@ PlaceToolInPackSlotMap PROC USES esi edi ecx eax edx ebx Object : PTR Tool , Pac
             cmp check_slotPos.Y , 7
             ja Next
 
-            ;mov ax , check_slotPos.Y
-            ;mov bx , 8
-            ;mul bx
-            ;movzx ebx , ax
-            ;movzx eax , check_slotPos.X
-            ;add ebx , eax
+            mov ax , check_slotPos.Y
+            mov bx , 8
+            mul bx
+            movzx ebx , ax
+            movzx eax , check_slotPos.X
+            add ebx , eax
 
             lea edi , (TOOL PTR [esi]).SHAPE
             add edi , check_shape_counter
@@ -271,6 +282,15 @@ PlaceToolInPackSlotMap PROC USES esi edi ecx eax edx ebx Object : PTR Tool , Pac
         pop ecx
         add check_slotPos.Y , 1
     Loop OuterLoop
+
+    mov ecx , 64
+    mov ebx , 0
+    mov eax , 0
+    L1:
+        mov al , (BACKPACK PTR [edx]).SlotMap[ebx]
+        call WriteInt
+        inc ebx
+    loop L1
 
     ret
 PlaceToolInPackSlotMap ENDP

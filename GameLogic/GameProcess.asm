@@ -43,11 +43,12 @@ RunPackProcess PROC uses esi eax ebx OurBp: PTR BACKPACK, Shelf: PTR GOODS, Targ
 	INVOKE ReadInt09
 	mov (TOOL PTR [esi]).BPPOSITION.Y, ax
 
-	;INVOKE CheckToolInBackPack , Target , OurBp , (TOOL PTR [esi]).BPPOSITION.X , (TOOL PTR [esi]).BPPOSITION.Y
-	;cmp al, 0
-	;je Conflict
+	xor eax , eax
+	INVOKE CheckToolInBackPack , Target , OurBp , (TOOL PTR [esi]).BPPOSITION.X , (TOOL PTR [esi]).BPPOSITION.Y
+	cmp al, 0
+	je Conflict				;still have problem , record seems ok(you can see WriteInt result) , but when Conflict it don't detect and draw tool and go fight 
 	
-	;INVOKE PlaceToolInPackSlotMap , Target , OurBp , (TOOL PTR [esi]).BPPOSITION.X , (TOOL PTR [esi]).BPPOSITION.Y
+	INVOKE PlaceToolInPackSlotMap , Target , OurBp , (TOOL PTR [esi]).BPPOSITION.X , (TOOL PTR [esi]).BPPOSITION.Y
 	INVOKE ShowTool, Target
 	INVOKE DeletTool, Shelf, bl
 	INVOKE PlaceToolInPackToolList , Target

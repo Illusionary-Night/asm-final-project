@@ -65,11 +65,16 @@ name11 BYTE "| |   | | |  __/\__ \__ \ \__ \ |_) | (_| | (_|  __/ |   <  __/ |_|
 name12 BYTE "|_|   |_|  \___||___/___/ |___/ .__/ \__,_|\___\___| |_|\_\___|\__, |  \__\___/  |___/\__\__,_|_|   \__|", 0
 name13 BYTE "                              | |                               __/ |                                   ", 0
 name14 BYTE "                              |_|                              |___/                                    ", 0
-x WORD 15   ;if you want to move the position of "pack it up!" text, just change x and y
-y WORD 2
+x WORD 60   ;if you want to move the position of "pack it up!" text, just change x and y
+y WORD 10
+screenBoundary RECTANGLE <> 
+coordBoundary COORD <0,0>
 
 .code
 ShowTitle proc uses ax bx position: COORD, start_pic: PTR PICTURE
+
+INVOKE SetRectangle, OFFSET screenBoundary, '*', 7, 210, 60, coordBoundary
+INVOKE ShowRectangle, OFFSET screenBoundary
 
 setCoord 0, 0
 INVOKE Setpicture, start_pic, OFFSET name1, 4, 39, 4, position
@@ -95,8 +100,8 @@ setCoord 87, 0
 INVOKE Setpicture, start_pic, OFFSET name6, 7, 4, 8, position
 INVOKE Showpicture, start_pic
 
-mov x, 8;if you want to move the position of "press any key to start" text, just change these 5 line code
-mov y, 20
+mov x, 53;if you want to move the position of "press any key to start" text, just change these 5 line code
+mov y, 40
 
 setCoord 0, 0
 INVOKE SetPicture, start_pic, OFFSET name7, 7, 104, 1, position
@@ -129,6 +134,7 @@ INVOKE Showpicture, start_pic
 setCoord 0, 7
 INVOKE Setpicture, start_pic, OFFSET name14, 7, 104, 1, position
 INVOKE Showpicture, start_pic
+
 ret 8
 ShowTitle endp
 

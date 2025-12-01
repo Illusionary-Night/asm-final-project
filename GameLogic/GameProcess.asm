@@ -26,8 +26,8 @@ INCLUDE ./asm-final-project/GameLogic/GameProcess.inc
 	UserLivesStr    BYTE "Lives: "
 	GameProcessCursor COORD <>;<UserAttributeX,UserAttributeY>
 	GameProcessText TEXT <>
-	ToolListPtrInBackPack DWORD ?
-	ToolCountPtrInBackPack DWORD ?
+	ToolListInBackPack DWORD ?
+	ToolCountInBackPack DWORD ?
 	Msg_ProcessPeriodicTools BYTE "Processing periodic tools...",0Ah,0Dh,"$"
 .code
 
@@ -90,7 +90,7 @@ RunBuyProcess endp
 
 ; Assume user attack enemy 200, Enemy attack user 150
 
-RunFightProcess proc uses esi edi AllyChar: PTR CHARACTERATTRIBUTE, EnemyChar: PTR CHARACTERATTRIBUTE, Position: COORD
+RunFightProcess proc uses esi edi ebx edx AllyChar: PTR CHARACTERATTRIBUTE, EnemyChar: PTR CHARACTERATTRIBUTE, Position: COORD
 
 	mov esi, AllyChar
 	mov edi, EnemyChar
@@ -98,7 +98,9 @@ RunFightProcess proc uses esi edi AllyChar: PTR CHARACTERATTRIBUTE, EnemyChar: P
 	sub (CHARACTERATTRIBUTE PTR [esi]).Ingame.HP, 150	; enemy attack user
 	
 	;cyclical tool active--------------------------
-	INVOKE GetToolListPtrInBackPack, ADDR ToolListPtrInBackPack, ADDR ToolCountPtrInBackPack
+	INVOKE GetToolListPtrInBackPack
+	mov ToolListInBackPack, ebx
+	mov ToolCountInBackPack, edx
 	INVOKE ProcessPeriodicTools , esi, edi
 	;----------------------------------------------
 	
@@ -186,9 +188,8 @@ EraseCharInfo endp
 
 ; ProcessPeriodicTools: 遍歷道具陣列，處理週期冷卻
 ProcessPeriodicTools PROC USES esi edi eax ebx ecx edx AllyChar: PTR CHARACTERATTRIBUTE, EnemyChar: PTR CHARACTERATTRIBUTE
-    mov esi, ToolListPtrInBackPack       ; ESI 指向第一個道具
-    mov ecx, ToolCountPtrInBackPack     
-	MOV ecx, [ecx]			; ECX = 陣列長度
+    mov esi, ToolListInBackPack       ; ESI 指向第一個道具
+    mov ecx, ToolCountInBackPack	; ECX = 陣列長度
 
 
 	push edx
@@ -202,7 +203,7 @@ ProcessPeriodicTools PROC USES esi edi eax ebx ecx edx AllyChar: PTR CHARACTERAT
 
 	push edx
 	mov dh, 50       ; Y 座標（0 從上開始）
-	mov dl, 120       ; X 座標（0 從左開始）
+	mov dl, 150       ; X 座標（0 從左開始）
 	call Gotoxy       ; 設定文字游標位置
 	pop edx
 

@@ -20,7 +20,7 @@ INCLUDE ./asm-final-project/MemOperation.inc
     check_slotPos   COORD <?,?>
 
     ToolListInBackPack  TOOL 100 DUP(<>)
-    ToolNumberInBackPack DWORD 1
+    ToolNumberInBackPack DWORD 0
 .code
 
 InitBackPack PROC USES esi edi ecx eax,
@@ -287,21 +287,31 @@ PlaceToolInPackToolList PROC USES esi edi eax Object : PTR Tool
     INVOKE MemClone, edi , esi , SIZEOF TOOL
     inc ToolNumberInBackPack
 
+    ; Debug test: print number of tools in backpack------------------------------
+    push edx
+	mov dh, 50       ; Y 座標（0 從上開始）
+	mov dl, 120       ; X 座標（0 從左開始）
+	call Gotoxy       ; 設定文字游標位置
+	pop edx
+
+	push eax
+	mov eax, ToolNumberInBackPack
+	call WriteInt
+    pop eax
+    ;--------------------------------------------------------------------------
+	
+
 ret
 PlaceToolInPackToolList ENDP
 
-;return toolList in Object and return number of tools in ToolNumber
-GetToolListPtrInBackPack PROC USES eax edx, Object: PTR PTR TOOL, ToolNumber: PTR DWORD
+;return toolList in ebx and return number of tools in edx, both are pointers
+GetToolListPtrInBackPack PROC ;here use ebx and edx to return values
 
     ; 回傳 ToolListInBackPack 開頭位址
-    mov eax, OFFSET ToolListInBackPack
-    mov edx, Object
-    mov [edx], eax
+    mov ebx, OFFSET ToolListInBackPack
 
     ; 回傳道具數量
-    mov eax, ToolNumberInBackPack
-    mov edx, ToolNumber
-    mov [edx], eax
+    mov edx, ToolNumberInBackPack
 
     ret
 GetToolListPtrInBackPack ENDP

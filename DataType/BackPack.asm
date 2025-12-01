@@ -37,16 +37,6 @@ InitBackPack PROC USES esi edi ecx eax ebx,
     mov al , 0
     rep stosb
 
-    mov ecx , 64
-    mov ebx , 0
-    mov eax , 0
-    L:
-        mov al , (BACKPACK PTR [esi]).SlotMap[ebx]
-        call WriteInt
-        inc ebx
-    loop L
-
-
     lea esi , (BACKPACK PTR [esi]).ItemUUIDMap
     mov ecx , MAXSLOTS
     mov al , 0
@@ -280,15 +270,6 @@ PlaceToolInPackSlotMap PROC USES esi edi ecx eax edx ebx Object : PTR Tool , Pac
         pop ecx
         add check_slotPos.Y , 1
     Loop OuterLoop
-
-    mov ecx , 64
-    mov ebx , 0
-    mov eax , 0
-    L1:
-        mov al , (BACKPACK PTR [edx]).SlotMap[ebx]
-        call WriteInt
-        inc ebx
-    loop L1
 
     ret
 PlaceToolInPackSlotMap ENDP

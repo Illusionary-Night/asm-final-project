@@ -90,13 +90,17 @@ RunBuyProcess endp
 
 ; Assume user attack enemy 200, Enemy attack user 150
 
-RunFightProcess proc uses esi edi Char1: PTR CHARACTERATTRIBUTE, Char2: PTR CHARACTERATTRIBUTE, Position: COORD
+RunFightProcess proc uses esi edi AllyChar: PTR CHARACTERATTRIBUTE, EnemyChar: PTR CHARACTERATTRIBUTE, Position: COORD
 
-	mov esi, Char1
-	mov edi, Char2
-	sub (CHARACTERATTRIBUTE PTR [edi]).Ingame.HP, 200
-	sub (CHARACTERATTRIBUTE PTR [esi]).Ingame.HP, 150
-
+	mov esi, AllyChar
+	mov edi, EnemyChar
+	;sub (CHARACTERATTRIBUTE PTR [edi]).Ingame.HP, 200 ;user don't need to attack directly
+	sub (CHARACTERATTRIBUTE PTR [esi]).Ingame.HP, 150	; enemy attack user
+	
+	;cyclical tool active--------------------------
+	;INVOKE ProcessPeriodicTools
+	;----------------------------------------------
+	
 	mov eax, (CHARACTERATTRIBUTE PTR [edi]).Ingame.HP
 	cmp eax, 0
 	jle UserWin
@@ -116,12 +120,12 @@ RunFightProcess proc uses esi edi Char1: PTR CHARACTERATTRIBUTE, Char2: PTR CHAR
 		dec (CHARACTERATTRIBUTE PTR [esi]).Resource.LIVES
 		mov eax, 1
 	Done:
-		INVOKE EraseCharInfo, Char1, Position
-		INVOKE ShowCharInfo, Char1, Position
+		INVOKE EraseCharInfo, AllyChar, Position
+		INVOKE ShowCharInfo, AllyChar, Position
 
 		add Position.X, 40
-		INVOKE EraseCharInfo, Char2, Position
-		INVOKE ShowCharInfo, Char2, Position
+		INVOKE EraseCharInfo, EnemyChar, Position
+		INVOKE ShowCharInfo, EnemyChar, Position
 	ret
 
 RunFightProcess endp
@@ -177,5 +181,57 @@ EraseCharInfo proc uses eax esi ecx Char: PTR CHARACTERATTRIBUTE, Position: COOR
 	ret 
 
 EraseCharInfo endp
+
+
+; ProcessPeriodicTools: 遍歷道具陣列，處理週期冷卻
+ProcessPeriodicTools PROC USES esi edi eax ebx ecx edx ToolList:PTR TOOL, ToolNumber:DWORD, AllyChar: PTR CHARACTERATTRIBUTE, EnemyChar: PTR CHARACTERATTRIBUTE
+
+    mov esi, ToolList       ; ESI 指向第一個道具
+    mov ecx, ToolNumber     ; ECX = 陣列長度
+
+    cmp ecx, 0
+    je DoneLoop
+
+NextTool:
+    ; -------------------------------
+    ; ESI 指向 TOOL[i]
+    ; 減少冷卻
+    ; -------------------------------
+    mov eax, (TOOL PTR [esi]).COOLDOWN
+    cmp eax, 0
+    je SkipTool             ; 已經是 0 就跳過
+
+    dec (TOOL PTR [esi]).COOLDOWN
+
+    ; 判斷是否歸零
+    mov eax, (TOOL PTR [esi]).COOLDOWN
+    cmp eax, 0
+    jne SkipTool
+
+    ; -------------------------------
+    ; TODO: invoke some function or trigger effect
+	lea ebx, (TOOL PTR [esi]).ALLYDELTA
+	mov edi, AllyChar                       ; EDI = pointer to CHARACTERATTRIBUTE
+	lea edi, (CHARACTERATTRIBUTE PTR [edi]).Ingame   ; EDI = &AllyChar.Ingame
+	INVOKE OverlayInGameAttribute, edi, ebx, 0
+	cmp eax, 0
+	jne SkipTool
+	lea ebx, (TOOL PTR [esi]).ENEMYDELTA
+	mov edi, EnemyChar                      ; EDI = pointer to CHARACTERATTRIBUTE
+	lea edi, (CHARACTERATTRIBUTE PTR [edi]).Ingame   ; EDI = &EnemyChar.Ingame
+	INVOKE OverlayInGameAttribute, edi, ebx, 1
+    ; -------------------------------
+    
+
+	mov eax, (TOOL PTR [esi]).COOLDOWNMAX
+	mov (TOOL PTR [esi]).COOLDOWN, eax
+
+SkipTool:
+    add esi, SIZEOF TOOL     ; 移到下一個道具
+    loop NextTool
+
+DoneLoop:
+    ret
+ProcessPeriodicTools ENDP
 
 end

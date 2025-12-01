@@ -4,6 +4,7 @@ INCLUDE ./asm-final-project/IO/display.inc
 INCLUDE ./asm-final-project/IO/input.inc
 INCLUDE ./asm-final-project/IO/graph.inc
 INCLUDE ./asm-final-project/IO/StartScene.inc
+INCLUDE ./asm-final-project/IO/StageGraph.inc
 
 INCLUDE ./asm-final-project/DataType/GameDataType.inc
 INCLUDE ./asm-final-project/DataType/ToolDataType.inc
@@ -67,7 +68,7 @@ IntoPrepareStat proc uses esi eax ecx CurStat: PTR GAMESTAT
 	INVOKE ResetAllToolInGoods, OFFSET Seller
 	
 	L1:                                           ;choose which tool to sell
-		INVOKE InsertTool, OFFSET Seller, 1
+		INVOKE InsertTool, OFFSET Seller, 2
 		inc al
 	LOOP L1
 	INVOKE ShowGoods, OFFSET Seller
@@ -91,9 +92,12 @@ IntoFightStat proc uses esi eax CurStat: PTR GAMESTAT
 
 	mov al, SelfStat
 	mov (GAMESTAT PTR [esi]).SubStat, al
+	INVOKE ShowStage, CurStat
 
 	INVOKE InitializeResourceAttribute, OFFSET Enemy.Resource
 	INVOKE InitializeInGameAttribute, OFFSET Enemy.InGame
+
+	INVOKE InitializeInGameAttribute, OFFSET User.InGame	;---------------------------- I think we also need to re-initialize user InGame attribute here
 
 	INVOKE EraseToolInfo, OFFSET Seller
 	INVOKE EraseToolInfo, OFFSET OurGoods
@@ -150,6 +154,7 @@ ChePrepareSubStat proc uses esi eax ecx ebx CurStat: PTR GAMESTAT, SubStat: BYTE
 	mov esi, CurStat
 	mov al, SubStat
 	mov (GAMESTAT PTR [esi]).SubStat, al
+	INVOKE ShowStage, CurStat
 
 	xor ecx, ecx
 	mov ecx, 3
@@ -188,8 +193,8 @@ ChePrepareSubStat proc uses esi eax ecx ebx CurStat: PTR GAMESTAT, SubStat: BYTE
 		Dummy1:
 	LOOP L1
 
-	jmp Done	
-
+	jmp Done
+	
 	L2:                          ;Pack Process, break untile user done
 		mov ecx, 0
 		mov eax, 0

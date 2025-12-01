@@ -39,8 +39,8 @@ GameMainLoop proc uses eax ecx ebx esi
 	INVOKE CheStartSubStat, OFFSET CurGameStat, GameRuleStat
 
 	INVOKE SetTestTool	             ;we will initialize tool database here
-	INVOKE CreateTool, OFFSET Game_UUID, 1
-	
+	INVOKE SetAllTool				; initialize all tool info
+	;INVOKE CreateTool, OFFSET Game_UUID, 1	
 
 	L1:
 		INVOKE IntoPrepareStat, OFFSET CurGameStat

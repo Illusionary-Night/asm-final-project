@@ -138,7 +138,7 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	fire_cooldown_max DWORD 4
 	fire_typeid DWORD 1
 	fire_ally_delta INGAMEATTRIBUTE  <0,0,0>
-	fire_enemy_delta INGAMEATTRIBUTE  <-20,0,0>
+	fire_enemy_delta INGAMEATTRIBUTE  <-20,-10,0>
 	fire_name BYTE "Soul Flame",0, 0,0,0,0,0,0,0,0,0,0,0  ; 總共 20 bytes
 	fire_price DWORD 5
 	;--------------------------------------------------------------------

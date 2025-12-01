@@ -221,16 +221,21 @@ NextTool:
     ; ESI 指向 TOOL[i]
     ; 減少冷卻
     ; -------------------------------
-    mov eax, (TOOL PTR [esi]).COOLDOWN
-    cmp eax, 0
-    je SkipTool             ; 已經是 0 就跳過
+	push edx
+	mov dh, 50       ; Y 座標（0 從上開始）
+	mov dl, 160       ; X 座標（0 從左開始）
+	call Gotoxy       ; 設定文字游標位置
+	pop edx
 
-    dec (TOOL PTR [esi]).COOLDOWN
+	push eax
+	mov eax, (TOOL PTR [esi]).COOLDOWN
+	call WriteInt
+	pop eax
+	;--------------------------------
 
-    ; 判斷是否歸零
-    mov eax, (TOOL PTR [esi]).COOLDOWN
-    cmp eax, 0
-    jne SkipTool
+	INVOKE CooldownUpdate_Tool, esi
+	cmp eax, 0
+	jne SkipTool
 
     ; -------------------------------
     ; TODO: invoke some function or trigger effect
@@ -246,9 +251,6 @@ NextTool:
 	INVOKE OverlayInGameAttribute, edi, ebx, 1
     ; -------------------------------
     
-
-	mov eax, (TOOL PTR [esi]).COOLDOWNMAX
-	mov (TOOL PTR [esi]).COOLDOWN, eax
 
 SkipTool:
     add esi, SIZEOF TOOL     ; 移到下一個道具

@@ -29,7 +29,7 @@ INCLUDE ./asm-final-project/GameLogic/GameProcess.inc
 	
 .code
 
-RunPackProcess PROC uses esi eax ebx OurBp: PTR BACKPACK, Shelf: PTR GOODS, Target: PTR TOOL
+RunPackProcess PROC uses esi eax ebx ecx OurBp: PTR BACKPACK, Shelf: PTR GOODS, Target: PTR TOOL
 	
 	xor eax, eax
 	mov esi, Target
@@ -55,6 +55,7 @@ RunPackProcess PROC uses esi eax ebx OurBp: PTR BACKPACK, Shelf: PTR GOODS, Targ
 	jmp Dummy	
 
 	Conflict:               ;you can show some text here
+	
 	Dummy:
 
 	ret

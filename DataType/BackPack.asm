@@ -20,7 +20,7 @@ INCLUDE ./asm-final-project/MemOperation.inc
     check_slotPos   COORD <?,?>
 
     ToolListInBackPack  TOOL 100 DUP(<>)
-    ToolNumber DWORD 1
+    ToolNumber DWORD 0
 .code
 
 InitBackPack PROC USES esi edi ecx eax ebx,
@@ -222,9 +222,7 @@ CheckToolInBackPack PROC USES esi edi ecx ebx edx Object : PTR Tool , CompareObj
     jmp Done
 
     ToolCannotPitIn:
-        mov eax , 8
-        call WriteInt
-
+        mov eax , 0
     Done:
     ret
 

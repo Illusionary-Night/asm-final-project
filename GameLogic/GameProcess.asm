@@ -33,6 +33,8 @@ RunPackProcess PROC uses esi eax ebx ecx OurBp: PTR BACKPACK, Shelf: PTR GOODS, 
 	
 	xor eax, eax
 	mov esi, Target
+
+	INVOKE ShowPackEraseGraph
 	
 	INVOKE ReadInt09
 	mov bl, al
@@ -46,16 +48,18 @@ RunPackProcess PROC uses esi eax ebx ecx OurBp: PTR BACKPACK, Shelf: PTR GOODS, 
 	xor eax , eax
 	INVOKE CheckToolInBackPack , Target , OurBp , (TOOL PTR [esi]).BPPOSITION.X , (TOOL PTR [esi]).BPPOSITION.Y
 	cmp al, 0
-	je Conflict				;still have problem , record seems ok(you can see WriteInt result) , but when Conflict it don't detect and draw tool and go fight 
+	je Conflict
 	
 	INVOKE PlaceToolInPackSlotMap , Target , OurBp , (TOOL PTR [esi]).BPPOSITION.X , (TOOL PTR [esi]).BPPOSITION.Y
 	INVOKE ShowTool, Target
 	INVOKE DeletTool, Shelf, bl
 	INVOKE PlaceToolInPackToolList , Target
+	INVOKE ShowPackSuccessGraph
 	jmp Dummy	
 
 	Conflict:               ;you can show some text here
-	
+	INVOKE ShowPackNotSuccessGraph
+	jmp Dummy
 	Dummy:
 
 	ret
@@ -183,27 +187,27 @@ EraseCharInfo proc uses eax esi ecx Char: PTR CHARACTERATTRIBUTE, Position: COOR
 EraseCharInfo endp
 
 
-; ProcessPeriodicTools: ¹M¾ú¹D¨ã°}¦C¡A³B²z¶g´Á§N«o
+; ProcessPeriodicTools: ï¿½Mï¿½ï¿½ï¿½Dï¿½ï¿½}ï¿½Cï¿½Aï¿½Bï¿½zï¿½gï¿½ï¿½ï¿½Nï¿½o
 ProcessPeriodicTools PROC USES esi edi eax ebx ecx edx ToolList:PTR TOOL, ToolNumber:DWORD, AllyChar: PTR CHARACTERATTRIBUTE, EnemyChar: PTR CHARACTERATTRIBUTE
 
-    mov esi, ToolList       ; ESI «ü¦V²Ä¤@­Ó¹D¨ã
-    mov ecx, ToolNumber     ; ECX = °}¦Cªø«×
+    mov esi, ToolList       ; ESI ï¿½ï¿½ï¿½Vï¿½Ä¤@ï¿½Ó¹Dï¿½ï¿½
+    mov ecx, ToolNumber     ; ECX = ï¿½}ï¿½Cï¿½ï¿½ï¿½ï¿½
 
     cmp ecx, 0
     je DoneLoop
 
 NextTool:
     ; -------------------------------
-    ; ESI «ü¦V TOOL[i]
-    ; ´î¤Ö§N«o
+    ; ESI ï¿½ï¿½ï¿½V TOOL[i]
+    ; ï¿½ï¿½Ö§Nï¿½o
     ; -------------------------------
     mov eax, (TOOL PTR [esi]).COOLDOWN
     cmp eax, 0
-    je SkipTool             ; ¤w¸g¬O 0 ´N¸õ¹L
+    je SkipTool             ; ï¿½wï¿½gï¿½O 0 ï¿½Nï¿½ï¿½ï¿½L
 
     dec (TOOL PTR [esi]).COOLDOWN
 
-    ; §PÂ_¬O§_Âk¹s
+    ; ï¿½Pï¿½_ï¿½Oï¿½_ï¿½kï¿½s
     mov eax, (TOOL PTR [esi]).COOLDOWN
     cmp eax, 0
     jne SkipTool
@@ -227,7 +231,7 @@ NextTool:
 	mov (TOOL PTR [esi]).COOLDOWN, eax
 
 SkipTool:
-    add esi, SIZEOF TOOL     ; ²¾¨ì¤U¤@­Ó¹D¨ã
+    add esi, SIZEOF TOOL     ; ï¿½ï¿½ï¿½ï¿½Uï¿½@ï¿½Ó¹Dï¿½ï¿½
     loop NextTool
 
 DoneLoop:

@@ -21,6 +21,32 @@ INCLUDE ./asm-final-project/MemOperation.inc
 
     ToolListInBackPack  TOOL 100 DUP(<>)
     ToolNumber DWORD 0
+
+
+    PackGraphTextBuf  TEXT <>
+
+    PackFailGraph1 Byte " _______  _______  _        _ _________   _______          _________  _________ _       " 
+    PackFailGraph2 Byte "(  ____ \(  ___  )( (    /|( )\__   __/  (  ____ )|\     /|\__   __/  \__   __/( (    /|"
+    PackFailGraph3 Byte "| (    \/| (   ) ||  \  ( ||/    ) (     | (    )|| )   ( |   ) (        ) (   |  \  ( |"
+    PackFailGraph4 Byte "| |      | (___) ||   \ | |      | |     | (____)|| |   | |   | |        | |   |   \ | |"
+    PackFailGraph5 Byte "| |      |  ___  || (\ \) |      | |     |  _____)| |   | |   | |        | |   | (\ \) |"
+    PackFailGraph6 Byte "| |      | (   ) || | \   |      | |     | (      | |   | |   | |        | |   | | \   |"
+    PackFailGraph7 Byte "| (____/\| )   ( || )  \  |      | |     | )      | (___) |   | |     ___) (___| )  \  |"
+    PackFailGraph8 Byte "(_______/|/     \||/    )_)      )_(     |/       (_______)   )_(     \_______/|/    )_)"
+
+
+
+    PackSuccessGraph1 Byte " _______          _________  _________ _          _______  _______  _______  _          "
+    PackSuccessGraph2 Byte "(  ____ )|\     /|\__   __/  \__   __/( (    /|  (  ____ )(  ___  )(  ____ \| \    /\   "
+    PackSuccessGraph3 Byte "| (    )|| )   ( |   ) (        ) (   |  \  ( |  | (    )|| (   ) || (    \/|  \  / /   "
+    PackSuccessGraph4 Byte "| (____)|| |   | |   | |        | |   |   \ | |  | (____)|| (___) || |      |  (_/ /    "
+    PackSuccessGraph5 Byte "|  _____)| |   | |   | |        | |   | (\ \) |  |  _____)|  ___  || |      |   _ (     "
+    PackSuccessGraph6 Byte "| (      | |   | |   | |        | |   | | \   |  | (      | (   ) || |      |  ( \ \    "
+    PackSuccessGraph7 Byte "| )      | (___) |   | |     ___) (___| )  \  |  | )      | )   ( || (____/\|  /  \ \   "
+    PackSuccessGraph8 Byte "|/       (_______)   )_(     \_______/|/    )_)  |/       |/     \|(_______/|_/    \/   "
+                                                                                     
+    PackGraphCursorBuf COORD <PackGraphPositionX , PackGraphPositionY>                                                                                    
+
 .code
 
 InitBackPack PROC USES esi edi ecx eax ebx,
@@ -175,10 +201,10 @@ CheckToolInBackPack PROC USES esi edi ecx ebx edx Object : PTR Tool , CompareObj
 
         InnerLoop:
             cmp check_slotPos.X , 7
-            ja Next
+            ja SlotFull
 
             cmp check_slotPos.Y , 7
-            ja Next
+            ja SlotFull
 
             mov ax , check_slotPos.Y
             mov bx , 8
@@ -288,5 +314,163 @@ PlaceToolInPackToolList PROC USES esi edi eax Object : PTR Tool
 
 ret
 PlaceToolInPackToolList ENDP
+
+ShowPackSuccessGraph PROC USES ecx
+    INVOKE ShowSuccessPackGraph , OFFSET PackSuccessGraph1 , PackSuccessGraphWidth
+ret
+ShowPackSuccessGraph ENDP
+
+ShowPackNotSuccessGraph PROC USES ecx
+    INVOKE ShowPackGraph , OFFSET PackFailGraph1 , PackFailGraphWidth
+ret
+ShowPackNotSuccessGraph ENDP
+
+ShowPackEraseGraph PROC USES ecx
+    INVOKE ErasePackGraph
+ret
+ShowPackEraseGraph ENDP
+
+ShowPackGraph PROC USES esi eax Source : PTR TEXT , _Length : WORD
+
+    mov esi , Source
+    mov eax , 0
+    SetPackGraphCursor PackGraphPositionX , PackGraphPositionY
+    INVOKE SetText , OFFSET PackGraphTextBuf , esi , PackNotSuccessColor , PackGraphCursorBuf , _Length
+    INVOKE ShowText , OFFSET PackGraphTextBuf
+    AddPackGraphCursorY 1
+    movzx eax , _Length
+    add esi , eax
+
+    INVOKE SetText , OFFSET PackGraphTextBuf , esi , PackNotSuccessColor , PackGraphCursorBuf , _Length
+    INVOKE ShowText , OFFSET PackGraphTextBuf
+    AddPackGraphCursorY 1
+    movzx eax , _Length
+    add esi , eax
+
+    INVOKE SetText , OFFSET PackGraphTextBuf , esi , PackNotSuccessColor , PackGraphCursorBuf , _Length
+    INVOKE ShowText , OFFSET PackGraphTextBuf
+    AddPackGraphCursorY 1
+    movzx eax , _Length
+    add esi , eax
+
+    INVOKE SetText , OFFSET PackGraphTextBuf , esi , PackNotSuccessColor , PackGraphCursorBuf , _Length
+    INVOKE ShowText , OFFSET PackGraphTextBuf
+    AddPackGraphCursorY 1
+    movzx eax , _Length
+    add esi , eax
+
+    INVOKE SetText , OFFSET PackGraphTextBuf , esi , PackNotSuccessColor , PackGraphCursorBuf , _Length
+    INVOKE ShowText , OFFSET PackGraphTextBuf
+    AddPackGraphCursorY 1
+    movzx eax , _Length
+    add esi , eax
+
+    INVOKE SetText , OFFSET PackGraphTextBuf , esi , PackNotSuccessColor , PackGraphCursorBuf , _Length
+    INVOKE ShowText , OFFSET PackGraphTextBuf
+    AddPackGraphCursorY 1
+    movzx eax , _Length
+    add esi , eax
+
+    INVOKE SetText , OFFSET PackGraphTextBuf , esi , PackNotSuccessColor , PackGraphCursorBuf , _Length
+    INVOKE ShowText , OFFSET PackGraphTextBuf
+    AddPackGraphCursorY 1
+    movzx eax , _Length
+    add esi , eax
+
+    INVOKE SetText , OFFSET PackGraphTextBuf , esi , PackNotSuccessColor , PackGraphCursorBuf , _Length
+    INVOKE ShowText , OFFSET PackGraphTextBuf
+
+    ret
+ShowPackGraph ENDP
+
+ErasePackGraph PROC
+
+    SetPackGraphCursor PackGraphPositionX , PackGraphPositionY
+    INVOKE SetText , OFFSET PackGraphTextBuf , OFFSET PackSuccessGraph1 , PackNotSuccessColor , PackGraphCursorBuf , PackSuccessGraphWidth
+    INVOKE EraseText , OFFSET PackGraphTextBuf
+    AddPackGraphCursorY 1
+
+    INVOKE SetText , OFFSET PackGraphTextBuf , OFFSET PackSuccessGraph2 , PackNotSuccessColor , PackGraphCursorBuf , PackSuccessGraphWidth
+    INVOKE EraseText , OFFSET PackGraphTextBuf
+    AddPackGraphCursorY 1
+
+    INVOKE SetText , OFFSET PackGraphTextBuf , OFFSET PackSuccessGraph3 , PackNotSuccessColor , PackGraphCursorBuf , PackSuccessGraphWidth
+    INVOKE EraseText , OFFSET PackGraphTextBuf
+    AddPackGraphCursorY 1
+
+    INVOKE SetText , OFFSET PackGraphTextBuf , OFFSET PackSuccessGraph4 , PackNotSuccessColor , PackGraphCursorBuf , PackSuccessGraphWidth
+    INVOKE EraseText , OFFSET PackGraphTextBuf
+    AddPackGraphCursorY 1
+
+    INVOKE SetText , OFFSET PackGraphTextBuf , OFFSET PackSuccessGraph5 , PackNotSuccessColor , PackGraphCursorBuf , PackSuccessGraphWidth
+    INVOKE EraseText , OFFSET PackGraphTextBuf
+    AddPackGraphCursorY 1
+
+    INVOKE SetText , OFFSET PackGraphTextBuf , OFFSET PackSuccessGraph6 , PackNotSuccessColor , PackGraphCursorBuf , PackSuccessGraphWidth
+    INVOKE EraseText , OFFSET PackGraphTextBuf
+    AddPackGraphCursorY 1
+
+    INVOKE SetText , OFFSET PackGraphTextBuf , OFFSET PackSuccessGraph7 , PackNotSuccessColor , PackGraphCursorBuf , PackSuccessGraphWidth
+    INVOKE EraseText , OFFSET PackGraphTextBuf
+    AddPackGraphCursorY 1
+
+    INVOKE SetText , OFFSET PackGraphTextBuf , OFFSET PackSuccessGraph8 , PackNotSuccessColor , PackGraphCursorBuf , PackSuccessGraphWidth
+    INVOKE EraseText , OFFSET PackGraphTextBuf
+    
+    ret
+ErasePackGraph ENDP
+
+ShowSuccessPackGraph PROC USES esi eax Source : PTR TEXT , _Length : WORD
+
+    mov esi , Source
+    mov eax , 0
+    SetPackGraphCursor PackGraphPositionX , PackGraphPositionY
+    INVOKE SetText , OFFSET PackGraphTextBuf , esi , PackSuccessColor , PackGraphCursorBuf , _Length
+    INVOKE ShowText , OFFSET PackGraphTextBuf
+    AddPackGraphCursorY 1
+    movzx eax , _Length
+    add esi , eax
+
+    INVOKE SetText , OFFSET PackGraphTextBuf , esi , PackSuccessColor , PackGraphCursorBuf , _Length
+    INVOKE ShowText , OFFSET PackGraphTextBuf
+    AddPackGraphCursorY 1
+    movzx eax , _Length
+    add esi , eax
+
+    INVOKE SetText , OFFSET PackGraphTextBuf , esi , PackSuccessColor , PackGraphCursorBuf , _Length
+    INVOKE ShowText , OFFSET PackGraphTextBuf
+    AddPackGraphCursorY 1
+    movzx eax , _Length
+    add esi , eax
+
+    INVOKE SetText , OFFSET PackGraphTextBuf , esi , PackSuccessColor , PackGraphCursorBuf , _Length
+    INVOKE ShowText , OFFSET PackGraphTextBuf
+    AddPackGraphCursorY 1
+    movzx eax , _Length
+    add esi , eax
+
+    INVOKE SetText , OFFSET PackGraphTextBuf , esi , PackSuccessColor , PackGraphCursorBuf , _Length
+    INVOKE ShowText , OFFSET PackGraphTextBuf
+    AddPackGraphCursorY 1
+    movzx eax , _Length
+    add esi , eax
+
+    INVOKE SetText , OFFSET PackGraphTextBuf , esi , PackSuccessColor , PackGraphCursorBuf , _Length
+    INVOKE ShowText , OFFSET PackGraphTextBuf
+    AddPackGraphCursorY 1
+    movzx eax , _Length
+    add esi , eax
+
+    INVOKE SetText , OFFSET PackGraphTextBuf , esi , PackSuccessColor , PackGraphCursorBuf , _Length
+    INVOKE ShowText , OFFSET PackGraphTextBuf
+    AddPackGraphCursorY 1
+    movzx eax , _Length
+    add esi , eax
+
+    INVOKE SetText , OFFSET PackGraphTextBuf , esi , PackSuccessColor , PackGraphCursorBuf , _Length
+    INVOKE ShowText , OFFSET PackGraphTextBuf
+
+    ret
+ShowSuccessPackGraph ENDP
 
 END

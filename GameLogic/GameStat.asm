@@ -209,6 +209,7 @@ ChePrepareSubStat proc uses esi eax ecx ebx CurStat: PTR GAMESTAT, SubStat: BYTE
 
 		EndProcess2: 
 			mov ecx, 1
+			INVOKE ShowPackEraseGraph
 			jmp Dummy2		
 		ShowProcess2:
 			INVOKE ReadInt09

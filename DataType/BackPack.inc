@@ -6,6 +6,37 @@ BACKPACKWIDTH EQU 8
 BACKPACKHEIGHT EQU 8
 MAXSLOTS EQU BACKPACKWIDTH * BACKPACKHEIGHT
 
+PackGraphPositionX EQU 80
+PackGraphPositionY EQU 30
+
+PackFailGraphWidth EQU 88
+PackSuccessGraphWidth EQU 88
+
+PackNotSuccessColor EQU 12
+PackSuccessColor EQU 10
+
+SetPackGraphCursor macro NEWX , NEWY
+    push eax
+
+    mov ax , NEWX
+    mov PackGraphCursorBuf.X , ax
+
+    mov ax , NEWY
+    mov PackGraphCursorBuf.Y , ax
+
+    pop eax
+endm
+
+AddPackGraphCursorY macro num
+    push eax
+
+    mov ax , PackGraphCursorBuf.Y
+    add ax , num
+    mov PackGraphCursorBuf.Y , ax
+
+    pop eax
+endm
+
 
 BACKPACK STRUCT
     BackPackWidth       WORD    BACKPACKWIDTH
@@ -28,5 +59,15 @@ CheckToolInBackPack PROTO , Object : PTR Tool , CompareObject : PTR BACKPACK , C
 PlaceToolInPackSlotMap PROTO , Object : PTR Tool , PackRecord : PTR BACKPACK , CursorPosX : WORD , CursorPosY : WORD
 
 PlaceToolInPackToolList PROTO , Object : PTR Tool
+
+ShowPackSuccessGraph PROTO
+ShowPackNotSuccessGraph PROTO
+ShowPackEraseGraph PROTO
+
+ShowPackGraph PROTO , Source : PTR TEXT , _Length : WORD
+
+ErasePackGraph PROTO
+
+ShowSuccessPackGraph PROTO , Source : PTR TEXT , _Length : WORD
 
 ENDIF

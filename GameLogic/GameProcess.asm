@@ -26,7 +26,9 @@ INCLUDE ./asm-final-project/GameLogic/GameProcess.inc
 	UserLivesStr    BYTE "Lives: "
 	GameProcessCursor COORD <>;<UserAttributeX,UserAttributeY>
 	GameProcessText TEXT <>
-	
+	ToolListInBackPack DWORD ?
+	ToolCountInBackPack DWORD ?
+	Msg_ProcessPeriodicTools BYTE "Processing periodic tools...",0Ah,0Dh,"$"
 .code
 
 RunPackProcess PROC uses esi eax ebx ecx OurBp: PTR BACKPACK, Shelf: PTR GOODS, Target: PTR TOOL
@@ -66,7 +68,7 @@ RunPackProcess PROC uses esi eax ebx ecx OurBp: PTR BACKPACK, Shelf: PTR GOODS, 
 
 RunPackProcess endp
 
-RunBuyProcess proc uses eax esi ebx Shelf1: PTR GOODS, Shelf2: PTR GOODS, Char: PTR CHARACTERATTRIBUTE, Position: COORD
+RunBuyProcess proc uses eax esi edi ebx edx Shelf1: PTR GOODS, Shelf2: PTR GOODS, Char: PTR CHARACTERATTRIBUTE, Position: COORD
 
 	INVOKE ReadInt09
 	mov bl, al
@@ -94,7 +96,7 @@ RunBuyProcess endp
 
 ; Assume user attack enemy 200, Enemy attack user 150
 
-RunFightProcess proc uses esi edi AllyChar: PTR CHARACTERATTRIBUTE, EnemyChar: PTR CHARACTERATTRIBUTE, Position: COORD
+RunFightProcess proc uses esi edi ebx edx AllyChar: PTR CHARACTERATTRIBUTE, EnemyChar: PTR CHARACTERATTRIBUTE, Position: COORD
 
 	mov esi, AllyChar
 	mov edi, EnemyChar
@@ -102,7 +104,10 @@ RunFightProcess proc uses esi edi AllyChar: PTR CHARACTERATTRIBUTE, EnemyChar: P
 	sub (CHARACTERATTRIBUTE PTR [esi]).Ingame.HP, 150	; enemy attack user
 	
 	;cyclical tool active--------------------------
-	;INVOKE ProcessPeriodicTools
+	INVOKE GetToolListPtrInBackPack
+	mov ToolListInBackPack, ebx
+	mov ToolCountInBackPack, edx
+	INVOKE ProcessPeriodicTools , esi, edi
 	;----------------------------------------------
 	
 	mov eax, (CHARACTERATTRIBUTE PTR [edi]).Ingame.HP
@@ -188,10 +193,31 @@ EraseCharInfo endp
 
 
 ; ProcessPeriodicTools: �M���D��}�C�A�B�z�g���N�o
-ProcessPeriodicTools PROC USES esi edi eax ebx ecx edx ToolList:PTR TOOL, ToolNumber:DWORD, AllyChar: PTR CHARACTERATTRIBUTE, EnemyChar: PTR CHARACTERATTRIBUTE
+ProcessPeriodicTools PROC USES esi edi eax ebx ecx edx AllyChar: PTR CHARACTERATTRIBUTE, EnemyChar: PTR CHARACTERATTRIBUTE
+    mov esi, ToolListInBackPack       ; ESI ���V�Ĥ@�ӹD��
+    mov ecx, ToolCountInBackPack	; ECX = �}�C����
 
-    mov esi, ToolList       ; ESI ���V�Ĥ@�ӹD��
-    mov ecx, ToolNumber     ; ECX = �}�C����
+
+	push edx
+	mov dh, 50       ; Y �y�С]0 �q�W�}�l�^
+	mov dl, 100       ; X �y�С]0 �q���}�l�^
+	call Gotoxy       ; �]�w��r��Ц�m
+	pop edx
+
+	mov edx, OFFSET Msg_ProcessPeriodicTools
+	call WriteString 
+
+	push edx
+	mov dh, 50       ; Y �y�С]0 �q�W�}�l�^
+	mov dl, 150       ; X �y�С]0 �q���}�l�^
+	call Gotoxy       ; �]�w��r��Ц�m
+	pop edx
+
+	push eax
+	mov eax, ecx
+	call WriteInt
+	pop eax
+
 
     cmp ecx, 0
     je DoneLoop
@@ -201,16 +227,21 @@ NextTool:
     ; ESI ���V TOOL[i]
     ; ��֧N�o
     ; -------------------------------
-    mov eax, (TOOL PTR [esi]).COOLDOWN
-    cmp eax, 0
-    je SkipTool             ; �w�g�O 0 �N���L
+	push edx
+	mov dh, 50       ; Y �y�С]0 �q�W�}�l�^
+	mov dl, 160       ; X �y�С]0 �q���}�l�^
+	call Gotoxy       ; �]�w��r��Ц�m
+	pop edx
 
-    dec (TOOL PTR [esi]).COOLDOWN
+	push eax
+	mov eax, (TOOL PTR [esi]).COOLDOWN
+	call WriteInt
+	pop eax
+	;--------------------------------
 
-    ; �P�_�O�_�k�s
-    mov eax, (TOOL PTR [esi]).COOLDOWN
-    cmp eax, 0
-    jne SkipTool
+	INVOKE CooldownUpdate_Tool, esi
+	cmp eax, 0
+	jne SkipTool
 
     ; -------------------------------
     ; TODO: invoke some function or trigger effect
@@ -226,9 +257,6 @@ NextTool:
 	INVOKE OverlayInGameAttribute, edi, ebx, 1
     ; -------------------------------
     
-
-	mov eax, (TOOL PTR [esi]).COOLDOWNMAX
-	mov (TOOL PTR [esi]).COOLDOWN, eax
 
 SkipTool:
     add esi, SIZEOF TOOL     ; ����U�@�ӹD��

@@ -32,19 +32,7 @@ Display_Init endp
 
 clear_screen proc uses eax ecx esi
 
-	sub esp, 2
-	mov esi, OFFSET Screen_info
-	mov ecx, [esi+2]
-	mov esi, ebp
-	mov al, 0Dh
-	mov [esi-2], al
-	mov al, 0Ah
-	mov [esi-3], al
-	sub esi, 3
-	L1:
-		INVOKE PrintStr, esi, 2
-	loop L1
-	add esp, 2
+	call Clrscr
 	ret	
 
 clear_screen endp

@@ -69,5 +69,6 @@ ShowPackGraph PROTO , Source : PTR TEXT , _Length : WORD
 ErasePackGraph PROTO
 
 ShowSuccessPackGraph PROTO , Source : PTR TEXT , _Length : WORD
+GetToolListPtrInBackPack PROTO
 
 ENDIF

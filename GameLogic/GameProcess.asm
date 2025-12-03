@@ -57,6 +57,7 @@ RunPackProcess PROC uses esi eax ebx ecx OurBp: PTR BACKPACK, Shelf: PTR GOODS, 
 	INVOKE DeletTool, Shelf, bl
 	INVOKE PlaceToolInPackToolList , Target
 	INVOKE ShowPackSuccessGraph
+	INVOKE EraseToolInfo, Shelf
 	jmp Dummy	
 
 	Conflict:               ;you can show some text here
@@ -192,25 +193,25 @@ EraseCharInfo proc uses eax esi ecx Char: PTR CHARACTERATTRIBUTE, Position: COOR
 EraseCharInfo endp
 
 
-; ProcessPeriodicTools: �M���D��}�C�A�B�z�g���N�o
+; ProcessPeriodicTools:  M   D  } C A B z g   N o
 ProcessPeriodicTools PROC USES esi edi eax ebx ecx edx AllyChar: PTR CHARACTERATTRIBUTE, EnemyChar: PTR CHARACTERATTRIBUTE
-    mov esi, ToolListInBackPack       ; ESI ���V�Ĥ@�ӹD��
-    mov ecx, ToolCountInBackPack	; ECX = �}�C����
+    mov esi, ToolListInBackPack       ; ESI    V Ĥ@ ӹD  
+    mov ecx, ToolCountInBackPack	; ECX =  } C    
 
 
 	push edx
-	mov dh, 50       ; Y �y�С]0 �q�W�}�l�^
-	mov dl, 100       ; X �y�С]0 �q���}�l�^
-	call Gotoxy       ; �]�w��r��Ц�m
+	mov dh, 50       ; Y  y С]0  q W } l ^
+	mov dl, 100       ; X  y С]0  q   } l ^
+	call Gotoxy       ;  ] w  r  Ц m
 	pop edx
 
 	mov edx, OFFSET Msg_ProcessPeriodicTools
 	call WriteString 
 
 	push edx
-	mov dh, 50       ; Y �y�С]0 �q�W�}�l�^
-	mov dl, 150       ; X �y�С]0 �q���}�l�^
-	call Gotoxy       ; �]�w��r��Ц�m
+	mov dh, 50       ; Y  y С]0  q W } l ^
+	mov dl, 150       ; X  y С]0  q   } l ^
+	call Gotoxy       ;  ] w  r  Ц m
 	pop edx
 
 	push eax
@@ -224,13 +225,13 @@ ProcessPeriodicTools PROC USES esi edi eax ebx ecx edx AllyChar: PTR CHARACTERAT
 
 NextTool:
     ; -------------------------------
-    ; ESI ���V TOOL[i]
-    ; ��֧N�o
+    ; ESI    V TOOL[i]
+    ;   ֧N o
     ; -------------------------------
 	push edx
-	mov dh, 50       ; Y �y�С]0 �q�W�}�l�^
-	mov dl, 160       ; X �y�С]0 �q���}�l�^
-	call Gotoxy       ; �]�w��r��Ц�m
+	mov dh, 50       ; Y  y С]0  q W } l ^
+	mov dl, 160       ; X  y С]0  q   } l ^
+	call Gotoxy       ;  ] w  r  Ц m
 	pop edx
 
 	push eax
@@ -259,7 +260,7 @@ NextTool:
     
 
 SkipTool:
-    add esi, SIZEOF TOOL     ; ����U�@�ӹD��
+    add esi, SIZEOF TOOL     ;     U @ ӹD  
     loop NextTool
 
 DoneLoop:

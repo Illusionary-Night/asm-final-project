@@ -78,6 +78,7 @@ IntoPrepareStat proc uses esi eax ecx CurStat: PTR GAMESTAT
 	mov GameStatCursor.X, ax
 	mov ax, UserInfoPositionY
 	mov GameStatCursor.Y, ax
+	
 	INVOKE ShowCharInfo, OFFSET User, GameStatCursor
 	
 	ret 4
@@ -112,6 +113,7 @@ IntoFightStat proc uses esi eax CurStat: PTR GAMESTAT
 	INVOKE ShowCharInfo, OFFSET Enemy, GameStatCursor
 
 	sub GameStatCursor, EnemyInfoPositionX-UserInfoPositionX
+	mov esi, OFFSET User
 	DelayForARound
 
 	L1:  ; Assume user attack enemy 20, Enemy attack user 15
@@ -122,6 +124,9 @@ IntoFightStat proc uses esi eax CurStat: PTR GAMESTAT
 		jmp Dummy
 
 		Done:
+			DelayForARound
+			mov eax, 1000
+			mov (CHARACTERATTRIBUTE PTR [esi]).Ingame.HP, eax
 			mov ecx, 1
 		Dummy:
 			DelayForARound

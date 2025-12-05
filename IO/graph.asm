@@ -210,6 +210,8 @@ ShowRectangle proc uses eax ecx ebx esi edi object: PTR RECTANGLE
 		push ecx
 		mov cx, [esi+3]
 		sub cx, 2
+		cmp cx, 0
+		jle L5
 
 		L2:
 			INVOKE PrintStr, eax, 1
@@ -220,6 +222,8 @@ ShowRectangle proc uses eax ecx ebx esi edi object: PTR RECTANGLE
 			push ecx
 			mov cx, [esi+3]
 			sub cx, 2
+			cmp cx, 0
+			jle L5
 		L4:
 			INVOKE PrintStr, esi, 1
 		loop L4
@@ -232,7 +236,7 @@ ShowRectangle proc uses eax ecx ebx esi edi object: PTR RECTANGLE
 			inc bx
 			mov [edi+2], bx
 			INVOKE SetCursor, GraphCursor
-			pop ebx
+			pop ebx	
 
 	loop L1
 

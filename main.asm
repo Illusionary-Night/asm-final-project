@@ -51,7 +51,7 @@ L3:
 
 	;INVOKE SetText, OFFSET _title, OFFSET teststr2, 0Ah, Cursor, LENGTHOF teststr2
 	;INVOKE SetLine, OFFSET Li1, '*', 0Ah, 1, 10, Cursor
-	;INVOKE SetRectangle, OFFSET rec1, '*', 07h, 5, 3, Cursor
+	;INVOKE SetRectangle, OFFSET rec1, '*', 07h, 2, 4, Cursor
 	;INVOKE SetPicture, OFFSET pic1, OFFSET teststr1, 07h, 6, 6, Cursor
 	;INVOKE SetToolSlot, OFFSET Tool1, OFFSET teststr1, 0Ah
 	

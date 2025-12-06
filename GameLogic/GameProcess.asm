@@ -70,17 +70,20 @@ RunPackProcess PROC uses esi eax ebx ecx OurBp: PTR BACKPACK, Shelf: PTR GOODS, 
 
 RunPackProcess endp
 
-RunBuyProcess proc uses eax esi edi ebx edx Shelf1: PTR GOODS, Shelf2: PTR GOODS, Char: PTR CHARACTERATTRIBUTE, Position: COORD
+RunBuyProcess proc uses eax esi edi ebx edx Shelf1: PTR GOODS, Shelf2: PTR GOODS, Char: PTR CHARACTERATTRIBUTE, Position: COORD, Target: PTR TOOL
 
 	INVOKE ReadInt09
+	mov edi, Target
 	mov bl, al
-	INVOKE CheckMoneyEnough, Char, 25  ;Assume all tool is 25 dollars
+	INVOKE TakeTool, Shelf1, Target, al
+	mov edx, (TOOL PTR [edi]).PRICE
+	INVOKE CheckMoneyEnough, Char, edx  ;Assume all tool is 25 dollars
 	cmp eax, 1
 	jne Done
-	mov al, bl
 	mov esi, Char
-	sub (CHARACTERATTRIBUTE PTR [esi]).Resource.MONEY, 25
+	sub (CHARACTERATTRIBUTE PTR [esi]).Resource.MONEY, edx
 
+	mov al, bl
 	INVOKE EraseCharInfo, Char, Position 
 	INVOKE ShowCharInfo, Char, Position 
 

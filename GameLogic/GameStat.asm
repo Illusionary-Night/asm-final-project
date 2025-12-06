@@ -204,7 +204,7 @@ ChePrepareSubStat proc uses esi eax ecx ebx CurStat: PTR GAMESTAT, SubStat: BYTE
 			mov ax, UserInfoPositionY
 			mov GameStatCursor.Y, ax
 
-			INVOKE RunBuyProcess, OFFSET Seller, OFFSET OurGoods, OFFSET User, GameStatCursor
+			INVOKE RunBuyProcess, OFFSET Seller, OFFSET OurGoods, OFFSET User, GameStatCursor, OFFSET GameStatToolBuf 
 		Dummy1:
 	LOOP L1
 

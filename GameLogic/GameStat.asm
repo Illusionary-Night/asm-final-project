@@ -67,11 +67,12 @@ IntoPrepareStat proc uses esi eax ecx CurStat: PTR GAMESTAT
 	
 	INVOKE ResetAllToolInGoods, OFFSET Seller
 	
-	mov ecx, 4
+	mov ecx, 3
 	L1:                                           ;choose which tool to sell
 		INVOKE InsertTool, OFFSET Seller, 2
 	LOOP L1
 	INVOKE InsertTool, OFFSET Seller, 3
+	INVOKE InsertTool, OFFSET Seller, 4
 	INVOKE ShowGoods, OFFSET Seller
 	INVOKE ShowGoods, OFFSET OurGoods
 	

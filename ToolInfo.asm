@@ -138,24 +138,25 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	fire_cooldown_max DWORD 4
 	fire_typeid DWORD 1
 	fire_ally_delta INGAMEATTRIBUTE  <0,0,0>
-	fire_enemy_delta INGAMEATTRIBUTE  <-20,-10,0>
+	fire_enemy_delta INGAMEATTRIBUTE  <-100,-10,0>
 	fire_name BYTE "Soul Flame",0, 0,0,0,0,0,0,0,0,0,0,0  ; 總共 20 bytes
 	fire_price DWORD 5
 	;--------------------------------------------------------------------
 
 	; magic_orb tool data---------------------------------------------------
-	magic_orb_slot_info_00 BYTE	" **** ",
-							    "**  **",
-								"*    *",
-								"*    *",
-								"**  **",
-								"  *** "
-	magic_orb_slot_info_01 BYTE	"      ",
-								"      ",
-								"      ",
-								"      ",
-								"      ",
-								"      "
+
+	magic_orb_slot_info_00 BYTE	"....::",
+							    "..::##",
+								".:##++",
+								":#++==",
+								":#+=::",
+								":#=::="
+	magic_orb_slot_info_01 BYTE	"::....",
+								"##::..",
+								"++##:.",
+								"==++#:",
+								"::=+#:",
+								"=::=#:"
 	magic_orb_slot_info_02 BYTE	"      ",
 								"      ",
 								"      ",
@@ -168,18 +169,18 @@ INCLUDE ./asm-final-project/MemOperation.inc
 								"      ",
 								"      ",
 								"      "
-	magic_orb_slot_info_10 BYTE	"      ",
-	                            "      ",
-								"      ",
-								"      ",
-								"      ",
-								"      "
-	magic_orb_slot_info_11 BYTE	"      ",
-								"      ",
-								"      ",
-								"      ",
-								"      ",
-								"      "
+	magic_orb_slot_info_10 BYTE	":#=::=",
+	                            ":#+=::",
+								":#++==",
+								".:##++",
+								"..::##",
+								"....::"
+	magic_orb_slot_info_11 BYTE	"=::=#:",
+								"::=+#:",
+								"==++#:",
+								"++##:.",
+								"##::..",
+								"::...."
 	magic_orb_slot_info_12 BYTE	"      ",
 								"      ",
 								"      ",
@@ -243,8 +244,8 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	
 	magic_orb_tool Tool  <>
 	magic_orb_tool_slot TOOLSLOT 16 DUP(<>)
-	magic_orb_tool_shape BYTE	"1000",
-								"0000",
+	magic_orb_tool_shape BYTE	"1100",
+								"1100",
 								"0000",
 								"0000"
 	magic_orb_rarity BYTE 5
@@ -255,6 +256,122 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	magic_orb_name BYTE "Magic Orb"
 	magic_orb_price DWORD 20
 	;--------------------------------------------------------------------
+
+
+	; arcane_blade tool data---------------------------------------------------
+
+	arcane_blade_slot_info_00 BYTE	" ./\. ",
+							    ".//\\.",
+								":i||i:",
+								":||||:",
+								":||||:",
+								" !||! "
+	arcane_blade_slot_info_01 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	arcane_blade_slot_info_02 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	arcane_blade_slot_info_03 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	arcane_blade_slot_info_10 BYTE	"[=++=]",
+	                            "[=++=]",
+								" :||: ",
+								" :||: ",
+								":{}{}:",
+								" .{}. "
+	arcane_blade_slot_info_11 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	arcane_blade_slot_info_12 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	arcane_blade_slot_info_13 BYTE	"      ",
+	                            "      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	arcane_blade_slot_info_20 BYTE	"      ",
+	                            "      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	arcane_blade_slot_info_21 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	arcane_blade_slot_info_22 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	arcane_blade_slot_info_23 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	arcane_blade_slot_info_30 BYTE	"      ",
+	                            "      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	arcane_blade_slot_info_31 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	arcane_blade_slot_info_32 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	arcane_blade_slot_info_33 BYTE	"      ",
+	                            "      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	
+	arcane_blade_tool Tool  <>
+	arcane_blade_tool_slot TOOLSLOT 16 DUP(<>)
+	arcane_blade_tool_shape BYTE	"1000",
+									"1000",
+									"1000",
+									"1000"
+	arcane_blade_rarity BYTE 5
+	arcane_blade_cooldown_max DWORD 3
+	arcane_blade_typeid DWORD 1
+	arcane_blade_ally_delta INGAMEATTRIBUTE  <0,-20,0>
+	arcane_blade_enemy_delta INGAMEATTRIBUTE  <-100,0,0>
+	arcane_blade_name BYTE "Arcane Blade"
+	arcane_blade_price DWORD 20
+	;--------------------------------------------------------------------
+
 
 
 
@@ -412,6 +529,39 @@ SetAllTool PROC USES esi ecx eax edx
 	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_33, 0Bh
 	INVOKE SetProtoTool, OFFSET magic_orb_tool, OFFSET magic_orb_tool_slot, OFFSET magic_orb_tool_shape, magic_orb_rarity, magic_orb_cooldown_max, magic_orb_typeid, magic_orb_ally_delta, magic_orb_enemy_delta, OFFSET magic_orb_name, magic_orb_price
 	
+	mov esi, OFFSET arcane_blade_tool_slot
+	INVOKE SetToolSlot, esi, OFFSET arcane_blade_slot_info_00, 06h
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET arcane_blade_slot_info_01, 06h
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET arcane_blade_slot_info_02, 06h
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET arcane_blade_slot_info_03, 06h
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET arcane_blade_slot_info_10, 06h
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET arcane_blade_slot_info_11, 06h
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET arcane_blade_slot_info_12, 06h
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET arcane_blade_slot_info_13, 06h
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET arcane_blade_slot_info_20, 06h
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET arcane_blade_slot_info_21, 06h
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET arcane_blade_slot_info_22, 06h
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET arcane_blade_slot_info_23, 06h
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET arcane_blade_slot_info_30, 06h
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET arcane_blade_slot_info_31, 06h
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET arcane_blade_slot_info_32, 06h
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET arcane_blade_slot_info_33, 06h
+	INVOKE SetProtoTool, OFFSET arcane_blade_tool, OFFSET arcane_blade_tool_slot, OFFSET arcane_blade_tool_shape, arcane_blade_rarity, arcane_blade_cooldown_max, arcane_blade_typeid, arcane_blade_ally_delta, arcane_blade_enemy_delta, OFFSET arcane_blade_name, arcane_blade_price
 	
 	ret
 SetAllTool  ENDP

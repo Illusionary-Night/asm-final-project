@@ -31,7 +31,7 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	temp_position COORD <>
 	test_name BYTE "Test Tool",0
 	;--------------------------------------------------------------------
-	; test tool data---------------------------------------------------
+	; fire tool data---------------------------------------------------
 	fire_slot_info_00 BYTE	"      ",
 							"      ",
 							"      ",
@@ -130,7 +130,7 @@ INCLUDE ./asm-final-project/MemOperation.inc
 							"      "
 	fire_tool Tool  <>
 	fire_tool_slot TOOLSLOT 16 DUP(<>)
-	fire_tool_shape BYTE	"1111",
+	fire_tool_shape BYTE	"0110",
 							"1111",
 							"1111",
 							"1111"
@@ -143,7 +143,118 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	fire_price DWORD 5
 	;--------------------------------------------------------------------
 
-
+	; magic_orb tool data---------------------------------------------------
+	magic_orb_slot_info_00 BYTE	" **** ",
+							    "**  **",
+								"*    *",
+								"*    *",
+								"**  **",
+								"  *** "
+	magic_orb_slot_info_01 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	magic_orb_slot_info_02 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	magic_orb_slot_info_03 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	magic_orb_slot_info_10 BYTE	"      ",
+	                            "      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	magic_orb_slot_info_11 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	magic_orb_slot_info_12 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	magic_orb_slot_info_13 BYTE	"      ",
+	                            "      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	magic_orb_slot_info_20 BYTE	"      ",
+	                            "      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	magic_orb_slot_info_21 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	magic_orb_slot_info_22 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	magic_orb_slot_info_23 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	magic_orb_slot_info_30 BYTE	"      ",
+	                            "      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	magic_orb_slot_info_31 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	magic_orb_slot_info_32 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	magic_orb_slot_info_33 BYTE	"      ",
+	                            "      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	
+	magic_orb_tool Tool  <>
+	magic_orb_tool_slot TOOLSLOT 16 DUP(<>)
+	magic_orb_tool_shape BYTE	"0110",
+							"1000",
+							"0000",
+							"0000"
+	magic_orb_rarity BYTE 5
+	magic_orb_cooldown_max DWORD 2
+	magic_orb_typeid DWORD 1
+	magic_orb_ally_delta INGAMEATTRIBUTE  <0,0,-10>
+	magic_orb_enemy_delta INGAMEATTRIBUTE  <-200,-10,0>
+	magic_orb_name BYTE "Magic Orb"
+	magic_orb_price DWORD 20
+	;--------------------------------------------------------------------
 
 
 
@@ -264,7 +375,44 @@ SetAllTool PROC USES esi ecx eax edx
 	add esi, SIZEOF TOOLSLOT
 	INVOKE SetToolSlot, esi, OFFSET fire_slot_info_33, 0Ch
 
-	INVOKE SetProtoTool, OFFSET fire_tool, OFFSET fire_tool_slot, OFFSET fire_tool_shape, fire_rarity, fire_cooldown_max, fire_typeid, fire_ally_delta, fire_enemy_delta, OFFSET fire_name, 500
+	INVOKE SetProtoTool, OFFSET fire_tool, OFFSET fire_tool_slot, OFFSET fire_tool_shape, fire_rarity, fire_cooldown_max, fire_typeid, fire_ally_delta, fire_enemy_delta, OFFSET fire_name, fire_price
+	
+
+	mov esi, OFFSET magic_orb_tool_slot
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_00, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_01, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_02, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_03, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_10, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_11, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_12, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_13, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_20, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_21, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_22, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_23, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_30, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_31, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_32, 0Ch
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_33, 0Ch
+	INVOKE SetProtoTool, OFFSET magic_orb_tool, OFFSET magic_orb_tool_slot, OFFSET magic_orb_tool_shape, magic_orb_rarity, magic_orb_cooldown_max, magic_orb_typeid, magic_orb_ally_delta, magic_orb_enemy_delta, OFFSET magic_orb_name, magic_orb_price
+	
+	
 	ret
 SetAllTool  ENDP
 

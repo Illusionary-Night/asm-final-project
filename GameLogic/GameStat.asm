@@ -131,6 +131,10 @@ IntoFightStat proc uses esi eax CurStat: PTR GAMESTAT
 			DelayForARound
 			mov eax, 1000
 			mov (CHARACTERATTRIBUTE PTR [esi]).Ingame.HP, eax
+			mov eax, 100
+			mov (CHARACTERATTRIBUTE PTR [esi]).Ingame.MP, eax
+			mov eax, 100
+			mov (CHARACTERATTRIBUTE PTR [esi]).Ingame.EP, eax
 			mov ecx, 1
 		Dummy:
 			DelayForARound

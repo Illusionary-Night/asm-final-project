@@ -37,7 +37,8 @@ RunBuyProcess PROTO,
 	Shelf1: PTR GOODS,
 	Shelf2: PTR GOODS,
 	Char: PTR CHARACTERATTRIBUTE,
-	Position: COORD
+	Position: COORD,
+	Target: PTR TOOL
 
 ;return the fight result to eax, 0 not done, 1 done
 RunFightProcess PROTO,                  ; Assume user attack enemy 20, Enemy attack user 15

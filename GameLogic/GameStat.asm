@@ -132,6 +132,10 @@ IntoFightStat proc uses esi eax CurStat: PTR GAMESTAT
 			DelayForARound
 			mov eax, 1000
 			mov (CHARACTERATTRIBUTE PTR [esi]).Ingame.HP, eax
+			mov eax, 100
+			mov (CHARACTERATTRIBUTE PTR [esi]).Ingame.MP, eax
+			mov eax, 100
+			mov (CHARACTERATTRIBUTE PTR [esi]).Ingame.EP, eax
 			mov ecx, 1
 		Dummy:
 			DelayForARound
@@ -201,7 +205,7 @@ ChePrepareSubStat proc uses esi eax ecx ebx CurStat: PTR GAMESTAT, SubStat: BYTE
 			mov ax, UserInfoPositionY
 			mov GameStatCursor.Y, ax
 
-			INVOKE RunBuyProcess, OFFSET Seller, OFFSET OurGoods, OFFSET User, GameStatCursor
+			INVOKE RunBuyProcess, OFFSET Seller, OFFSET OurGoods, OFFSET User, GameStatCursor, OFFSET GameStatToolBuf 
 		Dummy1:
 	LOOP L1
 

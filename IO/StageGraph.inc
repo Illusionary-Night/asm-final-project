@@ -6,7 +6,7 @@ __StageGraph EQU 1
 StagePositionX EQU 80
 StagePositionY EQU 40
 
-StageColor EQU  8
+StageColor EQU  14
 
 BuyStageGraphWidth  EQU 103 
 PackStageGraphWidth EQU 112

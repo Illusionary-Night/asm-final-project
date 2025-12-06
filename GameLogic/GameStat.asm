@@ -5,6 +5,7 @@ INCLUDE ./asm-final-project/IO/input.inc
 INCLUDE ./asm-final-project/IO/graph.inc
 INCLUDE ./asm-final-project/IO/StartScene.inc
 INCLUDE ./asm-final-project/IO/StageGraph.inc
+INCLUDE ./asm-final-project/IO/FightScene.inc
 
 INCLUDE ./asm-final-project/DataType/GameDataType.inc
 INCLUDE ./asm-final-project/DataType/ToolDataType.inc
@@ -107,12 +108,15 @@ IntoFightStat proc uses esi eax CurStat: PTR GAMESTAT
 
 	mov ax, UserInfoPositionX
 	mov GameStatCursor.X, ax
-	add GameStatCursor.X, EnemyInfoPositionX-UserInfoPositionX
 	mov ax, UserInfoPositionY
-	mov GameStatCursor.Y, ax
-	INVOKE ShowCharInfo, OFFSET Enemy, GameStatCursor
+	mov GameStatCursor.Y, ax	;move cursor to UserInfoPosition
+	INVOKE ShowCharInfoGraph, OFFSET User, GameStatCursor
+	
+	add GameStatCursor.X, EnemyInfoPositionX-UserInfoPositionX
+	INVOKE ShowCharInfo, OFFSET Enemy, GameStatCursor	;move cursor to EnemyInfoPositionX
+	INVOKE ShowCharInfoGraph, OFFSET Enemy, GameStatCursor
 
-	sub GameStatCursor, EnemyInfoPositionX-UserInfoPositionX
+	sub GameStatCursor.X, EnemyInfoPositionX-UserInfoPositionX	;move cursor to UserInfoPosition
 	mov esi, OFFSET User
 	DelayForARound
 
@@ -131,9 +135,11 @@ IntoFightStat proc uses esi eax CurStat: PTR GAMESTAT
 		Dummy:
 			DelayForARound
 	LOOP L1
-
+	
+	INVOKE EraseCharInfoGraph, OFFSET User, GameStatCursor
 	add GameStatCursor.X, EnemyInfoPositionX-UserInfoPositionX
 	INVOKE EraseCharInfo, OFFSET Enemy, GameStatCursor
+	INVOKE EraseCharInfoGraph, OFFSET Enemy, GameStatCursor
 	
 	ret 4
 

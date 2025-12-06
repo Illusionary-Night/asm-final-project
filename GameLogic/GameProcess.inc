@@ -28,8 +28,6 @@ AddGameProcessCursorY macro num
 	pop eax
 endm
 
-
-
 RunPackProcess PROTO,
 	OurBp: PTR BACKPACK,
 	Shelf: PTR GOODS,
@@ -45,14 +43,6 @@ RunBuyProcess PROTO,
 RunFightProcess PROTO,                  ; Assume user attack enemy 20, Enemy attack user 15
 	AllyChar: PTR CHARACTERATTRIBUTE,  ;User
 	EnemyChar: PTR CHARACTERATTRIBUTE,	;Enemy
-	Position: COORD
-
-ShowCharInfo PROTO,
-	Char: PTR CHARACTERATTRIBUTE,
-	Position: COORD
-
-EraseCharInfo PROTO,
-	Char: PTR CHARACTERATTRIBUTE,
 	Position: COORD
 
 ProcessPeriodicTools PROTO,

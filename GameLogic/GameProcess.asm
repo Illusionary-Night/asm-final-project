@@ -4,6 +4,7 @@ INCLUDE ./asm-final-project/IO/display.inc
 INCLUDE ./asm-final-project/IO/input.inc
 INCLUDE ./asm-final-project/IO/graph.inc
 INCLUDE ./asm-final-project/IO/StartScene.inc
+INCLUDE ./asm-final-project/IO/FightScene.inc
 
 INCLUDE ./asm-final-project/DataType/GameDataType.inc
 INCLUDE ./asm-final-project/DataType/ToolDataType.inc
@@ -103,6 +104,7 @@ RunFightProcess proc uses esi edi ebx edx AllyChar: PTR CHARACTERATTRIBUTE, Enem
 	mov edi, EnemyChar
 	;sub (CHARACTERATTRIBUTE PTR [edi]).Ingame.HP, 200 ;user don't need to attack directly
 	sub (CHARACTERATTRIBUTE PTR [esi]).Ingame.HP, 150	; enemy attack user
+	sub (CHARACTERATTRIBUTE PTR [edi]).Ingame.MP, 10	; enemy lost 10 MP each attack
 	
 	;cyclical tool active--------------------------
 	INVOKE GetToolListPtrInBackPack
@@ -131,67 +133,18 @@ RunFightProcess proc uses esi edi ebx edx AllyChar: PTR CHARACTERATTRIBUTE, Enem
 		mov eax, 1
 	Done:
 		INVOKE EraseCharInfo, AllyChar, Position
+		INVOKE EraseCharInfoGraph, AllyChar, Position
 		INVOKE ShowCharInfo, AllyChar, Position
+		INVOKE ShowCharInfoGraph, AllyChar, Position
 
-		add Position.X, 40
+		add Position.X, EnemyInfoPositionX-UserInfoPositionX
 		INVOKE EraseCharInfo, EnemyChar, Position
+		INVOKE EraseCharInfoGraph, EnemyChar, Position
 		INVOKE ShowCharInfo, EnemyChar, Position
+		INVOKE ShowCharInfoGraph, EnemyChar, Position
 	ret
 
 RunFightProcess endp
-
-ShowCharInfo proc uses eax esi Char: PTR CHARACTERATTRIBUTE, Position: COORD
-	
-	mov esi, Char
-	SetGameProcessCursor Position.X, Position.Y
-
-	INVOKE SetText, OFFSET GameProcessText, OFFSET UserHpStr, 0Ah, GameProcessCursor, LENGTHOF UserHpStr
-	INVOKE ShowText, OFFSET GameProcessText
-	mov eax, (CHARACTERATTRIBUTE PTR [esi]).Ingame.HP
-	call WriteInt
-	inc GameProcessCursor.Y
-
-	INVOKE SetText, OFFSET GameProcessText, OFFSET UserEpStr, 0Ah, GameProcessCursor, LENGTHOF UserEpStr
-	INVOKE ShowText, OFFSET GameProcessText
-	mov eax, (CHARACTERATTRIBUTE PTR [esi]).Ingame.EP
-	call WriteInt
-	inc GameProcessCursor.Y
-
-	INVOKE SetText, OFFSET GameProcessText, OFFSET UserMpStr, 0Ah, GameProcessCursor, LENGTHOF UserMpStr
-	INVOKE ShowText, OFFSET GameProcessText
-	mov eax, (CHARACTERATTRIBUTE PTR [esi]).Ingame.MP
-	call WriteInt
-	inc GameProcessCursor.Y
-
-	INVOKE SetText, OFFSET GameProcessText, OFFSET UserMoneyStr, 0Ah, GameProcessCursor, LENGTHOF UserMoneyStr
-	INVOKE ShowText, OFFSET GameProcessText
-	mov eax, (CHARACTERATTRIBUTE PTR [esi]).Resource.MONEY
-	call WriteInt
-	inc GameProcessCursor.Y
-
-	INVOKE SetText, OFFSET GameProcessText, OFFSET UserLivesStr, 0Ah, GameProcessCursor, LENGTHOF UserLivesStr
-	INVOKE ShowText, OFFSET GameProcessText
-	mov eax, (CHARACTERATTRIBUTE PTR [esi]).Resource.LIVES
-	call WriteInt
-	inc GameProcessCursor.Y
-
-	ret
-
-ShowCharInfo endp
-
-EraseCharInfo proc uses eax esi ecx Char: PTR CHARACTERATTRIBUTE, Position: COORD
-
-	mov ecx, 5
-	SetGameProcessCursor Position.X, Position.Y
-	L1:
-		INVOKE SetText, OFFSET GameProcessText, OFFSET UserMoneyStr, 0Ah, GameProcessCursor, 15
-		INVOKE EraseText, OFFSET GameProcessText
-		inc GameProcessCursor.Y
-	LOOP L1
-	ret 
-
-EraseCharInfo endp
-
 
 ; ProcessPeriodicTools:  M   D  } C A B z g   N o
 ProcessPeriodicTools PROC USES esi edi eax ebx ecx edx AllyChar: PTR CHARACTERATTRIBUTE, EnemyChar: PTR CHARACTERATTRIBUTE

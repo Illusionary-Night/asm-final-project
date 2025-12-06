@@ -243,14 +243,14 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	
 	magic_orb_tool Tool  <>
 	magic_orb_tool_slot TOOLSLOT 16 DUP(<>)
-	magic_orb_tool_shape BYTE	"0110",
-							"1000",
-							"0000",
-							"0000"
+	magic_orb_tool_shape BYTE	"1000",
+								"0000",
+								"0000",
+								"0000"
 	magic_orb_rarity BYTE 5
 	magic_orb_cooldown_max DWORD 2
 	magic_orb_typeid DWORD 1
-	magic_orb_ally_delta INGAMEATTRIBUTE  <0,0,-10>
+	magic_orb_ally_delta INGAMEATTRIBUTE  <0,0,-40>
 	magic_orb_enemy_delta INGAMEATTRIBUTE  <-200,-10,0>
 	magic_orb_name BYTE "Magic Orb"
 	magic_orb_price DWORD 20
@@ -379,37 +379,37 @@ SetAllTool PROC USES esi ecx eax edx
 	
 
 	mov esi, OFFSET magic_orb_tool_slot
-	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_00, 0Ch
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_00, 0Bh
 	add esi, SIZEOF TOOLSLOT
-	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_01, 0Ch
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_01, 0Bh
 	add esi, SIZEOF TOOLSLOT
-	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_02, 0Ch
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_02, 0Bh
 	add esi, SIZEOF TOOLSLOT
-	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_03, 0Ch
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_03, 0Bh
 	add esi, SIZEOF TOOLSLOT
-	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_10, 0Ch
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_10, 0Bh
 	add esi, SIZEOF TOOLSLOT
-	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_11, 0Ch
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_11, 0Bh
 	add esi, SIZEOF TOOLSLOT
-	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_12, 0Ch
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_12, 0Bh
 	add esi, SIZEOF TOOLSLOT
-	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_13, 0Ch
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_13, 0Bh
 	add esi, SIZEOF TOOLSLOT
-	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_20, 0Ch
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_20, 0Bh
 	add esi, SIZEOF TOOLSLOT
-	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_21, 0Ch
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_21, 0Bh
 	add esi, SIZEOF TOOLSLOT
-	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_22, 0Ch
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_22, 0Bh
 	add esi, SIZEOF TOOLSLOT
-	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_23, 0Ch
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_23, 0Bh
 	add esi, SIZEOF TOOLSLOT
-	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_30, 0Ch
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_30, 0Bh
 	add esi, SIZEOF TOOLSLOT
-	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_31, 0Ch
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_31, 0Bh
 	add esi, SIZEOF TOOLSLOT
-	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_32, 0Ch
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_32, 0Bh
 	add esi, SIZEOF TOOLSLOT
-	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_33, 0Ch
+	INVOKE SetToolSlot, esi, OFFSET magic_orb_slot_info_33, 0Bh
 	INVOKE SetProtoTool, OFFSET magic_orb_tool, OFFSET magic_orb_tool_slot, OFFSET magic_orb_tool_shape, magic_orb_rarity, magic_orb_cooldown_max, magic_orb_typeid, magic_orb_ally_delta, magic_orb_enemy_delta, OFFSET magic_orb_name, magic_orb_price
 	
 	

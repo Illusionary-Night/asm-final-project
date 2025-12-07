@@ -270,4 +270,15 @@ loop L
 ret 4
 ShowAllyImage endp
 
+EraseAllyImage proc Position: COORD
+    SetGameProcessCursor Position.X, Position.Y
+    add GameProcessCursor.X, textGraphXGap
+    add GameProcessCursor.Y, imageYGap
+    INVOKE SetRectangle, OFFSET userBox, ' ', 0, 35, 21, GameProcessCursor
+    INVOKE ShowRectangle, OFFSET userBox
+ret 4
+
+
+EraseAllyImage endp
+
 end

@@ -38,4 +38,6 @@ EraseCharInfoGraph PROTO,
 
 ShowAllyImage PROTO Position: COORD
 
+EraseAllyImage PROTO Position: COORD
+
 ENDIF

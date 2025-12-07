@@ -137,8 +137,8 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	fire_rarity BYTE 5
 	fire_cooldown_max DWORD 4
 	fire_typeid DWORD 1
-	fire_ally_delta INGAMEATTRIBUTE  <0,0,0>
-	fire_enemy_delta INGAMEATTRIBUTE  <-100,-10,0>
+	fire_ally_delta INGAMEATTRIBUTE  <+100,+10,+10>
+	fire_enemy_delta INGAMEATTRIBUTE  <-100,-0,0>
 	fire_name BYTE "Soul Flame",0, 0,0,0,0,0,0,0,0,0,0,0  ; 總共 20 bytes
 	fire_price DWORD 5
 	;--------------------------------------------------------------------
@@ -253,7 +253,7 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	magic_orb_typeid DWORD 1
 	magic_orb_ally_delta INGAMEATTRIBUTE  <0,0,-40>
 	magic_orb_enemy_delta INGAMEATTRIBUTE  <-200,-10,0>
-	magic_orb_name BYTE "Magic Orb"
+	magic_orb_name BYTE "Magic Orb",0,0,0,0,0,0,0,0,0,0,0 ; 總共 20 bytes
 	magic_orb_price DWORD 20
 	;--------------------------------------------------------------------
 
@@ -368,8 +368,121 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	arcane_blade_typeid DWORD 1
 	arcane_blade_ally_delta INGAMEATTRIBUTE  <0,-20,0>
 	arcane_blade_enemy_delta INGAMEATTRIBUTE  <-100,0,0>
-	arcane_blade_name BYTE "Arcane Blade"
+	arcane_blade_name BYTE "Arcane Blade",0
 	arcane_blade_price DWORD 20
+	;--------------------------------------------------------------------
+; the_grace_cross tool data---------------------------------------------------
+
+	the_grace_cross_slot_info_00 BYTE	"      ",
+							    "      ",
+							    "      ",
+							    "GRACEM",
+							    "SPIRIT",
+							    "      "
+	the_grace_cross_slot_info_01 BYTE	"HOLYGR",
+								"ACEAWE",
+								"VIRTUE",
+								"ERCYLI",
+								"EREDEM",
+								"EFAITH"
+	the_grace_cross_slot_info_02 BYTE	"      ",
+								"      ",
+								"      ",
+								"GHTHOP",
+								"PTIONA",
+								"      "
+	the_grace_cross_slot_info_03 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	the_grace_cross_slot_info_10 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	the_grace_cross_slot_info_11 BYTE	"ATONEM",
+								"ENTSAL",
+								"VATION",
+								"DELIVE",
+								"ERANCE",
+								"DIVINE"
+	the_grace_cross_slot_info_12 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	the_grace_cross_slot_info_13 BYTE	"      ",
+	                            "      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	the_grace_cross_slot_info_20 BYTE	"      ",
+	                            "      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	the_grace_cross_slot_info_21 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	the_grace_cross_slot_info_22 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	the_grace_cross_slot_info_23 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	the_grace_cross_slot_info_30 BYTE	"      ",
+	                            "      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	the_grace_cross_slot_info_31 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	the_grace_cross_slot_info_32 BYTE	"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	the_grace_cross_slot_info_33 BYTE	"      ",
+	                            "      ",
+								"      ",
+								"      ",
+								"      ",
+								"      "
+	
+	the_grace_cross_tool Tool  <>
+	the_grace_cross_tool_slot TOOLSLOT 16 DUP(<>)
+	the_grace_cross_tool_shape BYTE	"1110",
+								"0100",
+								"0000",
+								"0000"
+	the_grace_cross_rarity BYTE 5
+	the_grace_cross_cooldown_max DWORD 10
+	the_grace_cross_typeid DWORD 1
+	the_grace_cross_ally_delta INGAMEATTRIBUTE  <+500,+50,-50>
+	the_grace_cross_enemy_delta INGAMEATTRIBUTE  <0,0,0>
+	the_grace_cross_name BYTE "The Grace Cross",0
+	the_grace_cross_price DWORD 20
 	;--------------------------------------------------------------------
 
 
@@ -563,6 +676,40 @@ SetAllTool PROC USES esi ecx eax edx
 	INVOKE SetToolSlot, esi, OFFSET arcane_blade_slot_info_33, 06h
 	INVOKE SetProtoTool, OFFSET arcane_blade_tool, OFFSET arcane_blade_tool_slot, OFFSET arcane_blade_tool_shape, arcane_blade_rarity, arcane_blade_cooldown_max, arcane_blade_typeid, arcane_blade_ally_delta, arcane_blade_enemy_delta, OFFSET arcane_blade_name, arcane_blade_price
 	
+	mov esi, OFFSET the_grace_cross_tool_slot
+	INVOKE SetToolSlot, esi, OFFSET the_grace_cross_slot_info_00, 0Eh
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET the_grace_cross_slot_info_01, 0Eh
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET the_grace_cross_slot_info_02, 0Eh
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET the_grace_cross_slot_info_03, 0Eh
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET the_grace_cross_slot_info_10, 0Eh
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET the_grace_cross_slot_info_11, 0Eh
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET the_grace_cross_slot_info_12, 0Eh
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET the_grace_cross_slot_info_13, 0Eh
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET the_grace_cross_slot_info_20, 0Eh
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET the_grace_cross_slot_info_21, 0Eh
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET the_grace_cross_slot_info_22, 0Eh
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET the_grace_cross_slot_info_23, 0Eh
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET the_grace_cross_slot_info_30, 0Eh
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET the_grace_cross_slot_info_31, 0Eh
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET the_grace_cross_slot_info_32, 0Eh
+	add esi, SIZEOF TOOLSLOT
+	INVOKE SetToolSlot, esi, OFFSET the_grace_cross_slot_info_33, 0Eh
+	INVOKE SetProtoTool, OFFSET the_grace_cross_tool, OFFSET the_grace_cross_tool_slot, OFFSET the_grace_cross_tool_shape, the_grace_cross_rarity, the_grace_cross_cooldown_max, the_grace_cross_typeid, the_grace_cross_ally_delta, the_grace_cross_enemy_delta, OFFSET the_grace_cross_name, the_grace_cross_price
+
 	ret
 SetAllTool  ENDP
 

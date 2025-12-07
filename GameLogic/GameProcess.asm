@@ -156,19 +156,16 @@ ProcessPeriodicTools PROC USES esi edi eax ebx ecx edx AllyChar: PTR CHARACTERAT
     mov ecx, ToolCountInBackPack	; ECX =  } C    
 
 
-	push edx
-	mov dh, 50       ; Y  y С]0  q W } l ^
-	mov dl, 100       ; X  y С]0  q   } l ^
-	call Gotoxy       ;  ] w  r  Ц m
-	pop edx
+    cmp ecx, 0
+    je DoneLoop
 
-	mov edx, OFFSET Msg_ProcessPeriodicTools
-	call WriteString 
-
-	push edx
-	mov dh, 50       ; Y  y С]0  q W } l ^
-	mov dl, 150       ; X  y С]0  q   } l ^
-	call Gotoxy       ;  ] w  r  Ц m
+NextTool:
+    ; -------------------------------
+    push edx
+	mov edx, ecx
+	add dh, 50       
+	mov dl, 150       
+	call Gotoxy       
 	pop edx
 
 	push eax
@@ -176,19 +173,11 @@ ProcessPeriodicTools PROC USES esi edi eax ebx ecx edx AllyChar: PTR CHARACTERAT
 	call WriteInt
 	pop eax
 
-
-    cmp ecx, 0
-    je DoneLoop
-
-NextTool:
-    ; -------------------------------
-    ; ESI    V TOOL[i]
-    ;   ֧N o
-    ; -------------------------------
 	push edx
-	mov dh, 50       ; Y  y С]0  q W } l ^
-	mov dl, 160       ; X  y С]0  q   } l ^
-	call Gotoxy       ;  ] w  r  Ц m
+	mov edx, ecx
+	add dh, 50       
+	mov dl, 160       
+	call Gotoxy       
 	pop edx
 
 	push eax

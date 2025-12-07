@@ -138,7 +138,7 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	fire_cooldown_max DWORD 4
 	fire_typeid DWORD 1
 	fire_ally_delta INGAMEATTRIBUTE  <+100,+10,+10>
-	fire_enemy_delta INGAMEATTRIBUTE  <-100,-0,0>
+	fire_enemy_delta INGAMEATTRIBUTE  <-100,0,0>
 	fire_name BYTE "Soul Flame",0, 0,0,0,0,0,0,0,0,0,0,0  ; 總共 20 bytes
 	fire_price DWORD 5
 	;--------------------------------------------------------------------
@@ -368,7 +368,7 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	arcane_blade_typeid DWORD 1
 	arcane_blade_ally_delta INGAMEATTRIBUTE  <0,-20,0>
 	arcane_blade_enemy_delta INGAMEATTRIBUTE  <-100,0,0>
-	arcane_blade_name BYTE "Arcane Blade",0
+	arcane_blade_name BYTE "Arcane Blade",0,0,0,0,0,0,0,0 ; 總共 20 bytes
 	arcane_blade_price DWORD 20
 	;--------------------------------------------------------------------
 ; the_grace_cross tool data---------------------------------------------------

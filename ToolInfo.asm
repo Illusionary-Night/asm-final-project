@@ -137,10 +137,10 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	fire_rarity BYTE 5
 	fire_cooldown_max DWORD 4
 	fire_typeid DWORD 1
-	fire_ally_delta INGAMEATTRIBUTE  <-100,+10,+10>
-	fire_enemy_delta INGAMEATTRIBUTE  <-100,0,0>
+	fire_ally_delta INGAMEATTRIBUTE  <-150,+10,+10>
+	fire_enemy_delta INGAMEATTRIBUTE  <-150,0,0>
 	fire_name BYTE "Soul Flame",0, 0,0,0,0,0,0,0,0,0,0,0  ; 總共 20 bytes
-	fire_price DWORD 100
+	fire_price DWORD 50
 	;--------------------------------------------------------------------
 
 	; magic_orb tool data---------------------------------------------------
@@ -482,7 +482,7 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	the_grace_cross_ally_delta INGAMEATTRIBUTE  <+500,+50,-50>
 	the_grace_cross_enemy_delta INGAMEATTRIBUTE  <0,0,0>
 	the_grace_cross_name BYTE "The Grace Cross",0,0,0,0,0
-	the_grace_cross_price DWORD 200
+	the_grace_cross_price DWORD 50
 	;--------------------------------------------------------------------
 
 

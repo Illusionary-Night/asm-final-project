@@ -1,7 +1,8 @@
 INCLUDE ./asm-final-project/SysInc/Irvine32.inc
 INCLUDE ./asm-final-project/IO/graph.inc
-INCLUDE ./asm-final-project/DataType/Character.inc
 INCLUDE ./asm-final-project/IO/FightScene.inc
+
+INCLUDE ./asm-final-project/DataType/Character.inc
 
 .data
     HPGraph BYTE " ***     *** ",
@@ -53,13 +54,8 @@ INCLUDE ./asm-final-project/IO/FightScene.inc
     userBox RECTANGLE <>
 
 .code
-
-ShowFightStatus PROC uses ax bx ecx esi edi
-    ret
-ShowFightStatus ENDP
-
 ShowCharInfo proc uses eax esi Char: PTR CHARACTERATTRIBUTE, Position: COORD
-	
+
 	mov esi, Char
 	SetGameProcessCursor Position.X, Position.Y
 
@@ -138,10 +134,10 @@ ShowCharInfoGraph proc uses eax esi edx Char: PTR CHARACTERATTRIBUTE, Position: 
     imul (CHARACTERATTRIBUTE PTR [esi]).InGame.HP   ;25 * current HP stores in edx/eax
     idiv (CHARACTERATTRIBUTE PTR [esi]).Resource.MAXHP  ;25 * (current HP/max HP) stors in eax
 
-    cmp ax, 1
+    cmp ax, 0   ;avoid zero or one length rectangle
     jle ZeroHP
-    cmp ax, 25
-    je FullHP
+    cmp ax, 25  ;avoid zero length rectangle
+    jge FullHP
     jmp NormalHP
 ZeroHP:
     INVOKE SetRectangle, OFFSET userBox, ' ', 255, 25, 3, GameProcessCursor
@@ -158,7 +154,6 @@ NormalHP:
 
     mov dx, 25
     sub dx, ax
-    cmp dx, 0
     INVOKE SetRectangle, OFFSET userBox, ' ', 255, dx, 3, GameProcessCursor
     INVOKE ShowRectangle, OFFSET userBox
     sub GameProcessCursor.X, ax
@@ -169,10 +164,10 @@ FinishHP:
     imul (CHARACTERATTRIBUTE PTR [esi]).InGame.EP   ;25 * current HP stores in edx/eax
     idiv (CHARACTERATTRIBUTE PTR [esi]).Resource.MAXEP  ;25 * (current HP/max HP) stors in eax
 
-    cmp ax, 1
+    cmp ax, 0   ;avoid zero or one length rectangle
     jle ZeroSP
-    cmp ax, 25
-    je FullSP
+    cmp ax, 25  ;avoid zero length rectangle
+    jge FullSP
     jmp NormalSP
 ZeroSP:
     INVOKE SetRectangle, OFFSET userBox, ' ', 255, 25, 3, GameProcessCursor
@@ -189,7 +184,6 @@ NormalSP:
 
     mov dx, 25
     sub dx, ax
-    cmp dx, 0
     INVOKE SetRectangle, OFFSET userBox, ' ', 255, dx, 3, GameProcessCursor
     INVOKE ShowRectangle, OFFSET userBox
     sub GameProcessCursor.X, ax
@@ -200,10 +194,10 @@ FinishSP:
     imul (CHARACTERATTRIBUTE PTR [esi]).InGame.MP   ;25 * current HP stores in edx/eax
     idiv (CHARACTERATTRIBUTE PTR [esi]).Resource.MAXMP  ;25 * (current HP/max HP) stors in eax
 
-    cmp ax, 1
+    cmp ax, 0   ;avoid zero or one length rectangle
     jle ZeroMP
-    cmp ax, 25
-    je FullMP
+    cmp ax, 25  ;avoid zero length rectangle
+    jge FullMP
     jmp NormalMP
 ZeroMP:
     INVOKE SetRectangle, OFFSET userBox, ' ', 255, 25, 3, GameProcessCursor
@@ -220,7 +214,6 @@ NormalMP:
 
     mov dx, 25
     sub dx, ax
-    cmp dx, 0
     INVOKE SetRectangle, OFFSET userBox, ' ', 255, dx, 3, GameProcessCursor
     INVOKE ShowRectangle, OFFSET userBox
     sub GameProcessCursor.X, ax

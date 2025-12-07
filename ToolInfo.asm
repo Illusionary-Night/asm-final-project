@@ -361,8 +361,8 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	arcane_blade_tool_slot TOOLSLOT 16 DUP(<>)
 	arcane_blade_tool_shape BYTE	"1000",
 									"1000",
-									"1000",
-									"1000"
+									"0000",
+									"0000"
 	arcane_blade_rarity BYTE 5
 	arcane_blade_cooldown_max DWORD 3
 	arcane_blade_typeid DWORD 1

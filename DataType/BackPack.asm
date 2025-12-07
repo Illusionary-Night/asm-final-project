@@ -201,6 +201,9 @@ CheckToolInBackPack PROC USES esi edi ecx ebx edx Object : PTR Tool , CompareObj
         mov check_slotPos.X , ax
 
         InnerLoop:
+            lea edi , (TOOL PTR [esi]).SHAPE
+            add edi , check_shape_counter
+
             cmp check_slotPos.X , 7
             ja SlotFull
 
@@ -213,9 +216,6 @@ CheckToolInBackPack PROC USES esi edi ecx ebx edx Object : PTR Tool , CompareObj
             movzx ebx , ax
             movzx eax , check_slotPos.X
             add ebx , eax
-
-            lea edi , (TOOL PTR [esi]).SHAPE
-            add edi , check_shape_counter
 
             cmp (BACKPACK PTR [edx]).SlotMap[ebx] , 1
             je SlotFull

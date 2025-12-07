@@ -2,10 +2,11 @@
 IFNDEF __FightScene
 __FightScene EQU 1
 
-textGraphXGap EQU 15	;the gap between text and HP,SP,MP bar
+textGraphXGap EQU 14	;the gap between text and HP,SP,MP bar
 upGraphYGap EQU 3 	;the gap between the upper bound screen boundary and HP,SP,MP bar
 textYGap EQU 7		;the gap beteeen text
 GraphYGap EQU textYGap + 1		;thhe gap between graph
+imageYGap EQU upGraphYGap + 3 * textYGap
 
 SetGameProcessCursor macro NEWX, NEWY
 	push eax
@@ -34,5 +35,7 @@ ShowCharInfoGraph PROTO,
 EraseCharInfoGraph PROTO,
 	Char: PTR CHARACTERATTRIBUTE,
 	Position: COORD
+
+ShowAllyImage PROTO Position: COORD
 
 ENDIF

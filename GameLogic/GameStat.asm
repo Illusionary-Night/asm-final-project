@@ -93,7 +93,8 @@ IntoFightStat proc uses esi eax CurStat: PTR GAMESTAT
 
 	mov al, SelfStat
 	mov (GAMESTAT PTR [esi]).SubStat, al
-	INVOKE ShowStage, CurStat
+	INVOKE EraseStageGraph
+	;INVOKE ShowStage, CurStat
 
 	INVOKE InitializeResourceAttribute, OFFSET Enemy.Resource
 	INVOKE InitializeInGameAttribute, OFFSET Enemy.InGame
@@ -110,6 +111,7 @@ IntoFightStat proc uses esi eax CurStat: PTR GAMESTAT
 	mov ax, UserInfoPositionY
 	mov GameStatCursor.Y, ax	;move cursor to UserInfoPosition
 	INVOKE ShowCharInfoGraph, OFFSET User, GameStatCursor
+	INVOKE ShowAllyImage, GameStatCursor	;testing
 	
 	add GameStatCursor.X, EnemyInfoPositionX-UserInfoPositionX
 	INVOKE ShowCharInfo, OFFSET Enemy, GameStatCursor	;move cursor to EnemyInfoPositionX

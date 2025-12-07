@@ -40,9 +40,6 @@ INCLUDE ./asm-final-project/DataType/Character.inc
                     "    *****    ",
                     "  **     **  ", 0
 
-
-
-
     UserHpStr	BYTE "Hp: "
 	UserEpStr	BYTE "Sp: "
 	UserMpStr	BYTE "Mp: "
@@ -52,6 +49,28 @@ INCLUDE ./asm-final-project/DataType/Character.inc
     GameProcessText TEXT <>
     hintGraph PICTURE <>
     userBox RECTANGLE <>
+    imageText TEXT <>
+    allyImage01 BYTE "  #######                 #######  ", 0
+    allyImage02 BYTE " #######                   ####### ", 0
+    allyImage03 BYTE "######                       ######", 0
+    allyImage04 BYTE "#######                     #######", 0
+    allyImage05 BYTE " #######   #############   ####### ", 0
+    allyImage06 BYTE "   #############################   ", 0
+    allyImage07 BYTE "     #########################     ", 0
+    allyImage08 BYTE "      #######################      ", 0
+    allyImage09 BYTE "      ####    #######    ####      ", 0
+    allyImage10 BYTE "      ###      #####      ###      ", 0
+    allyImage11 BYTE "       ##      #####      ##   #   ", 0
+    allyImage12 BYTE "         #################    # #  ", 0
+    allyImage13 BYTE "             #########   #  # #    ", 0
+    allyImage14 BYTE "          #  #     #    ## ##      ", 0
+    allyImage15 BYTE "        #     #     #     ###      ", 0
+    allyImage16 BYTE "        #   #   #     #   #        ", 0
+    allyImage17 BYTE "       #    #    #     #   #       ", 0
+    allyImage18 BYTE "      #   #    #   #    #   #      ", 0
+    allyImage19 BYTE "    #    #    #     #    #    #    ", 0
+    allyImage20 BYTE "       # ## ##   #   ## ## #       ", 0
+    allyImage21 BYTE "              # # # #              ", 0
 
 .code
 ShowCharInfo proc uses eax esi Char: PTR CHARACTERATTRIBUTE, Position: COORD
@@ -235,5 +254,20 @@ L:
     loop L
 ret 8
 EraseCharInfoGraph endp
+
+ShowAllyImage proc uses ecx esi Position: COORD
+    SetGameProcessCursor Position.X, Position.Y
+    add GameProcessCursor.X, textGraphXGap
+    add GameProcessCursor.Y, imageYGap
+    mov ecx, 21
+    mov esi, OFFSET allyImage01
+L:
+    INVOKE SetText, OFFSET imageText, esi, 15, GameProcessCursor, 35
+    INVOKE ShowText, OFFSET imageText
+    add esi, 36
+    inc GameProcessCursor.Y
+loop L
+ret 4
+ShowAllyImage endp
 
 end

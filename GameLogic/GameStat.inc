@@ -34,7 +34,7 @@ EnemeStat       EQU 1
 UserInfoPositionX EQU 60
 UserInfoPositionY EQU 0
 
-EnemyInfoPositionX EQU 105
+EnemyInfoPositionX EQU 150
 EnemyInfoPositionY EQU 0
 
 GameStagePositionX EQU 80

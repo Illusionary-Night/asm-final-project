@@ -145,6 +145,7 @@ RunFightProcess proc uses esi edi ebx edx AllyChar: PTR CHARACTERATTRIBUTE, Enem
 		INVOKE EraseCharInfoGraph, EnemyChar, Position
 		INVOKE ShowCharInfo, EnemyChar, Position
 		INVOKE ShowCharInfoGraph, EnemyChar, Position
+
 	ret
 
 RunFightProcess endp

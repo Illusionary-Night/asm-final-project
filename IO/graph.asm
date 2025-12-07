@@ -203,15 +203,16 @@ ShowRectangle proc uses eax ecx ebx esi edi object: PTR RECTANGLE
 
 	L1:
 		INVOKE PrintStr, esi, 1	;print the left edge of rectangle
+		push ecx
 		cmp ecx,1 
 		je L3	;if current height = 1, means this edge is the bottom of rectangle
 		cmp ecx, ebx
 		je L3	;if current height = original height, means this edge is the top of rectangle
-		push ecx
 		mov cx, [esi+3]
 		sub cx, 2
 		cmp cx, 0
-		jle L5
+		je L5
+		jl L6
 
 		L2:
 			INVOKE PrintStr, eax, 1
@@ -219,24 +220,25 @@ ShowRectangle proc uses eax ecx ebx esi edi object: PTR RECTANGLE
 		jmp L5
 
 		L3: 
-			push ecx
 			mov cx, [esi+3]	;cx stores width
 			sub cx, 2
 			cmp cx, 0
-			jle L5	;if width <= 2, jump to L5
+			je L5	;if width = 2, jump to L5
+			jl L6	;if width = 1, jump to L6
 		L4:
 			INVOKE PrintStr, esi, 1
 		loop L4	;print the medium part of rectangle top or bottom
 
 		L5:
 			INVOKE PrintStr, esi, 1	;print the right edge of rectangle
-			pop ecx	;cx stores height again
+		L6:
 			push ebx
 			mov bx, [edi+2]
 			inc bx
 			mov [edi+2], bx
 			INVOKE SetCursor, GraphCursor	;add 1 height to cursor position
 			pop ebx	
+			pop ecx	;cx stores height again
 
 	loop L1
 

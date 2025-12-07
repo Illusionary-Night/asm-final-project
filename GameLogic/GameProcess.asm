@@ -162,8 +162,12 @@ ProcessPeriodicTools PROC USES esi edi eax ebx ecx edx AllyChar: PTR CHARACTERAT
 NextTool:
     ; -------------------------------
     push edx
-	mov edx, ecx
-	add dh, 50       
+	mov dh, 50       
+	add edx, ecx
+	add edx, ecx
+	add edx, ecx
+	add edx, ecx
+
 	mov dl, 150       
 	call Gotoxy       
 	pop edx

@@ -40,4 +40,8 @@ ShowAllyImage PROTO Position: COORD
 
 EraseAllyImage PROTO Position: COORD
 
+ShowEnemyImage PROTO Position: COORD
+
+EraseEnemyImage PROTO Position: COORD
+
 ENDIF

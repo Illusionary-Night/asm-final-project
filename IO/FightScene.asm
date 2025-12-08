@@ -72,6 +72,31 @@ INCLUDE ./asm-final-project/DataType/Character.inc
     allyImage20 BYTE "       # ## ##   #   ## ## #       ", 0
     allyImage21 BYTE "              # # # #              ", 0
 
+    enemyImage01 BYTE "        ########################        ", 0
+    enemyImage02 BYTE "      ############################      ", 0
+    enemyImage03 BYTE "    ################################    ", 0
+    enemyImage04 BYTE "    #############        #############  ", 0
+    enemyImage05 BYTE "  ##########                    ########", 0
+    enemyImage06 BYTE "  ####      # #            # #      ####", 0
+    enemyImage07 BYTE "  ##    #######             ######    ##", 0
+    enemyImage08 BYTE "  ##  #########             ########  ##", 0
+    enemyImage09 BYTE "  ##  #########             ########  ##", 0
+    enemyImage10 BYTE "  ##  #########             ########  ##", 0
+    enemyImage11 BYTE "  ##    ####                  ####    ##", 0
+    enemyImage12 BYTE "  #####                            #####", 0
+    enemyImage13 BYTE "        #######    ####     ######      ", 0
+    enemyImage14 BYTE "        #########  ####  #########      ", 0
+    enemyImage15 BYTE "    #############  ####  ###########    ", 0
+    enemyImage16 BYTE "    ###############    ####   ######    ", 0
+    enemyImage17 BYTE "    ######   ##############   ######    ", 0
+    enemyImage18 BYTE "    ####     ##############     ######  ", 0
+    enemyImage19 BYTE "  ########   ################     ######", 0
+    enemyImage20 BYTE "    #####  ##################       ####", 0
+    enemyImage21 BYTE "  ####    ###################           ", 0
+    enemyImage22 BYTE "####      ######################        ", 0
+    enemyImage23 BYTE "##      #########      #########        ", 0
+    enemyImage24 BYTE "      ###########      ###########      ", 0
+
 .code
 ShowCharInfo proc uses eax esi Char: PTR CHARACTERATTRIBUTE, Position: COORD
 
@@ -277,8 +302,30 @@ EraseAllyImage proc Position: COORD
     INVOKE SetRectangle, OFFSET userBox, ' ', 0, 35, 21, GameProcessCursor
     INVOKE ShowRectangle, OFFSET userBox
 ret 4
-
-
 EraseAllyImage endp
+
+ShowEnemyImage proc uses ecx esi Position: COORD
+    SetGameProcessCursor Position.X, Position.Y
+    add GameProcessCursor.X, textGraphXGap
+    add GameProcessCursor.Y, imageYGap
+    mov ecx, 24
+    mov esi, OFFSET enemyImage01
+L:
+    INVOKE SetText, OFFSET imageText, esi, 15, GameProcessCursor, 40
+    INVOKE ShowText, OFFSET imageText
+    add esi, 41
+    inc GameProcessCursor.Y
+loop L
+ret 4
+ShowEnemyImage endp
+
+EraseEnemyImage proc Position: COORD
+    SetGameProcessCursor Position.X, Position.Y
+    add GameProcessCursor.X, textGraphXGap
+    add GameProcessCursor.Y, imageYGap
+    INVOKE SetRectangle, OFFSET userBox, ' ', 0, 40, 24, GameProcessCursor
+    INVOKE ShowRectangle, OFFSET userBox
+ret 4
+EraseEnemyImage endp
 
 end

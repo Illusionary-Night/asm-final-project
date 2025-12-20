@@ -371,7 +371,7 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	arcane_blade_name BYTE "Arcane Blade",0,0,0,0,0,0,0,0 ; 總共 20 bytes
 	arcane_blade_price DWORD 20
 	;--------------------------------------------------------------------
-; the_grace_cross tool data---------------------------------------------------
+	; the_grace_cross tool data---------------------------------------------------
 
 	the_grace_cross_slot_info_00 BYTE	"      ",
 							    "      ",
@@ -496,6 +496,10 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	tool_database TOOL 100 DUP(<>)
 	TD_number DWORD 1
 .code
+; ------------------------------------------------------------
+; SetProtoTool
+; Initialize a tool prototype and store it into prototype database
+; ------------------------------------------------------------
 SetProtoTool PROC USES esi edi eax,
 	Object: PTR TOOL,
 	Slot: PTR TOOLSLOT,
@@ -508,14 +512,17 @@ SetProtoTool PROC USES esi edi eax,
 	ToolName: PTR BYTE,
 	Price: DWORD
 
-    mov esi, Object
+    mov esi, Object		; Target TOOL object
     
+	; Copy slot graphics
     lea edi, (TOOL PTR [esi]).SLOT
     INVOKE MemClone, edi, Slot, SIZEOF TOOLSLOT * 16
     
+	; Copy shape data
     lea edi, (TOOL PTR [esi]).SHAPE
     INVOKE MemClone, edi, Shape, SIZEOF BYTE * 16
     
+	; Set basic attributes
     mov al, Rarity
     mov (TOOL PTR [esi]).RARITY, al
     
@@ -525,18 +532,22 @@ SetProtoTool PROC USES esi edi eax,
     mov eax, TypeID
     mov (TOOL PTR [esi]).TYPEID, eax
     
+	; Copy ally / enemy attribute effects
     lea edi, (TOOL PTR [esi]).ALLYDELTA
     INVOKE MemClone, edi, ADDR AllyDelta, SIZEOF INGAMEATTRIBUTE
 
     lea edi, (TOOL PTR [esi]).ENEMYDELTA
     INVOKE MemClone, edi, ADDR EnemyDelta, SIZEOF INGAMEATTRIBUTE
 
+	; Copy tool name
 	lea edi, (TOOL PTR [esi]).TOOLNAME
     INVOKE MemClone, edi, ToolName, SIZEOF BYTE * 20
 
+	; Set price
 	mov eax, Price
 	mov (TOOL PTR [esi]).PRICE, eax
 
+	; Store prototype into prototype database
 	mov edi, OFFSET tool_proto_database
 	mov eax, SIZEOF TOOL
 	mul TPD_number
@@ -548,19 +559,27 @@ SetProtoTool PROC USES esi edi eax,
     ret
 SetProtoTool ENDP
 
+; ------------------------------------------------------------
+; SetTestTool
+; Create a simple test tool for debugging
+; ------------------------------------------------------------
 SetTestTool PROC USES esi ecx eax edx
 	mov esi, OFFSET test_tool_slot
 	
+	; Initialize all slots
 	mov ecx, 16
 SlotRepeatLabel:
 	INVOKE SetToolSlot, esi, OFFSET test_slot_info2, 0Ah
 	add esi, SIZEOF TOOLSLOT
 	LOOP SlotRepeatLabel
 
+	; Initialize attributes
 	INVOKE SetInGameAttribute, OFFSET test_ally_delta ,0 ,0 ,0
 	INVOKE SetInGameAttribute, OFFSET test_enemy_delta ,0 ,0 ,0
+	; Register test tool prototype
 	INVOKE SetProtoTool, OFFSET test_tool, OFFSET test_tool_slot, OFFSET test_tool_shape, 1, 4, 5, test_ally_delta, test_enemy_delta, OFFSET test_name,10
 	
+	; Set backpack position
 	lea edi, test_tool.BPPOSITION
 	mov esi, OFFSET test_position
     INVOKE MemClone, edi, esi, SIZEOF COORD
@@ -571,6 +590,10 @@ SlotRepeatLabel:
 	ret
 SetTestTool  ENDP
 
+; ------------------------------------------------------------
+; SetAllTool
+; Initialize all predefined tools in the game
+; ------------------------------------------------------------
 SetAllTool PROC USES esi ecx eax edx
 	mov esi, OFFSET fire_tool_slot
 	INVOKE SetToolSlot, esi, OFFSET fire_slot_info_00, 0Ch
@@ -715,7 +738,10 @@ SetAllTool  ENDP
 
 
 
-
+; ------------------------------------------------------------
+; GetToolByUUID
+; Copy tool prototype by UUID into target object
+; ------------------------------------------------------------
 
 GetToolByUUID PROC USES esi eax, 
 	Object :PTR TOOL,
@@ -730,6 +756,10 @@ GetToolByUUID PROC USES esi eax,
 	ret
 GetToolByUUID ENDP
 
+; ------------------------------------------------------------
+; CreateTool
+; Create a runtime tool instance from prototype database
+; ------------------------------------------------------------
 CreateTool PROC USES eax esi,		; 在Database中創建一個新的Tool實例 Object_UUID:輸出參數 傳回新Tool的UUID
     Object_UUID : PTR DWORD,			; 傳回新Tool的UUID
     type_ID : DWORD						; Tool的原型ID
@@ -763,7 +793,10 @@ CreateTool PROC USES eax esi,		; 在Database中創建一個新的Tool實例 Obje
     ret
 CreateTool ENDP
 
-
+; ------------------------------------------------------------
+; ToolTest
+; Simple tool system test
+; ------------------------------------------------------------
 ToolTest PROC
 	INVOKE SetTestTool	
 	;INVOKE CreateTool, OFFSET test_UUID, 0

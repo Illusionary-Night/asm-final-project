@@ -37,7 +37,7 @@ ExitProcess proto,dwExitCode:dword
 .code
 main proc
 	
-	INVOKE Display_Init
+	INVOKE Display_Init			; Initialize display system
 	;INVOKE InitBackPack, OFFSET TestBp
 	;INVOKE ShowBackpack, Cursor
 
@@ -76,7 +76,7 @@ L3:
 	
 	;DelayXms 10000
 	;INVOKE clear_screen
-	INVOKE GameMainLoop
+	INVOKE GameMainLoop			; Enter main game loop
 	L1:
 		;mov ecx, 0
 	loop L1

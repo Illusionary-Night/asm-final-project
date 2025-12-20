@@ -7,7 +7,7 @@ MemClone PROC USES esi edi ecx, Object:PTR BYTE, Source:PTR BYTE, _Length:DWORD
     mov esi, Source
     mov edi, Object
     mov ecx, _Length
-    rep movsb
+    rep movsb           ; Copy ECX bytes from [ESI] to [EDI]
     ret
 MemClone ENDP
 

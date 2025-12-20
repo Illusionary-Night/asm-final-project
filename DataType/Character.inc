@@ -1,20 +1,26 @@
 .NOLIST
 IFNDEF __Character
 __Character EQU 1
+
+; --- Data Structures ---
+
+; Current dynamic stats (changes frequently during gameplay)
 INGAMEATTRIBUTE STRUCT
-	HP SDWORD ?			; Health Points ¥Í©R­È
-	EP SDWORD ?			; Stamina Points ­@¤O­È
-	MP SDWORD ?			; Magic Points Å]¤O­È
+	HP SDWORD ?			; Health Points ï¿½Í©Rï¿½ï¿½
+	EP SDWORD ?			; Stamina Points ï¿½@ï¿½Oï¿½ï¿½
+	MP SDWORD ?			; Magic Points ï¿½]ï¿½Oï¿½ï¿½
 INGAMEATTRIBUTE ENDS
 
+; Long-term stats and limits
 RESOURCEATTRIBUTE STRUCT
-	MAXHP SDWORD ?		; ¥Í©R­È¤W­­
-	MAXEP SDWORD ?		; ­@¤O­È¤W­­
-	MAXMP SDWORD ?		; Å]¤O­È¤W­­
-	MONEY SDWORD ?		;ª÷¿ú¼Æ¶q ¥Î¨ÓÁÊ¶R¹D¨ã
-	LIVES SDWORD ?		;¥Í©R¼Æ¶q ¥i³QÀ»±Ñ¦¸¼Æ
+	MAXHP SDWORD ?		; ï¿½Í©Rï¿½È¤Wï¿½ï¿½
+	MAXEP SDWORD ?		; ï¿½@ï¿½Oï¿½È¤Wï¿½ï¿½
+	MAXMP SDWORD ?		; ï¿½]ï¿½Oï¿½È¤Wï¿½ï¿½
+	MONEY SDWORD ?		;ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶q ï¿½Î¨ï¿½ï¿½Ê¶Rï¿½Dï¿½ï¿½
+	LIVES SDWORD ?		;ï¿½Í©Rï¿½Æ¶q ï¿½iï¿½Qï¿½ï¿½ï¿½Ñ¦ï¿½ï¿½ï¿½
 RESOURCEATTRIBUTE ENDS
 
+; Combined character data
 CHARACTERATTRIBUTE STRUCT
 	InGame INGAMEATTRIBUTE <>
 	Resource RESOURCEATTRIBUTE <>
@@ -22,25 +28,32 @@ CHARACTERATTRIBUTE ENDS
 
 ;INGAME 
 
+; --- Prototypes ---
+
+; In-Game Attributes (HP/EP/MP)
+
 SetInGameAttribute PROTO :PTR INGAMEATTRIBUTE, :SDWORD, :SDWORD, :SDWORD
 
-InitializeInGameAttribute PROTO :PTR CHARACTERATTRIBUTE	;ªì©l¤Æ¹CÀ¸¤¤ÄÝ©Ê
+InitializeInGameAttribute PROTO :PTR CHARACTERATTRIBUTE	;ï¿½ï¿½lï¿½Æ¹Cï¿½ï¿½ï¿½ï¿½ï¿½Ý©ï¿½
 
-CheckInGameStatEnough PROTO :PTR INGAMEATTRIBUTE, :PTR SDWORD, :SDWORD	;§PÂ_¬O§_¦³¨¬°÷ªºHP, EP, MP 
+CheckInGameStatEnough PROTO :PTR INGAMEATTRIBUTE, :PTR SDWORD, :SDWORD	;ï¿½Pï¿½_ï¿½Oï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½HP, EP, MP 
 
-OverlayInGameAttribute PROTO :PTR INGAMEATTRIBUTE, :PTR INGAMEATTRIBUTE, :DWORD; Å|¥[¹CÀ¸¤¤ÄÝ©Ê °Ñ¼Æ3 = TypeFlag: 0 = Demand, 1 = Effect »Ý¨D¤£º¡µL®Ä¨Ã¦^¶Ç1¦beax
+; Core Logic: Modifies stats based on Demand (check requirements) or Effect (apply damage/heal)
+OverlayInGameAttribute PROTO :PTR INGAMEATTRIBUTE, :PTR INGAMEATTRIBUTE, :DWORD; ï¿½|ï¿½[ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½Ý©ï¿½ ï¿½Ñ¼ï¿½3 = TypeFlag: 0 = Demand, 1 = Effect ï¿½Ý¨Dï¿½ï¿½ï¿½ï¿½ï¿½Lï¿½Ä¨Ã¦^ï¿½ï¿½1ï¿½beax
 
 
 ;RESOURCE
+; Resource Attributes (Max stats/Money)
 
 SetResourceAttribute PROTO :PTR RESOURCEATTRIBUTE, :SDWORD, :SDWORD, :SDWORD, :SDWORD, :SDWORD
 
-InitializeResourceAttribute PROTO :PTR RESOURCEATTRIBUTE	;ªì©l¤Æ¸ê·½ÄÝ©Ê
+InitializeResourceAttribute PROTO :PTR RESOURCEATTRIBUTE	;ï¿½ï¿½lï¿½Æ¸ê·½ï¿½Ý©ï¿½
 
 ;CHARACTER
+; Utility Checks
 
-CheckMoneyEnough PROTO :PTR CHARACTERATTRIBUTE, :SDWORD	;§PÂ_¬O§_¦³¨¬°÷ªºMoney ;¦^¶Ç¨ìeax, 1:ºc, 0:§_
+CheckMoneyEnough PROTO :PTR CHARACTERATTRIBUTE, :SDWORD	;ï¿½Pï¿½_ï¿½Oï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Money ;ï¿½^ï¿½Ç¨ï¿½eax, 1:ï¿½c, 0:ï¿½_
 
-CheckCharacterAlive PROTO :PTR CHARACTERATTRIBUTE	;¦^¶Ç¨ìeax, 1:¬¡µÛ, 0:¦º±¼
+CheckCharacterAlive PROTO :PTR CHARACTERATTRIBUTE	;ï¿½^ï¿½Ç¨ï¿½eax, 1:ï¿½ï¿½ï¿½ï¿½, 0:ï¿½ï¿½ï¿½ï¿½
 
 ENDIF

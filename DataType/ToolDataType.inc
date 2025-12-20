@@ -4,29 +4,31 @@ __ToolDataType EQU 1
 INCLUDE ./asm-final-project/DataType/Character.inc
 INCLUDE ./asm-final-project/DataType/GameDataType.inc
 
+; --- Data Structure ---
 TOOL STRUCT
-	SLOT BYTE 16*SIZEOF TOOLSLOT DUP(?)	; ´y­z¹D¨ãªº¹Ï®×¡A¦b§Îª¬¤§¥~ªº½d³ò«h¥H¯S®í¦r¤¸'?'¨Óªí¹F¤£ÂÐ»\
-	SHAPE BYTE 16 DUP(?)		; ¨C®æ¥Hbool(0 or 1)ªí¹F¸Ó¦ì¸m¬O§_¦³§Îª¬
-	BPPOSITION COORD <>			; ´y­z¸Ó¹D¨ã¦b­I¥]¤¤ªº¦ì¸m
-	RARITY   BYTE ?				; ªí¥Üµ}¦³«×(normal¡Brare¡Bepic)¡A¥Î¦b°Ó©±¨ê·s¾÷²v
-	COOLDOWN DWORD ?			; §N«o®É¶¡¡A¹D¨ã¥þ³£¬O¶g´Á©Ê¹D¨ã
-	COOLDOWNMAX DWORD ?			; §N«o®É¶¡¤W­­
-	TYPEID DWORD ?				; ¹D¨ãºØÃþ½s¸¹
-	UUID DWORD ?				; ¹D¨ã°ß¤@½s¸¹¡A©w¸q®É¤£¥Î¶ñ¡Aªì©l¤Æ®É¤~»Ý­n
-	ALLYDELTA INGAMEATTRIBUTE <>		; ¨Ï¥Î¹D¨ã«á¹ï§Ú¤èªºÄÝ©ÊÅÜ¤Æ
-	ENEMYDELTA INGAMEATTRIBUTE <>		; ¨Ï¥Î¹D¨ã«á¹ï¼Ä¤èªºÄÝ©ÊÅÜ¤Æ
-	TOOLNAME BYTE 20 DUP(?)			; ¹D¨ã¦WºÙ
-	PRICE DWORD ?					; ¹D¨ã»ù®æ
+	; Visual & Physical properties
+	SLOT BYTE 16*SIZEOF TOOLSLOT DUP(?)	; ï¿½yï¿½zï¿½Dï¿½ãªºï¿½Ï®×¡Aï¿½bï¿½Îªï¿½ï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½dï¿½ï¿½hï¿½Hï¿½Sï¿½ï¿½ï¿½rï¿½ï¿½'?'ï¿½Óªï¿½ï¿½Fï¿½ï¿½ï¿½Ð»\
+	SHAPE BYTE 16 DUP(?)		; ï¿½Cï¿½ï¿½Hbool(0 or 1)ï¿½ï¿½ï¿½Fï¿½Ó¦ï¿½mï¿½Oï¿½_ï¿½ï¿½ï¿½Îªï¿½
+	BPPOSITION COORD <>			; ï¿½yï¿½zï¿½Ó¹Dï¿½ï¿½bï¿½Iï¿½]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½m
+	RARITY   BYTE ?				; ï¿½ï¿½ï¿½Üµ}ï¿½ï¿½ï¿½ï¿½(normalï¿½Brareï¿½Bepic)ï¿½Aï¿½Î¦bï¿½Ó©ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½v
+	COOLDOWN DWORD ?			; ï¿½Nï¿½oï¿½É¶ï¿½ï¿½Aï¿½Dï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½gï¿½ï¿½ï¿½Ê¹Dï¿½ï¿½
+	COOLDOWNMAX DWORD ?			; ï¿½Nï¿½oï¿½É¶ï¿½ï¿½Wï¿½ï¿½
+	TYPEID DWORD ?				; ï¿½Dï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½
+	UUID DWORD ?				; ï¿½Dï¿½ï¿½ß¤@ï¿½sï¿½ï¿½ï¿½Aï¿½wï¿½qï¿½É¤ï¿½ï¿½Î¶ï¿½Aï¿½ï¿½lï¿½Æ®É¤~ï¿½Ý­n
+	ALLYDELTA INGAMEATTRIBUTE <>		; ï¿½Ï¥Î¹Dï¿½ï¿½ï¿½ï¿½Ú¤èªºï¿½Ý©ï¿½ï¿½Ü¤ï¿½
+	ENEMYDELTA INGAMEATTRIBUTE <>		; ï¿½Ï¥Î¹Dï¿½ï¿½ï¿½ï¿½Ä¤èªºï¿½Ý©ï¿½ï¿½Ü¤ï¿½
+	TOOLNAME BYTE 20 DUP(?)			; ï¿½Dï¿½ï¿½Wï¿½ï¿½
+	PRICE DWORD ?					; ï¿½Dï¿½ï¿½ï¿½ï¿½ï¿½
 TOOL ENDS
 
 
+; --- Prototypes ---
 
+CooldownUpdate_Tool PROTO :PTR TOOL		; Updates timer, returns 1 if ready
 
-CooldownUpdate_Tool PROTO :PTR TOOL
+ExecuteTool PROTO :PTR TOOL				; (Not implemented in .asm provided)
 
-ExecuteTool PROTO :PTR TOOL
-
-ShowTool PROTO :PTR TOOL
+ShowTool PROTO :PTR TOOL				; Renders the tool in backpack
 
 
 ENDIF

@@ -4,6 +4,10 @@ INCLUDE ./asm-final-project/MemOperation.inc
 .data
 	
 .code
+; ---------------------------------------------------------
+; SetInGameAttribute
+; Directly sets current HP, EP, and MP values.
+; ---------------------------------------------------------
 SetInGameAttribute PROC USES esi,
     pAttr:PTR INGAMEATTRIBUTE,
     hp:SDWORD, ep:SDWORD, mp:SDWORD
@@ -22,21 +26,30 @@ SetInGameAttribute PROC USES esi,
     ret
 SetInGameAttribute ENDP
 
+; ---------------------------------------------------------
+; InitializeInGameAttribute
+; Resets current stats (HP/EP/MP) to the Max values found in ResourceAttribute.
+; ---------------------------------------------------------
 InitializeInGameAttribute PROC USES esi eax,
     pChar:PTR CHARACTERATTRIBUTE
 
     mov esi, pChar
-    ; ¨ú±o Resource ªº³Ì¤j­È
+    ; ï¿½ï¿½ï¿½o Resource ï¿½ï¿½ï¿½Ì¤jï¿½ï¿½
     mov eax, (CHARACTERATTRIBUTE PTR [esi]).Resource.MAXHP
     mov ebx, (CHARACTERATTRIBUTE PTR [esi]).Resource.MAXEP
     mov ecx, (CHARACTERATTRIBUTE PTR [esi]).Resource.MAXMP
 
-    ; ©I¥s SetInGameAttribute
+    ; ï¿½Iï¿½s SetInGameAttribute
     INVOKE SetInGameAttribute, esi, eax, ebx, ecx
 
     ret
 InitializeInGameAttribute ENDP
 
+; ---------------------------------------------------------
+; CheckInGameStatEnough
+; Checks if a specific attribute meets a required value.
+; pFieldOffset: Offset of the attribute within the struct (e.g., offset of HP).
+; ---------------------------------------------------------
 CheckInGameStatEnough PROC USES esi edi eax,
     pAttr:PTR INGAMEATTRIBUTE,
     pFieldOffset:PTR SDWORD,
@@ -45,7 +58,7 @@ CheckInGameStatEnough PROC USES esi edi eax,
     mov esi, pAttr
     mov edi, pFieldOffset
 
-    mov eax, [esi + edi]   ; ÅªÄæ¦ì­È
+    mov eax, [esi + edi]   ; Åªï¿½ï¿½ï¿½ï¿½
     cmp eax, needVal
     jl notEnough
 
@@ -58,34 +71,42 @@ notEnough:
 
 CheckInGameStatEnough ENDP
 
+; ---------------------------------------------------------
+; OverlayInGameAttribute
+; Applies changes to attributes (pAttr1 += pAttr2).
+; TypeFlag 0 (Demand): "Transaction Check" - Only applies if result >= 0. Returns 1 if unaffordable.
+; TypeFlag 1 (Effect): "Apply Force" - Applies change immediately. Clamps to 0 if negative.
+; ---------------------------------------------------------
 OverlayInGameAttribute PROC USES esi edi ebx ecx edx,   ; RETURN flag in eax 1= fail 0= success
     pAttr1:PTR INGAMEATTRIBUTE,
     pAttr2:PTR INGAMEATTRIBUTE,
     TypeFlag:DWORD            ; 0 = Demand, 1 = Effect
 
-    mov esi, pAttr1
-    mov edi, pAttr2
+    mov esi, pAttr1           ; Base Attributes (Current Player)
+    mov edi, pAttr2           ; Modifier Attributes (Cost or Effect)
     xor eax, eax              ; flag = 0
 
     ; ---------------------------
-    ; ¼ÒÀÀ­pºâ HP
+    ; ï¿½ï¿½ï¿½ï¿½ï¿½pï¿½ï¿½ HP
+    ; --- HP Logic ---
     mov ebx, (INGAMEATTRIBUTE PTR [edi]).HP
     mov ecx, (INGAMEATTRIBUTE PTR [esi]).HP
-    add ecx, ebx
+    add ecx, ebx              ; Calculate potential new value
     cmp TypeFlag, 0
-    je checkDemandHP
-checkEffectHP:
-    ; ®ÄªG¼Ò¦¡¡A­t­ÈÂk¹s
+    je checkDemandHP          ; If Demand mode, jump to check
+checkEffectHP:                ; Effect Mode (Apply immediately)
+    ; ï¿½ÄªGï¿½Ò¦ï¿½ï¿½Aï¿½tï¿½ï¿½ï¿½kï¿½s
     cmp ecx, 0
     jge okHP
     mov (INGAMEATTRIBUTE PTR [esi]).HP, 0
-    mov eax, 1
+    mov eax, 1                ; Set flag (maybe indicates death/exhaustion)
     jmp nextHP
 okHP:
     mov (INGAMEATTRIBUTE PTR [esi]).HP, ecx
 nextHP:
     ; ---------------------------
-    ; ¼ÒÀÀ­pºâ EP
+    ; ï¿½ï¿½ï¿½ï¿½ï¿½pï¿½ï¿½ EP
+    ; --- EP Logic (Same as HP) ---
     mov ebx, (INGAMEATTRIBUTE PTR [edi]).EP
     mov ecx, (INGAMEATTRIBUTE PTR [esi]).EP
     add ecx, ebx
@@ -101,7 +122,8 @@ okEP:
     mov (INGAMEATTRIBUTE PTR [esi]).EP, ecx
 nextEP:
     ; ---------------------------
-    ; ¼ÒÀÀ­pºâ MP
+    ; ï¿½ï¿½ï¿½ï¿½ï¿½pï¿½ï¿½ MP
+    ; --- MP Logic (Same as HP) ---
     mov ebx, (INGAMEATTRIBUTE PTR [edi]).MP
     mov ecx, (INGAMEATTRIBUTE PTR [esi]).MP
     add ecx, ebx
@@ -121,7 +143,9 @@ nextMP:
     ret
 
 ; ---------------------------
-; »Ý¨D¼Ò¦¡ÀË¬d
+; ï¿½Ý¨Dï¿½Ò¦ï¿½ï¿½Ë¬d
+; --- Demand Mode Checks ---
+; If any stat drops below 0, fail the whole transaction.
 checkDemandHP:
     cmp ecx, 0
     jl failOverlay
@@ -135,7 +159,7 @@ checkDemandMP:
     jl failOverlay
     jmp nextMP
 demandCheckDone:
-    ; ¥þ³¡ÀË¬d³q¹L ¡÷ Å|¥[
+    ; ï¿½ï¿½ï¿½ï¿½ï¿½Ë¬dï¿½qï¿½L ï¿½ï¿½ ï¿½|ï¿½[
     mov ebx, (INGAMEATTRIBUTE PTR [edi]).HP
     add (INGAMEATTRIBUTE PTR [esi]).HP, ebx
     mov ebx, (INGAMEATTRIBUTE PTR [edi]).EP
@@ -151,7 +175,10 @@ failOverlay:
 
 OverlayInGameAttribute ENDP
 
-
+; ---------------------------------------------------------
+; SetResourceAttribute
+; Sets all persistent resource stats (Max values, Money, Lives).
+; ---------------------------------------------------------
 SetResourceAttribute PROC USES esi,
     pAttr:PTR RESOURCEATTRIBUTE,
     maxhp:SDWORD, maxep:SDWORD, maxmp:SDWORD,
@@ -177,18 +204,26 @@ SetResourceAttribute PROC USES esi,
     ret
 SetResourceAttribute ENDP
 
+
+; ---------------------------------------------------------
+; InitializeResourceAttribute
+; Sets default hardcoded values: HP=1000, EP/MP=100, Money=100, Lives=5.
+; ---------------------------------------------------------
 InitializeResourceAttribute PROC USES esi,
     pAttr:PTR RESOURCEATTRIBUTE
 
     mov esi, pAttr
 
-    ; ª½±µ©I¥s SetResourceAttribute §â¥þ³¡²M¦¨ 0
-    INVOKE SetResourceAttribute, esi, 1000, 100, 100, 100, 5    ; °Ñ¼Æ: maxhp, maxep, maxmp, money, lives
+    ; ï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½s SetResourceAttribute ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Mï¿½ï¿½ 0
+    INVOKE SetResourceAttribute, esi, 1000, 100, 100, 100, 5    ; ï¿½Ñ¼ï¿½: maxhp, maxep, maxmp, money, lives
 
     ret
 InitializeResourceAttribute ENDP
 
-
+; ---------------------------------------------------------
+; CheckMoneyEnough
+; Returns EAX=1 if player has enough money, EAX=0 otherwise.
+; ---------------------------------------------------------
 CheckMoneyEnough PROC USES esi,
     pChar:PTR CHARACTERATTRIBUTE,
     needMoney:SDWORD
@@ -207,6 +242,10 @@ notEnough:
 
 CheckMoneyEnough ENDP
 
+; ---------------------------------------------------------
+; CheckCharacterAlive
+; Returns EAX=1 if Lives > 0, EAX=0 if dead.
+; ---------------------------------------------------------
 CheckCharacterAlive PROC USES esi,
     pChar:PTR CHARACTERATTRIBUTE
 

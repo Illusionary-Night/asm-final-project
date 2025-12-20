@@ -12,17 +12,20 @@ INCLUDE ./asm-final-project/MemOperation.inc
 
     StartPos    COORD <0, 0>      
 
+    ; Grid Line Properties
     linObj     LINE <>
     linChar    BYTE "*"
     linColor   WORD 07h
 
+    ; Collision Check Temp Variables
     check_shape_counter DWORD ?
     check_slotPos   COORD <?,?>
 
+    ; Backpack Storage
     ToolListInBackPack  TOOL 100 DUP(<>)
     ToolNumber DWORD 0
 
-
+    ; UI Buffers & ASCII Art
     PackGraphTextBuf  TEXT <>
 
     PackFailGraph1 Byte " _______  _______  _        _ _________   _______          _________  _________ _       " 
@@ -49,7 +52,10 @@ INCLUDE ./asm-final-project/MemOperation.inc
 
     ToolNumberInBackPack DWORD 0
 .code
-
+; ---------------------------------------------------------
+; InitBackPack
+; Clears the SlotMap and ItemUUIDMap (sets memory to 0).
+; ---------------------------------------------------------
 InitBackPack PROC USES esi edi ecx eax ebx,
     Object : PTR BACKPACK
 
@@ -72,6 +78,10 @@ InitBackPack PROC USES esi edi ecx eax ebx,
     ret
 InitBackPack ENDP
 
+; ---------------------------------------------------------
+; ShowBackpack
+; Draws the grid lines (horizontal and vertical) on screen.
+; ---------------------------------------------------------
 ShowBackpack PROC USES ecx eax ebx edx BackPackBasPos : COORD
 
     mov ax , BackPackBasPos.X
@@ -116,6 +126,11 @@ ShowBackpack PROC USES ecx eax ebx edx BackPackBasPos : COORD
     ret
 ShowBackpack ENDP
 
+; ---------------------------------------------------------
+; ScreenPosToSlotIndex
+; Converts 2D coordinates (X, Y) to 1D Array Index.
+; Formula: Index = (Y * 8) + X
+; ---------------------------------------------------------
 ScreenPosToSlotIndex PROC USES ebx ecx , ScreenPos : COORD
 
     mov ax , ScreenPos.Y
@@ -130,7 +145,11 @@ ScreenPosToSlotIndex PROC USES ebx ecx , ScreenPos : COORD
 
     ret
 ScreenPosToSlotIndex ENDP
-    
+
+; ---------------------------------------------------------
+; RecordInBackPack / DelRecordBackPack
+; Marks a specific slot as occupied (1) or empty (0).
+; ---------------------------------------------------------
 RecordInBackPack PROC USES eax ebx esi edi ecx edx Object : PTR BACKPACK , ToolPos : COORD      ;record 1 if tool is in
 
     mov esi , Object
@@ -155,6 +174,10 @@ DelRecordBackPack PROC USES eax ebx edx esi edi ecx Object : PTR BACKPACK , Tool
     ret
 DelRecordBackPack ENDP
 
+; ---------------------------------------------------------
+; CheckBackPackRecord
+; Returns 1 if slot is occupied, 0 if empty.
+; ---------------------------------------------------------
 CheckBackPackRecord PROC USES esi ebx ecx edx Object : PTR BACKPACK , ToolPos : COORD        ;this function will return 1 or 0 in eax
 
     mov esi , Object
@@ -176,7 +199,11 @@ CheckBackPackRecord PROC USES esi ebx ecx edx Object : PTR BACKPACK , ToolPos : 
 
 CheckBackPackRecord ENDP
 
-
+; ---------------------------------------------------------
+; CheckToolInBackPack
+; Core Logic: Checks if a 4x4 tool fits at cursor position.
+; Returns: EAX=1 (Fits), EAX=0 (Collision/Out of Bounds)
+; ---------------------------------------------------------
 CheckToolInBackPack PROC USES esi edi ecx ebx edx Object : PTR Tool , CompareObject : PTR BACKPACK , CursorPosX : WORD , CursorPosY : WORD
 
     LOCAL startX : WORD
@@ -245,6 +272,10 @@ CheckToolInBackPack PROC USES esi edi ecx ebx edx Object : PTR Tool , CompareObj
 
 CheckToolInBackPack ENDP
 
+; ---------------------------------------------------------
+; PlaceToolInPackSlotMap
+; Writes the tool's shape ('1's) into the Backpack SlotMap.
+; ---------------------------------------------------------
 PlaceToolInPackSlotMap PROC USES esi edi ecx eax edx ebx Object : PTR Tool , PackRecord : PTR BACKPACK , CursorPosX : WORD , CursorPosY : WORD
 
     LOCAL startX : WORD
@@ -301,6 +332,10 @@ PlaceToolInPackSlotMap PROC USES esi edi ecx eax edx ebx Object : PTR Tool , Pac
     ret
 PlaceToolInPackSlotMap ENDP
 
+; ---------------------------------------------------------
+; PlaceToolInPackToolList
+; Clones the tool data into the backpack's internal array.
+; ---------------------------------------------------------
 PlaceToolInPackToolList PROC USES esi edi eax Object : PTR Tool
 
     mov esi , Object
@@ -330,6 +365,10 @@ PlaceToolInPackToolList PROC USES esi edi eax Object : PTR Tool
 ret
 PlaceToolInPackToolList ENDP
 
+; ---------------------------------------------------------
+; Graphics Functions (ASCII Art)
+; Functions to render Success/Fail banners line by line.
+; ---------------------------------------------------------
 ShowPackSuccessGraph PROC USES ecx
     INVOKE ShowSuccessPackGraph , OFFSET PackSuccessGraph1 , PackSuccessGraphWidth
 ret
@@ -345,6 +384,7 @@ ShowPackEraseGraph PROC USES ecx
 ret
 ShowPackEraseGraph ENDP
 
+; Helper: Renders 8 lines of text for graphs
 ShowPackGraph PROC USES esi eax Source : PTR TEXT , _Length : WORD
 
     mov esi , Source
@@ -487,7 +527,12 @@ ShowSuccessPackGraph PROC USES esi eax Source : PTR TEXT , _Length : WORD
 
     ret
 ShowSuccessPackGraph ENDP
+
 ;return toolList in ebx and return number of tools in edx, both are pointers
+; ---------------------------------------------------------
+; GetToolListPtrInBackPack
+; Returns: EBX = Pointer to Tool List, EDX = Count
+; ---------------------------------------------------------
 GetToolListPtrInBackPack PROC ;here use ebx and edx to return values
 
     ; �^�� ToolListInBackPack �}�Y��}

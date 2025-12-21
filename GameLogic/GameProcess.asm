@@ -110,14 +110,13 @@ RunBuyProcess endp
 ; Fight process (single round)
 ; Return EAX: 0 = continue, 1 = fight finished
 ; ------------------------------------------------------------
-; Assume Enemy attack user 150
 
 RunFightProcess proc uses esi edi ebx edx AllyChar: PTR CHARACTERATTRIBUTE, EnemyChar: PTR CHARACTERATTRIBUTE, Position: COORD
 
 	mov esi, AllyChar
 	mov edi, EnemyChar
 	;user don't need to attack directly
-	sub (CHARACTERATTRIBUTE PTR [esi]).Ingame.HP, 100; enemy attack user
+	sub (CHARACTERATTRIBUTE PTR [esi]).Ingame.HP, 100 ; Assume Enemy attack user 100 HP
 	
 	;cyclical tool active--------------------------
 	INVOKE GetToolListPtrInBackPack
@@ -213,13 +212,13 @@ NextTool:
     ; TODO: invoke some function or trigger effect
 	lea ebx, (TOOL PTR [esi]).ALLYDELTA
 	mov edi, AllyChar                       ; EDI = pointer to CHARACTERATTRIBUTE
-	;lea edi, (CHARACTERATTRIBUTE PTR [edi]).Ingame   ; EDI = &AllyChar.Ingame
+	
 	INVOKE OverlayInGameAttribute, edi, ebx, 0
 	cmp eax, 0
 	jne SkipTool
 	lea ebx, (TOOL PTR [esi]).ENEMYDELTA
 	mov edi, EnemyChar                      ; EDI = pointer to CHARACTERATTRIBUTE
-	;lea edi, (CHARACTERATTRIBUTE PTR [edi]).Ingame   ; EDI = &EnemyChar.Ingame
+	
 	INVOKE OverlayInGameAttribute, edi, ebx, 1
     ; -------------------------------
     

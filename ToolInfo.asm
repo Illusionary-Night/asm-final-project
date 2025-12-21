@@ -135,12 +135,12 @@ INCLUDE ./asm-final-project/MemOperation.inc
 							"1111",
 							"1111"
 	fire_rarity BYTE 5
-	fire_cooldown_max DWORD 4
+	fire_cooldown_max DWORD 3
 	fire_typeid DWORD 1
 	fire_ally_delta INGAMEATTRIBUTE  <-50,+10,+10>
 	fire_enemy_delta INGAMEATTRIBUTE  <-150,0,0>
 	fire_name BYTE "Soul Flame",0, 0,0,0,0,0,0,0,0,0,0,0  ; 總共 20 bytes
-	fire_price DWORD 50
+	fire_price DWORD 40
 	;--------------------------------------------------------------------
 
 	; magic_orb tool data---------------------------------------------------
@@ -249,12 +249,12 @@ INCLUDE ./asm-final-project/MemOperation.inc
 								"0000",
 								"0000"
 	magic_orb_rarity BYTE 5
-	magic_orb_cooldown_max DWORD 2
+	magic_orb_cooldown_max DWORD 1
 	magic_orb_typeid DWORD 1
-	magic_orb_ally_delta INGAMEATTRIBUTE  <0,0,-10>
-	magic_orb_enemy_delta INGAMEATTRIBUTE  <-100,-10,0>
+	magic_orb_ally_delta INGAMEATTRIBUTE  <0,0,-15>
+	magic_orb_enemy_delta INGAMEATTRIBUTE  <-150,-10,0>
 	magic_orb_name BYTE "Magic Orb",0,0,0,0,0,0,0,0,0,0,0 ; 總共 20 bytes
-	magic_orb_price DWORD 50
+	magic_orb_price DWORD 40
 	;--------------------------------------------------------------------
 
 
@@ -364,9 +364,9 @@ INCLUDE ./asm-final-project/MemOperation.inc
 									"0000",
 									"0000"
 	arcane_blade_rarity BYTE 5
-	arcane_blade_cooldown_max DWORD 3
+	arcane_blade_cooldown_max DWORD 2
 	arcane_blade_typeid DWORD 1
-	arcane_blade_ally_delta INGAMEATTRIBUTE  <0,-20,0>
+	arcane_blade_ally_delta INGAMEATTRIBUTE  <0,-10,-10>
 	arcane_blade_enemy_delta INGAMEATTRIBUTE  <-100,0,0>
 	arcane_blade_name BYTE "Arcane Blade",0,0,0,0,0,0,0,0 ; 總共 20 bytes
 	arcane_blade_price DWORD 20
@@ -477,12 +477,12 @@ INCLUDE ./asm-final-project/MemOperation.inc
 								"0000",
 								"0000"
 	the_grace_cross_rarity BYTE 5
-	the_grace_cross_cooldown_max DWORD 10
+	the_grace_cross_cooldown_max DWORD 9
 	the_grace_cross_typeid DWORD 1
 	the_grace_cross_ally_delta INGAMEATTRIBUTE  <+500,+50,-50>
 	the_grace_cross_enemy_delta INGAMEATTRIBUTE  <0,0,0>
 	the_grace_cross_name BYTE "The Grace Cross",0,0,0,0,0
-	the_grace_cross_price DWORD 50
+	the_grace_cross_price DWORD 40
 	;--------------------------------------------------------------------
 
 

@@ -10,7 +10,7 @@ INCLUDE ./asm-final-project/MemOperation.inc
 	Msg_Cooldown BYTE "     Cooldown Remain: ", 0
 .code
 
-CooldownUpdate_Tool PROC USES esi eax, ;return 1 if cooldown 0 
+CooldownUpdate_Tool PROC USES esi ebx edx, ;return 1 if cooldown 0
 	Object: PTR TOOL
 
 	;mov edx, OFFSET Msg_Cooldown
@@ -21,27 +21,24 @@ CooldownUpdate_Tool PROC USES esi eax, ;return 1 if cooldown 0
 	;pop eax
 
     mov esi, Object
-    mov ebx, (TOOL PTR [esi]).COOLDOWN
-    
-	cmp ebx, 0
+
+	cmp (TOOL PTR [esi]).COOLDOWN, 0
 	je Label_CoolingCompleted
 	
-	dec ebx
-
-	cmp ebx, 0
-	je Label_CoolingCompleted
+	dec (TOOL PTR [esi]).COOLDOWN
+	
 	jmp Label_Cooling
 
 Label_CoolingCompleted:
 	mov ebx, (TOOL PTR [esi]).COOLDOWNMAX
+	mov (TOOL PTR [esi]).COOLDOWN, ebx
 	mov eax, 1
 	jmp Label_end
 Label_Cooling:
     mov eax, 0
 Label_end:
-	mov (TOOL PTR [esi]).COOLDOWN, ebx
-    ret
-CooldownUpdate_Tool ENDP
+    ret 4
+CooldownUpdate_Tool ENDP	;uses eax to return
 
 
 ShowTool PROC USES esi edi eax ecx edx ebx, ;ebx edx不要拿來記憶 有坑 有人沒有USES

@@ -73,9 +73,6 @@ coordBoundary COORD <0,0>
 .code
 ShowTitle proc uses ax bx position: COORD, start_pic: PTR PICTURE
 
-INVOKE SetRectangle, OFFSET screenBoundary, '*', 7, 210, 60, coordBoundary
-INVOKE ShowRectangle, OFFSET screenBoundary
-
 setCoord 0, 0
 INVOKE Setpicture, start_pic, OFFSET name1, 4, 39, 4, position
 INVOKE Showpicture, start_pic

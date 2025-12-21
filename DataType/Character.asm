@@ -26,12 +26,12 @@ InitializeInGameAttribute PROC USES esi eax,
     pChar:PTR CHARACTERATTRIBUTE
 
     mov esi, pChar
-    ; ¨ú±o Resource ªº³Ì¤j­È
+    ; ï¿½ï¿½ï¿½o Resource ï¿½ï¿½ï¿½Ì¤jï¿½ï¿½
     mov eax, (CHARACTERATTRIBUTE PTR [esi]).Resource.MAXHP
     mov ebx, (CHARACTERATTRIBUTE PTR [esi]).Resource.MAXEP
     mov ecx, (CHARACTERATTRIBUTE PTR [esi]).Resource.MAXMP
 
-    ; ©I¥s SetInGameAttribute
+    ; ï¿½Iï¿½s SetInGameAttribute
     INVOKE SetInGameAttribute, esi, eax, ebx, ecx
 
     ret
@@ -45,7 +45,7 @@ CheckInGameStatEnough PROC USES esi edi eax,
     mov esi, pAttr
     mov edi, pFieldOffset
 
-    mov eax, [esi + edi]   ; ÅªÄæ¦ì­È
+    mov eax, [esi + edi]   ; Åªï¿½ï¿½ï¿½ï¿½
     cmp eax, needVal
     jl notEnough
 
@@ -59,23 +59,24 @@ notEnough:
 CheckInGameStatEnough ENDP
 
 OverlayInGameAttribute PROC USES esi edi ebx ecx edx,   ; RETURN flag in eax 1= fail 0= success
-    pAttr1:PTR INGAMEATTRIBUTE,
+    pAttr1:PTR CHARACTERATTRIBUTE,
     pAttr2:PTR INGAMEATTRIBUTE,
     TypeFlag:DWORD            ; 0 = Demand, 1 = Effect
 
     mov esi, pAttr1
+    lea edx, (CHARACTERATTRIBUTE PTR [esi]).Resource
     mov edi, pAttr2
     xor eax, eax              ; flag = 0
 
     ; ---------------------------
-    ; ¼ÒÀÀ­pºâ HP
+    ; ï¿½ï¿½ï¿½ï¿½ï¿½pï¿½ï¿½ HP
     mov ebx, (INGAMEATTRIBUTE PTR [edi]).HP
     mov ecx, (INGAMEATTRIBUTE PTR [esi]).HP
     add ecx, ebx
     cmp TypeFlag, 0
     je checkDemandHP
 checkEffectHP:
-    ; ®ÄªG¼Ò¦¡¡A­t­ÈÂk¹s
+    ; ï¿½ÄªGï¿½Ò¦ï¿½ï¿½Aï¿½tï¿½ï¿½ï¿½kï¿½s
     cmp ecx, 0
     jge okHP
     mov (INGAMEATTRIBUTE PTR [esi]).HP, 0
@@ -85,7 +86,7 @@ okHP:
     mov (INGAMEATTRIBUTE PTR [esi]).HP, ecx
 nextHP:
     ; ---------------------------
-    ; ¼ÒÀÀ­pºâ EP
+    ; ï¿½ï¿½ï¿½ï¿½ï¿½pï¿½ï¿½ EP
     mov ebx, (INGAMEATTRIBUTE PTR [edi]).EP
     mov ecx, (INGAMEATTRIBUTE PTR [esi]).EP
     add ecx, ebx
@@ -101,7 +102,7 @@ okEP:
     mov (INGAMEATTRIBUTE PTR [esi]).EP, ecx
 nextEP:
     ; ---------------------------
-    ; ¼ÒÀÀ­pºâ MP
+    ; ï¿½ï¿½ï¿½ï¿½ï¿½pï¿½ï¿½ MP
     mov ebx, (INGAMEATTRIBUTE PTR [edi]).MP
     mov ecx, (INGAMEATTRIBUTE PTR [esi]).MP
     add ecx, ebx
@@ -121,7 +122,7 @@ nextMP:
     ret
 
 ; ---------------------------
-; »Ý¨D¼Ò¦¡ÀË¬d
+; ï¿½Ý¨Dï¿½Ò¦ï¿½ï¿½Ë¬d
 checkDemandHP:
     cmp ecx, 0
     jl failOverlay
@@ -135,13 +136,32 @@ checkDemandMP:
     jl failOverlay
     jmp nextMP
 demandCheckDone:
-    ; ¥þ³¡ÀË¬d³q¹L ¡÷ Å|¥[
-    mov ebx, (INGAMEATTRIBUTE PTR [edi]).HP
-    add (INGAMEATTRIBUTE PTR [esi]).HP, ebx
-    mov ebx, (INGAMEATTRIBUTE PTR [edi]).EP
-    add (INGAMEATTRIBUTE PTR [esi]).EP, ebx
-    mov ebx, (INGAMEATTRIBUTE PTR [edi]).MP
-    add (INGAMEATTRIBUTE PTR [esi]).MP, ebx
+    ; ï¿½ï¿½ï¿½ï¿½ï¿½Ë¬dï¿½qï¿½L ï¿½ï¿½ ï¿½|ï¿½[
+
+    mov ebx, (INGAMEATTRIBUTE PTR [esi]).HP ;player's current HP
+    add ebx, (INGAMEATTRIBUTE PTR [edi]).HP ;tool effect
+    cmp ebx, (RESOURCEATTRIBUTE PTR [edx]).MAXHP    ;check if changed HP exceed maxHP
+    jle validHP
+    mov ebx, (RESOURCEATTRIBUTE PTR [edx]).MAXHP    ;make sure that current HP <= maxHP
+validHP:
+    mov (INGAMEATTRIBUTE PTR [esi]).HP, ebx
+    
+    mov ebx, (INGAMEATTRIBUTE PTR [esi]).EP
+    add ebx, (INGAMEATTRIBUTE PTR [edi]).EP
+    cmp ebx, (RESOURCEATTRIBUTE PTR [edx]).MAXEP
+    jle validEP
+    mov ebx, (RESOURCEATTRIBUTE PTR [edx]).MAXEP
+validEP:
+    mov (INGAMEATTRIBUTE PTR [esi]).EP, ebx
+
+    mov ebx, (INGAMEATTRIBUTE PTR [esi]).MP
+    add ebx, (INGAMEATTRIBUTE PTR [edi]).MP
+    cmp ebx, (RESOURCEATTRIBUTE PTR [edx]).MAXMP
+    jle validMP
+    mov ebx, (RESOURCEATTRIBUTE PTR [edx]).MAXMP
+validMP:
+    mov (INGAMEATTRIBUTE PTR [esi]).MP, ebx
+
     mov eax, 0
     ret
 
@@ -182,8 +202,8 @@ InitializeResourceAttribute PROC USES esi,
 
     mov esi, pAttr
 
-    ; ª½±µ©I¥s SetResourceAttribute §â¥þ³¡²M¦¨ 0
-    INVOKE SetResourceAttribute, esi, 1000, 100, 100, 100, 5    ; °Ñ¼Æ: maxhp, maxep, maxmp, money, lives
+    ; ï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½s SetResourceAttribute ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Mï¿½ï¿½ 0
+    INVOKE SetResourceAttribute, esi, 1000, 100, 100, 100, 5    ; ï¿½Ñ¼ï¿½: maxhp, maxep, maxmp, money, lives
 
     ret
 InitializeResourceAttribute ENDP

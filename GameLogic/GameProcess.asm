@@ -99,15 +99,14 @@ RunBuyProcess proc uses eax esi edi ebx edx Shelf1: PTR GOODS, Shelf2: PTR GOODS
 RunBuyProcess endp
 
 
-; Assume user attack enemy 200, Enemy attack user 150
+; Assume Enemy attack user 150
 
 RunFightProcess proc uses esi edi ebx edx AllyChar: PTR CHARACTERATTRIBUTE, EnemyChar: PTR CHARACTERATTRIBUTE, Position: COORD
 
 	mov esi, AllyChar
 	mov edi, EnemyChar
-	;sub (CHARACTERATTRIBUTE PTR [edi]).Ingame.HP, 200 ;user don't need to attack directly
-	sub (CHARACTERATTRIBUTE PTR [esi]).Ingame.HP, 150	; enemy attack user
-	sub (CHARACTERATTRIBUTE PTR [edi]).Ingame.MP, 10	; enemy lost 10 MP each attack
+	;user don't need to attack directly
+	sub (CHARACTERATTRIBUTE PTR [esi]).Ingame.HP, 100; enemy attack user
 	
 	;cyclical tool active--------------------------
 	INVOKE GetToolListPtrInBackPack
@@ -192,19 +191,19 @@ NextTool:
 
 	INVOKE CooldownUpdate_Tool, esi
 	cmp eax, 0
-	jne SkipTool
+	je SkipTool	;original jne
 
     ; -------------------------------
     ; TODO: invoke some function or trigger effect
 	lea ebx, (TOOL PTR [esi]).ALLYDELTA
 	mov edi, AllyChar                       ; EDI = pointer to CHARACTERATTRIBUTE
-	lea edi, (CHARACTERATTRIBUTE PTR [edi]).Ingame   ; EDI = &AllyChar.Ingame
+	;lea edi, (CHARACTERATTRIBUTE PTR [edi]).Ingame   ; EDI = &AllyChar.Ingame
 	INVOKE OverlayInGameAttribute, edi, ebx, 0
 	cmp eax, 0
 	jne SkipTool
 	lea ebx, (TOOL PTR [esi]).ENEMYDELTA
 	mov edi, EnemyChar                      ; EDI = pointer to CHARACTERATTRIBUTE
-	lea edi, (CHARACTERATTRIBUTE PTR [edi]).Ingame   ; EDI = &EnemyChar.Ingame
+	;lea edi, (CHARACTERATTRIBUTE PTR [edi]).Ingame   ; EDI = &EnemyChar.Ingame
 	INVOKE OverlayInGameAttribute, edi, ebx, 1
     ; -------------------------------
     

@@ -208,7 +208,7 @@ FinishHP:
     imul (CHARACTERATTRIBUTE PTR [esi]).InGame.EP   ;25 * current HP stores in edx/eax
     idiv (CHARACTERATTRIBUTE PTR [esi]).Resource.MAXEP  ;25 * (current HP/max HP) stors in eax
 
-    cmp ax, 0   ;avoid zero or one length rectangle
+    cmp ax, 0   ;avoid zero length rectangle
     jle ZeroSP
     cmp ax, 25  ;avoid zero length rectangle
     jge FullSP

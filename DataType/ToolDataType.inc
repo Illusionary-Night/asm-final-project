@@ -24,7 +24,7 @@ TOOL ENDS
 
 CooldownUpdate_Tool PROTO :PTR TOOL
 
-ExecuteTool PROTO :PTR TOOL
+;ExecuteTool PROTO :PTR TOOL
 
 ShowTool PROTO :PTR TOOL
 

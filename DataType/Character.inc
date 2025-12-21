@@ -28,7 +28,7 @@ InitializeInGameAttribute PROTO :PTR CHARACTERATTRIBUTE	;初始化遊戲中屬性
 
 CheckInGameStatEnough PROTO :PTR INGAMEATTRIBUTE, :PTR SDWORD, :SDWORD	;判斷是否有足夠的HP, EP, MP 
 
-OverlayInGameAttribute PROTO :PTR INGAMEATTRIBUTE, :PTR INGAMEATTRIBUTE, :DWORD; 疊加遊戲中屬性 參數3 = TypeFlag: 0 = Demand, 1 = Effect 需求不滿無效並回傳1在eax
+OverlayInGameAttribute PROTO :PTR CHARACTERATTRIBUTE, :PTR INGAMEATTRIBUTE, :DWORD; 疊加遊戲中屬性 參數3 = TypeFlag: 0 = Demand, 1 = Effect 需求不滿無效並回傳1在eax
 
 
 ;RESOURCE

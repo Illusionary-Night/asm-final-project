@@ -32,16 +32,19 @@ INCLUDE ./asm-final-project/GameLogic/GameProcess.inc
 	Msg_ProcessPeriodicTools BYTE "Processing periodic tools...",0Ah,0Dh,"$"
 .code
 
+; ------------------------------------------------------------
+; Handle placing a tool into backpack
+; ------------------------------------------------------------
 RunPackProcess PROC uses esi eax ebx ecx OurBp: PTR BACKPACK, Shelf: PTR GOODS, Target: PTR TOOL
 	
 	xor eax, eax
 	mov esi, Target
 
-	INVOKE ShowPackEraseGraph
+	INVOKE ShowPackEraseGraph		; Clear pack UI
 	
 	INVOKE ReadInt09
 	mov bl, al
-	INVOKE TakeTool, shelf, Target, al
+	INVOKE TakeTool, shelf, Target, al		; Get tool from shelf
 
 	INVOKE ReadInt09
 	mov (TOOL PTR [esi]).BPPOSITION.X, ax
@@ -51,17 +54,17 @@ RunPackProcess PROC uses esi eax ebx ecx OurBp: PTR BACKPACK, Shelf: PTR GOODS, 
 	xor eax , eax
 	INVOKE CheckToolInBackPack , Target , OurBp , (TOOL PTR [esi]).BPPOSITION.X , (TOOL PTR [esi]).BPPOSITION.Y
 	cmp al, 0
-	je Conflict
+	je Conflict			; Position conflict
 	
 	INVOKE PlaceToolInPackSlotMap , Target , OurBp , (TOOL PTR [esi]).BPPOSITION.X , (TOOL PTR [esi]).BPPOSITION.Y
-	INVOKE ShowTool, Target
-	INVOKE DeletTool, Shelf, bl
+	INVOKE ShowTool, Target				; Show tool in backpack
+	INVOKE DeletTool, Shelf, bl			; Remove tool from shelf
 	INVOKE PlaceToolInPackToolList , Target
 	INVOKE ShowPackSuccessGraph
 	INVOKE EraseToolInfo, Shelf
 	jmp Dummy	
 
-	Conflict:               ;you can show some text here
+	Conflict:               ; Placement failed
 	INVOKE ShowPackNotSuccessGraph
 	jmp Dummy
 	Dummy:
@@ -70,6 +73,9 @@ RunPackProcess PROC uses esi eax ebx ecx OurBp: PTR BACKPACK, Shelf: PTR GOODS, 
 
 RunPackProcess endp
 
+; ------------------------------------------------------------
+; Handle buying tool from seller
+; ------------------------------------------------------------
 RunBuyProcess proc uses eax esi edi ebx edx Shelf1: PTR GOODS, Shelf2: PTR GOODS, Char: PTR CHARACTERATTRIBUTE, Position: COORD, Target: PTR TOOL
 
 	INVOKE ReadInt09
@@ -88,9 +94,9 @@ RunBuyProcess proc uses eax esi edi ebx edx Shelf1: PTR GOODS, Shelf2: PTR GOODS
 	INVOKE ShowCharInfo, Char, Position 
 
 	INVOKE ShowCharInfo, Char, Position
-	INVOKE BuyTool, Shelf1, al
-	INVOKE InsertTool, Shelf2, eax
-	INVOKE ShowGoods, Shelf2
+	INVOKE BuyTool, Shelf1, al				
+	INVOKE InsertTool, Shelf2, eax			; Remove tool from seller
+	INVOKE ShowGoods, Shelf2				; Add tool to player shelf
 	INVOKE EraseToolInfo, Shelf1
 	Done:
 
@@ -100,12 +106,16 @@ RunBuyProcess endp
 
 
 ; Assume user attack enemy 200, Enemy attack user 150
-
+; ------------------------------------------------------------
+; Fight process (single round)
+; Return EAX: 0 = continue, 1 = fight finished
+; ------------------------------------------------------------
 RunFightProcess proc uses esi edi ebx edx AllyChar: PTR CHARACTERATTRIBUTE, EnemyChar: PTR CHARACTERATTRIBUTE, Position: COORD
 
 	mov esi, AllyChar
 	mov edi, EnemyChar
 	;sub (CHARACTERATTRIBUTE PTR [edi]).Ingame.HP, 200 ;user don't need to attack directly
+	; Enemy attacks user
 	sub (CHARACTERATTRIBUTE PTR [esi]).Ingame.HP, 150	; enemy attack user
 	sub (CHARACTERATTRIBUTE PTR [edi]).Ingame.MP, 10	; enemy lost 10 MP each attack
 	
@@ -135,11 +145,13 @@ RunFightProcess proc uses esi edi ebx edx AllyChar: PTR CHARACTERATTRIBUTE, Enem
 		dec (CHARACTERATTRIBUTE PTR [esi]).Resource.LIVES
 		mov eax, 1
 	Done:
+		; Refresh user info
 		INVOKE EraseCharInfo, AllyChar, Position
 		INVOKE EraseCharInfoGraph, AllyChar, Position
 		INVOKE ShowCharInfo, AllyChar, Position
 		INVOKE ShowCharInfoGraph, AllyChar, Position
 
+		; Refresh enemy info
 		add Position.X, EnemyInfoPositionX-UserInfoPositionX
 		INVOKE EraseCharInfo, EnemyChar, Position
 		INVOKE EraseCharInfoGraph, EnemyChar, Position
@@ -151,6 +163,9 @@ RunFightProcess proc uses esi edi ebx edx AllyChar: PTR CHARACTERATTRIBUTE, Enem
 RunFightProcess endp
 
 ; ProcessPeriodicTools:  M   D  } C A B z g   N o
+; ------------------------------------------------------------
+; Apply periodic tool effects during fight
+; ------------------------------------------------------------
 ProcessPeriodicTools PROC USES esi edi eax ebx ecx edx AllyChar: PTR CHARACTERATTRIBUTE, EnemyChar: PTR CHARACTERATTRIBUTE
     mov esi, ToolListInBackPack       ; ESI    V Ĥ@ ӹD  
     mov ecx, ToolCountInBackPack	; ECX =  } C    

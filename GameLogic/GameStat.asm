@@ -35,6 +35,9 @@ INCLUDE ./asm-final-project/GameLogic/GameProcess.inc
 	Enemy	     CHARACTERATTRIBUTE <>
 .code
 
+; ------------------------------------------------------------
+; Enter Start State
+; ------------------------------------------------------------
 IntoStartStat proc uses esi eax	CurStat: PTR GAMESTAT
 
 	mov esi, CurStat
@@ -54,6 +57,9 @@ IntoStartStat proc uses esi eax	CurStat: PTR GAMESTAT
 
 IntoStartStat endp
 
+; ------------------------------------------------------------
+; Enter Prepare State (Buy / Pack)
+; ------------------------------------------------------------
 IntoPrepareStat proc uses esi eax ecx CurStat: PTR GAMESTAT
 
 	;INVOKE clear_screen
@@ -85,6 +91,9 @@ IntoPrepareStat proc uses esi eax ecx CurStat: PTR GAMESTAT
 
 IntoPrepareStat endp
 
+; ------------------------------------------------------------
+; Enter Fight State
+; ------------------------------------------------------------
 IntoFightStat proc uses esi eax CurStat: PTR GAMESTAT
 
 	mov esi, CurStat
@@ -96,16 +105,19 @@ IntoFightStat proc uses esi eax CurStat: PTR GAMESTAT
 	INVOKE EraseStageGraph
 	;INVOKE ShowStage, CurStat
 
+	; Initialize enemy and reset user in-game stats
 	INVOKE InitializeResourceAttribute, OFFSET Enemy.Resource
 	INVOKE InitializeInGameAttribute, OFFSET Enemy.InGame
 
 	INVOKE InitializeInGameAttribute, OFFSET User.InGame	;---------------------------- I think we also need to re-initialize user InGame attribute here
 
+	; Clear shop UI
 	INVOKE EraseToolInfo, OFFSET Seller
 	INVOKE EraseToolInfo, OFFSET OurGoods
 	INVOKE EraseGoods, OFFSET Seller
 	INVOKE EraseGoods, OFFSET OurGoods
 
+	; Show user info and image
 	mov ax, UserInfoPositionX
 	mov GameStatCursor.X, ax
 	mov ax, UserInfoPositionY
@@ -113,11 +125,13 @@ IntoFightStat proc uses esi eax CurStat: PTR GAMESTAT
 	INVOKE ShowCharInfoGraph, OFFSET User, GameStatCursor
 	INVOKE ShowAllyImage, GameStatCursor
 	
+	; Show enemy info and image
 	add GameStatCursor.X, EnemyInfoPositionX-UserInfoPositionX
 	INVOKE ShowCharInfo, OFFSET Enemy, GameStatCursor	;move cursor to EnemyInfoPositionX
 	INVOKE ShowCharInfoGraph, OFFSET Enemy, GameStatCursor
 	INVOKE ShowEnemyImage, GameStatCursor
 
+	; Fight loop
 	sub GameStatCursor.X, EnemyInfoPositionX-UserInfoPositionX	;move cursor to UserInfoPosition
 	mov esi, OFFSET User
 	DelayForARound
@@ -130,6 +144,7 @@ IntoFightStat proc uses esi eax CurStat: PTR GAMESTAT
 		jmp Dummy
 
 		Done:
+			; Restore user status after fight
 			DelayForARound
 			mov eax, 1000
 			mov (CHARACTERATTRIBUTE PTR [esi]).Ingame.HP, eax
@@ -141,7 +156,7 @@ IntoFightStat proc uses esi eax CurStat: PTR GAMESTAT
 		Dummy:
 			DelayForARound
 	LOOP L1
-	
+	; Clear fight UI
 	INVOKE EraseCharInfoGraph, OFFSET User, GameStatCursor
 	INVOKE EraseAllyImage, GameStatCursor
 	
@@ -153,6 +168,9 @@ IntoFightStat proc uses esi eax CurStat: PTR GAMESTAT
 
 IntoFightStat endp
 
+; ------------------------------------------------------------
+; Handle Start Sub-State
+; ------------------------------------------------------------
 CheStartSubStat proc uses esi eax CurStat: PTR GAMESTAT, SubStat: BYTE
 
 	mov esi, CurStat
@@ -168,6 +186,9 @@ CheStartSubStat proc uses esi eax CurStat: PTR GAMESTAT, SubStat: BYTE
 
 CheStartSubStat endp
 
+; ------------------------------------------------------------
+; Handle Prepare Sub-State (Buy / Pack)
+; ------------------------------------------------------------
 ChePrepareSubStat proc uses esi eax ecx ebx CurStat: PTR GAMESTAT, SubStat: BYTE
 	
 	mov esi, CurStat
@@ -182,7 +203,7 @@ ChePrepareSubStat proc uses esi eax ecx ebx CurStat: PTR GAMESTAT, SubStat: BYTE
 	
 	cmp al, PackStat
 	je L2	
-
+; -------- Buy Process --------
 	L1:                         ;Buy Process, break untile user done
 		mov ecx, 0
 		mov eax, 0
@@ -213,7 +234,7 @@ ChePrepareSubStat proc uses esi eax ecx ebx CurStat: PTR GAMESTAT, SubStat: BYTE
 	LOOP L1
 
 	jmp Done
-	
+	; -------- Pack Process --------
 	L2:                          ;Pack Process, break untile user done
 		mov ecx, 0
 		mov eax, 0
@@ -245,6 +266,9 @@ ChePrepareSubStat proc uses esi eax ecx ebx CurStat: PTR GAMESTAT, SubStat: BYTE
 
 ChePrepareSubStat endp
 
+; ------------------------------------------------------------
+; Handle Fight Sub-State
+; ------------------------------------------------------------
 CheFightSubStat proc uses esi eax CurStat: PTR GAMESTAT, SubStat: BYTE
 	
 	mov esi, CurStat

@@ -21,20 +21,24 @@ INCLUDE ./asm-final-project/ToolInfo.inc
 	Game_UUID DWORD ?
 .code
 
+; ------------------------------------------------------------
+; GameMainLoop
+; Main loop controlling overall game flow
+; ------------------------------------------------------------
 GameMainLoop proc uses eax ecx ebx esi
 
 	INVOKE IntoStartStat, OFFSET CurGameStat
 
 	L2:
 		
-		TestKeyPress VK_SPACE
+		TestKeyPress VK_SPACE		; Check if SPACE key is pressed
 		jnz L4
 		L3: 
 			mov ecx, 0
 			jmp Done
 		L4: mov ecx, 1
 		Done:
-	loop L2
+	loop L2							; Wait until condition is met
 
 	INVOKE CheStartSubStat, OFFSET CurGameStat, GameRuleStat
 
@@ -43,14 +47,14 @@ GameMainLoop proc uses eax ecx ebx esi
 	;INVOKE CreateTool, OFFSET Game_UUID, 1	
 
 	L1:
-		INVOKE IntoPrepareStat, OFFSET CurGameStat
+		INVOKE IntoPrepareStat, OFFSET CurGameStat					; Enter prepare state
 
-		INVOKE ChePrepareSubStat, OFFSET CurGameStat, BuyStat
-		INVOKE ChePrepareSubStat, OFFSET CurGameStat, PackStat
+		INVOKE ChePrepareSubStat, OFFSET CurGameStat, BuyStat		; Check buy phase
+		INVOKE ChePrepareSubStat, OFFSET CurGameStat, PackStat		; Check backpack phase
 		
-		INVOKE IntoFightStat, OFFSET CurGameStat
+		INVOKE IntoFightStat, OFFSET CurGameStat					; Enter fight state
 		mov ecx, 0
-	LOOP L1
+	LOOP L1			; Main game loop
 
 GameMainLoop endp
 

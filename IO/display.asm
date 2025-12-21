@@ -10,6 +10,9 @@ INCLUDE ./asm-final-project/IO/display.inc
 	WriteAttribute WORD ?
 .code
 
+;------------------------------------------------------
+; Initialize console display system
+;------------------------------------------------------
 Display_Init proc uses eax esi
 
 	invoke GetStdHandle, STD_OUTPUT_HANDLE
@@ -30,6 +33,9 @@ Display_Init proc uses eax esi
 
 Display_Init endp
 
+;------------------------------------------------------
+; Clear console screen
+;------------------------------------------------------
 clear_screen proc uses eax ecx esi
 
 	call Clrscr
@@ -37,6 +43,9 @@ clear_screen proc uses eax ecx esi
 
 clear_screen endp
 
+;------------------------------------------------------
+; Get current text color
+;------------------------------------------------------
 GetColor proc uses ax esi ecx color: PTR WORD
 
 	mov esi, color
@@ -46,6 +55,9 @@ GetColor proc uses ax esi ecx color: PTR WORD
 
 GetColor endp
 
+;------------------------------------------------------
+; Get current cursor position
+;------------------------------------------------------
 GetCursor proc uses esi eax position: PTR COORD
 
 	INVOKE GetConsoleScreenBufferInfo, writehandle, OFFSET Screen_info
@@ -60,6 +72,9 @@ GetCursor proc uses esi eax position: PTR COORD
 
 GetCursor endp
 
+;------------------------------------------------------
+; Get screen size (buffer size)
+;------------------------------------------------------
 GetScreenSize proc uses eax esi position: PTR COORD
 
 	mov esi, OFFSET Screen_info
@@ -70,6 +85,9 @@ GetScreenSize proc uses eax esi position: PTR COORD
 	
 GetScreenSize endp
 
+;------------------------------------------------------
+; Set cursor position
+;------------------------------------------------------
 SetCursor proc uses eax ecx position: COORD
 	
 	mov eax, position
@@ -79,6 +97,9 @@ SetCursor proc uses eax ecx position: COORD
 
 SetCursor endp
 
+;------------------------------------------------------
+; Set text color
+;------------------------------------------------------
 SetColor proc uses ax ecx color: WORD
 
 	mov ax, color
@@ -88,6 +109,9 @@ SetColor proc uses ax ecx color: WORD
 
 SetColor endp
 
+;------------------------------------------------------
+; Print string to console
+;------------------------------------------------------
 PrintStr proc uses eax ecx esi Source: PTR BYTE, StrSize: DWORD     ;I don't know why it will change ecx, so we need to uses ecx.QQ
 
 	

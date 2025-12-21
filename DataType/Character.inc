@@ -38,8 +38,7 @@ InitializeInGameAttribute PROTO :PTR CHARACTERATTRIBUTE	;��l�ƹC����
 
 CheckInGameStatEnough PROTO :PTR INGAMEATTRIBUTE, :PTR SDWORD, :SDWORD	;�P�_�O�_��������HP, EP, MP 
 
-; Core Logic: Modifies stats based on Demand (check requirements) or Effect (apply damage/heal)
-OverlayInGameAttribute PROTO :PTR INGAMEATTRIBUTE, :PTR INGAMEATTRIBUTE, :DWORD; �|�[�C�����ݩ� �Ѽ�3 = TypeFlag: 0 = Demand, 1 = Effect �ݨD�����L�Ĩæ^��1�beax
+OverlayInGameAttribute PROTO :PTR CHARACTERATTRIBUTE, :PTR INGAMEATTRIBUTE, :DWORD; �|�[�C�����ݩ� �Ѽ�3 = TypeFlag: 0 = Demand, 1 = Effect �ݨD�����L�Ĩæ^��1�beax
 
 
 ;RESOURCE

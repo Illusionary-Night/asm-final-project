@@ -78,12 +78,13 @@ CheckInGameStatEnough ENDP
 ; TypeFlag 1 (Effect): "Apply Force" - Applies change immediately. Clamps to 0 if negative.
 ; ---------------------------------------------------------
 OverlayInGameAttribute PROC USES esi edi ebx ecx edx,   ; RETURN flag in eax 1= fail 0= success
-    pAttr1:PTR INGAMEATTRIBUTE,
+    pAttr1:PTR CHARACTERATTRIBUTE,
     pAttr2:PTR INGAMEATTRIBUTE,
     TypeFlag:DWORD            ; 0 = Demand, 1 = Effect
 
-    mov esi, pAttr1           ; Base Attributes (Current Player)
-    mov edi, pAttr2           ; Modifier Attributes (Cost or Effect)
+    mov esi, pAttr1
+    lea edx, (CHARACTERATTRIBUTE PTR [esi]).Resource
+    mov edi, pAttr2
     xor eax, eax              ; flag = 0
 
     ; ---------------------------
@@ -160,12 +161,31 @@ checkDemandMP:
     jmp nextMP
 demandCheckDone:
     ; �����ˬd�q�L �� �|�[
-    mov ebx, (INGAMEATTRIBUTE PTR [edi]).HP
-    add (INGAMEATTRIBUTE PTR [esi]).HP, ebx
-    mov ebx, (INGAMEATTRIBUTE PTR [edi]).EP
-    add (INGAMEATTRIBUTE PTR [esi]).EP, ebx
-    mov ebx, (INGAMEATTRIBUTE PTR [edi]).MP
-    add (INGAMEATTRIBUTE PTR [esi]).MP, ebx
+
+    mov ebx, (INGAMEATTRIBUTE PTR [esi]).HP ;player's current HP
+    add ebx, (INGAMEATTRIBUTE PTR [edi]).HP ;tool effect
+    cmp ebx, (RESOURCEATTRIBUTE PTR [edx]).MAXHP    ;check if changed HP exceed maxHP
+    jle validHP
+    mov ebx, (RESOURCEATTRIBUTE PTR [edx]).MAXHP    ;make sure that current HP <= maxHP
+validHP:
+    mov (INGAMEATTRIBUTE PTR [esi]).HP, ebx
+    
+    mov ebx, (INGAMEATTRIBUTE PTR [esi]).EP
+    add ebx, (INGAMEATTRIBUTE PTR [edi]).EP
+    cmp ebx, (RESOURCEATTRIBUTE PTR [edx]).MAXEP
+    jle validEP
+    mov ebx, (RESOURCEATTRIBUTE PTR [edx]).MAXEP
+validEP:
+    mov (INGAMEATTRIBUTE PTR [esi]).EP, ebx
+
+    mov ebx, (INGAMEATTRIBUTE PTR [esi]).MP
+    add ebx, (INGAMEATTRIBUTE PTR [edi]).MP
+    cmp ebx, (RESOURCEATTRIBUTE PTR [edx]).MAXMP
+    jle validMP
+    mov ebx, (RESOURCEATTRIBUTE PTR [edx]).MAXMP
+validMP:
+    mov (INGAMEATTRIBUTE PTR [esi]).MP, ebx
+
     mov eax, 0
     ret
 

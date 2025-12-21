@@ -26,9 +26,10 @@ TOOL ENDS
 
 CooldownUpdate_Tool PROTO :PTR TOOL		; Updates timer, returns 1 if ready
 
-ExecuteTool PROTO :PTR TOOL				; (Not implemented in .asm provided)
+;ExecuteTool PROTO :PTR TOOL				; (Not implemented in .asm provided)
 
-ShowTool PROTO :PTR TOOL				; Renders the tool in backpack
+
+ShowTool PROTO :PTR TOOL
 
 
 ENDIF

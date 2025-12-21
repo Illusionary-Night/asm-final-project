@@ -94,7 +94,7 @@ IntoPrepareStat endp
 ; ------------------------------------------------------------
 ; Enter Fight State
 ; ------------------------------------------------------------
-IntoFightStat proc uses esi eax CurStat: PTR GAMESTAT
+IntoFightStat proc uses esi CurStat: PTR GAMESTAT	;note that eax is used to return whether game should continue or not
 
 	mov esi, CurStat
 	mov al, FightStat
@@ -164,6 +164,8 @@ IntoFightStat proc uses esi eax CurStat: PTR GAMESTAT
 	INVOKE EraseCharInfo, OFFSET Enemy, GameStatCursor
 	INVOKE EraseCharInfoGraph, OFFSET Enemy, GameStatCursor
 	INVOKE EraseEnemyImage, GameStatCursor
+
+	INVOKE CheckCharacterAlive, OFFSET User	;check if player is alive
 	ret 4
 
 IntoFightStat endp
@@ -209,11 +211,11 @@ ChePrepareSubStat proc uses esi eax ecx ebx CurStat: PTR GAMESTAT, SubStat: BYTE
 		mov eax, 0
 		call ReadChar
 		cmp al, ShowInst
-		je ShowProcess1
+		je ShowProcess1	;press 'S' to show the information of goods
 		cmp al, BuyInst
-		je BuyProcess
+		je BuyProcess	;press 'B' to buy goods
 		cmp al, EndInst
-		je EndProcess1
+		je EndProcess1	;press 'E' to end buy process
 		jmp Dummy1	
 
 		EndProcess1: 

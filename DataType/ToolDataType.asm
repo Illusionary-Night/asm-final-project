@@ -17,7 +17,7 @@ INCLUDE ./asm-final-project/MemOperation.inc
 ; Returns EAX = 1 if Ready (0), EAX = 0 if Cooling down.
 ; Resets to COOLDOWNMAX immediately upon reaching 0.
 ; ---------------------------------------------------------
-CooldownUpdate_Tool PROC USES esi eax, ;return 1 if cooldown 0 
+CooldownUpdate_Tool PROC USES esi ebx edx, ;return 1 if cooldown 0
 	Object: PTR TOOL
 
 	;mov edx, OFFSET Msg_Cooldown
@@ -28,30 +28,26 @@ CooldownUpdate_Tool PROC USES esi eax, ;return 1 if cooldown 0
 	;pop eax
 
     mov esi, Object
-    mov ebx, (TOOL PTR [esi]).COOLDOWN
-    
-	; Check if already ready or needs decremen
-	cmp ebx, 0
+
+	cmp (TOOL PTR [esi]).COOLDOWN, 0
 	je Label_CoolingCompleted
 	
-	dec ebx
-
-	cmp ebx, 0
-	je Label_CoolingCompleted
+	dec (TOOL PTR [esi]).COOLDOWN
+	
 	jmp Label_Cooling
 
 Label_CoolingCompleted:
 	; Reset timer and return Success (1)
 	mov ebx, (TOOL PTR [esi]).COOLDOWNMAX
+	mov (TOOL PTR [esi]).COOLDOWN, ebx
 	mov eax, 1
 	jmp Label_end
 Label_Cooling:
 	; Still waiting, return Fail (0)
     mov eax, 0
 Label_end:
-	mov (TOOL PTR [esi]).COOLDOWN, ebx
-    ret
-CooldownUpdate_Tool ENDP
+    ret 4
+CooldownUpdate_Tool ENDP	;uses eax to return
 
 ; ---------------------------------------------------------
 ; ShowTool

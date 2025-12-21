@@ -4,8 +4,11 @@ INCLUDE ./asm-final-project/DataType/GameDataType.inc
 INCLUDE ./asm-final-project/DataType/ToolDataType.inc
 INCLUDE ./asm-final-project/DataType/Seller.inc
 INCLUDE ./asm-final-project/DataType/BackPack.inc
+INCLUDE ./asm-final-project/DataType/Character.inc
 
 INCLUDE ./asm-final-project/IO/input.inc
+INCLUDE ./asm-final-project/IO/display.inc
+INCLUDE ./asm-final-project/IO/EndScene.inc
 
 INCLUDE ./asm-final-project/ToolInfo.inc
 
@@ -52,10 +55,14 @@ GameMainLoop proc uses eax ecx ebx esi
 		INVOKE ChePrepareSubStat, OFFSET CurGameStat, BuyStat		; Check buy phase
 		INVOKE ChePrepareSubStat, OFFSET CurGameStat, PackStat		; Check backpack phase
 		
-		INVOKE IntoFightStat, OFFSET CurGameStat					; Enter fight state
-		mov ecx, 0
-	LOOP L1			; Main game loop
+		INVOKE IntoFightStat, OFFSET CurGameStat
+		cmp eax, 0
+		jz EndGame
+	jmp L1
 
+	EndGame:
+		INVOKE clear_screen
+		INVOKE ShowEndGame
 GameMainLoop endp
 
 end

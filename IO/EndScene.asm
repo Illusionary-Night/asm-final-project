@@ -4,6 +4,9 @@ INCLUDE ./asm-final-project/IO/graph.inc
 INCLUDE ./asm-final-project/IO/EndScene.inc
 
 .data
+;------------------------------------------------------
+; ASCII art for END GAME screen (8 lines)
+;------------------------------------------------------
 gameEndStr1 BYTE " $$$$$$\                                           $$$$$$\                                 ", 0
 gameEndStr2 BYTE "$$  __$$\                                         $$  __$$\                                ", 0
 gameEndStr3 BYTE "$$ /  \__| $$$$$$\  $$$$$$\$$$$\   $$$$$$\        $$ /  $$ |$$\    $$\  $$$$$$\   $$$$$$\  ", 0
@@ -13,10 +16,17 @@ gameEndStr6 BYTE "$$ |  $$ |$$  __$$ |$$ | $$ | $$ |$$   ____|      $$ |  $$ |  
 gameEndStr7 BYTE "\$$$$$$  |\$$$$$$$ |$$ | $$ | $$ |\$$$$$$$\        $$$$$$  |   \$  /   \$$$$$$$\ $$ |      ", 0
 gameEndStr8 BYTE " \______/  \_______|\__| \__| \__| \_______|       \______/     \_/     \_______|\__|      ", 0
 
+;------------------------------------------------------
+; Cursor and TEXT buffer for end scene
+;------------------------------------------------------
 EndSceneCursor COORD <0,0>
 EndGameText TEXT <>
                                                                                    
 .code
+;------------------------------------------------------
+; ShowEndGame
+; Display END GAME ASCII art line by line
+;------------------------------------------------------
 ShowEndGame proc uses ecx esi
     SetEndSceneCursor 59, 10
     mov ecx, 8

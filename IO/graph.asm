@@ -8,6 +8,9 @@ INCLUDE ./asm-final-project/IO/graph.inc
 	BackGroundColor WORD 07h
 .code
 
+;------------------------------------------------------
+; Set text object properties
+;------------------------------------------------------
 SetText proc uses eax esi object: PTR TEXT, source: PTR BYTE, color: WORD, position: COORD, _length: WORD
 
 	mov esi, object
@@ -26,6 +29,9 @@ SetText proc uses eax esi object: PTR TEXT, source: PTR BYTE, color: WORD, posit
 
 SetText endp
 
+;------------------------------------------------------
+; Draw text on screen
+;------------------------------------------------------
 ShowText proc uses eax ebx esi object: PTR TEXT
 
 	xor ebx, ebx
@@ -47,6 +53,9 @@ ShowText proc uses eax ebx esi object: PTR TEXT
 
 ShowText endp
 
+;------------------------------------------------------
+; Erase text from screen
+;------------------------------------------------------
 EraseText proc uses eax ebx esi ecx object: PTR TEXT
 
 	xor ebx, ebx
@@ -67,6 +76,9 @@ EraseText proc uses eax ebx esi ecx object: PTR TEXT
 
 EraseText endp
 
+;------------------------------------------------------
+; Set line object properties
+;------------------------------------------------------
 SetLine proc uses eax esi ecx Object: PTR LINE, Element: BYTE, Color: WORD, IsVertical: BYTE, _Length: WORD, Position: COORD
 
 	mov esi, Object
@@ -88,7 +100,10 @@ SetLine proc uses eax esi ecx Object: PTR LINE, Element: BYTE, Color: WORD, IsVe
 	ret 24
 
 SetLine endp
-	
+
+;------------------------------------------------------
+; Draw line
+;------------------------------------------------------
 ShowLine proc uses esi eax ecx edi Object: PTR LINE
 
 	xor ecx, ecx
@@ -127,6 +142,9 @@ ShowLine proc uses esi eax ecx edi Object: PTR LINE
 
 ShowLine endp
 
+;------------------------------------------------------
+; Erase line
+;------------------------------------------------------
 EraseLine proc uses eax esi ecx edi Object: PTR LINE
 
 	xor ecx, ecx
@@ -165,6 +183,9 @@ EraseLine proc uses eax esi ecx edi Object: PTR LINE
 
 EraseLine endp
 
+;------------------------------------------------------
+; Set rectangle object properties
+;------------------------------------------------------
 SetRectangle proc uses eax esi ecx object: PTR RECTANGLE, element: BYTE, color: WORD, _width: WORD, _Hight: WORD, position: COORD
 
 	mov esi, object
@@ -186,6 +207,9 @@ SetRectangle proc uses eax esi ecx object: PTR RECTANGLE, element: BYTE, color: 
 
 SetRectangle endp
 
+;------------------------------------------------------
+; Draw rectangle
+;------------------------------------------------------
 ShowRectangle proc uses eax ecx ebx esi edi object: PTR RECTANGLE
 	
 	xor ecx, ecx
@@ -247,6 +271,9 @@ ShowRectangle proc uses eax ecx ebx esi edi object: PTR RECTANGLE
 
 ShowRectangle endp
 
+;------------------------------------------------------
+; Erase rectangle
+;------------------------------------------------------
 EraseRectangle proc uses eax ecx esi edi ebx edx object: PTR RECTANGLE
 
 	xor ecx, ecx
@@ -292,6 +319,9 @@ EraseRectangle proc uses eax ecx esi edi ebx edx object: PTR RECTANGLE
 
 EraseRectangle endp
 
+;------------------------------------------------------
+; Set picture object properties
+;------------------------------------------------------
 SetPicture proc uses eax esi ecx Object: PTR PICTURE, Source: PTR BYTE, Color: WORD, _width: WORD, _Hight: WORD, Position: COORD,
 
 	mov esi, object
@@ -313,6 +343,9 @@ SetPicture proc uses eax esi ecx Object: PTR PICTURE, Source: PTR BYTE, Color: W
 
 SetPicture endp
 
+;------------------------------------------------------
+; Draw picture
+;------------------------------------------------------
 ShowPicture proc uses eax esi edi ecx object: PTR PICTURE
 
 	xor ecx, ecx
@@ -345,6 +378,9 @@ ShowPicture proc uses eax esi edi ecx object: PTR PICTURE
 
 ShowPicture endp
 
+;------------------------------------------------------
+; Erase picture
+;------------------------------------------------------
 ErasePicture proc uses eax esi ecx edi object: PTR PICTURE
 	
 	xor ecx, ecx

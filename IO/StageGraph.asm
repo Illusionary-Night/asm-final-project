@@ -6,6 +6,9 @@ INCLUDE ./asm-final-project/GameLogic/GameStat.inc
 
 
 .data
+	;-----------------------------
+	; Stage text buffers for display
+	;-----------------------------
 	StageGraphTextBuf  TEXT <>
 	BuyStageGraph1 Byte " ______                                _______           _______   _________ _______  _______  _       "
         BuyStageGraph2 Byte "(  ___ \ |\     /||\     /|  |\     /|(  ___  )|\     /|(  ____ )  \__   __/(  ___  )(  ___  )( \      "
@@ -40,6 +43,9 @@ INCLUDE ./asm-final-project/GameLogic/GameStat.inc
 	StageGraphCursorBuf COORD <StagePositionX,StagePositionY>
 .code
 
+;-------------------------------------------------------------
+; ShowStage: display stage based on current game status
+;-------------------------------------------------------------
 ShowStage proc uses esi eax ecx	CurStat: PTR GAMESTAT
 
 	mov esi, CurStat
@@ -70,7 +76,9 @@ ShowStage proc uses esi eax ecx	CurStat: PTR GAMESTAT
 ShowStage endp
 
 
-
+;-------------------------------------------------------------
+; ShowStageGraph: display 8 lines of ASCII stage
+;-------------------------------------------------------------
 ShowStageGraph proc uses esi eax Source: PTR TEXT, _Length: WORD
 
 	mov esi, Source
@@ -131,6 +139,9 @@ ShowStageGraph proc uses esi eax Source: PTR TEXT, _Length: WORD
 
 ShowStageGraph endp
 
+;-------------------------------------------------------------
+; EraseStageGraph: clear stage ASCII
+;-------------------------------------------------------------
 EraseStageGraph proc
 
 	SetStageGraphCursor StagePositionX, StagePositionY

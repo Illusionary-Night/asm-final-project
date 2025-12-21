@@ -2,6 +2,9 @@
 IFNDEF __graph
 __graph EQU 1
 
+;------------------------------------------------------
+; Data structures for drawing text and graphics
+;------------------------------------------------------
 TEXT STRUCT
 	Source   DWORD ?  ;the address of string
 	Color    WORD ?
@@ -34,6 +37,9 @@ PICTURE STRUCT
 	Position COORD <>
 PICTURE ENDS
 
+;------------------------------------------------------
+; Function prototypes for graphics operations
+;------------------------------------------------------
 SetText PROTO,
 	Object:   PTR TEXT,
 	Source:   PTR BYTE,   ;the address of string

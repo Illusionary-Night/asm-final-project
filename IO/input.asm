@@ -11,6 +11,9 @@ INCLUDE ./asm-final-project/DataType/ToolDataType.inc
     mode DWORD ?
 .code
 
+;------------------------------------------------------
+; Wait for a specific key press
+;------------------------------------------------------
 WaitKeyPress proc uses ax virtualkey : DWORD
 L1:
     INVOKE GetKeyState, virtualkey
@@ -25,6 +28,9 @@ outloop1:
     ret 2
 WaitKeyPress endp
 
+;------------------------------------------------------
+; Read tool's position from input
+;------------------------------------------------------
 ReadToolPosition proc uses esi ebx eax Object: PTR TOOL 
 
 	xor eax, eax
@@ -37,6 +43,9 @@ ReadToolPosition proc uses esi ebx eax Object: PTR TOOL
 
 ReadToolPosition endp
 
+;------------------------------------------------------
+; Read a single digit character and convert to integer
+;------------------------------------------------------
 ReadInt09 PROC 
 
 	call ReadChar

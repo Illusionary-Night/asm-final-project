@@ -2,12 +2,18 @@
 IFNDEF __FightScene
 __FightScene EQU 1
 
+;------------------------------------------------------
+; Layout settings for fight screen
+;------------------------------------------------------
 textGraphXGap EQU 14	;the gap between text and HP,SP,MP bar
 upGraphYGap EQU 3 	;the gap between the upper bound screen boundary and HP,SP,MP bar
 textYGap EQU 7		;the gap beteeen text
 GraphYGap EQU textYGap + 1		;thhe gap between graph
 imageYGap EQU upGraphYGap + 3 * textYGap
 
+;------------------------------------------------------
+; Set fight screen cursor
+;------------------------------------------------------
 SetGameProcessCursor macro NEWX, NEWY
 	push eax
 
@@ -20,6 +26,9 @@ SetGameProcessCursor macro NEWX, NEWY
 	pop eax
 endm
 
+;------------------------------------------------------
+; Character info and image display/erase
+;------------------------------------------------------
 ShowCharInfo PROTO,
 	Char: PTR CHARACTERATTRIBUTE,
 	Position: COORD

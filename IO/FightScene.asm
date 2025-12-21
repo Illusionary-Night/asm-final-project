@@ -98,6 +98,9 @@ INCLUDE ./asm-final-project/DataType/Character.inc
     enemyImage24 BYTE "      ###########      ###########      ", 0
 
 .code
+;------------------------------------------------------
+; Show text-based character stats (HP, SP, MP, Money, Lives)
+;------------------------------------------------------
 ShowCharInfo proc uses eax esi Char: PTR CHARACTERATTRIBUTE, Position: COORD
 
 	mov esi, Char
@@ -152,6 +155,9 @@ ShowCharInfo proc uses eax esi Char: PTR CHARACTERATTRIBUTE, Position: COORD
 
 ShowCharInfo endp
 
+;------------------------------------------------------
+; Erase character stats from screen
+;------------------------------------------------------
 EraseCharInfo proc uses eax esi ecx Char: PTR CHARACTERATTRIBUTE, Position: COORD
 
 	mov ecx, 5
@@ -168,6 +174,9 @@ EraseCharInfo proc uses eax esi ecx Char: PTR CHARACTERATTRIBUTE, Position: COOR
 
 EraseCharInfo endp
 
+;------------------------------------------------------
+; Draw HP/SP/MP bars
+;------------------------------------------------------
 ShowCharInfoGraph proc uses eax esi edx Char: PTR CHARACTERATTRIBUTE, Position: COORD
     SetGameProcessCursor Position.X, Position.Y
     add GameProcessCursor.X, textGraphXGap
@@ -280,6 +289,9 @@ L:
 ret 8
 EraseCharInfoGraph endp
 
+;------------------------------------------------------
+; Show ally ASCII image
+;------------------------------------------------------
 ShowAllyImage proc uses ecx esi Position: COORD
     SetGameProcessCursor Position.X, Position.Y
     add GameProcessCursor.X, textGraphXGap
@@ -304,6 +316,9 @@ EraseAllyImage proc Position: COORD
 ret 4
 EraseAllyImage endp
 
+;------------------------------------------------------
+; Show enemy ASCII image
+;------------------------------------------------------
 ShowEnemyImage proc uses ecx esi Position: COORD
     SetGameProcessCursor Position.X, Position.Y
     add GameProcessCursor.X, textGraphXGap
